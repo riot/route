@@ -1,4 +1,9 @@
 ;(function(window) {
+/**
+ * Simple client-side router
+ * @module riot-route
+ */
+
 var EVT = 'hashchange',
   win = window,
   loc = win.location,
@@ -6,17 +11,30 @@ var EVT = 'hashchange',
   current,
   fns
 
-// Pass dependencies via arguments
+/**
+ * Bootstrap this module: passing dependencies via arguments
+ * @param {Object} observable - riot-observable
+ * @returns {Object} router object
+ */
 function bootstrap(observable) {
   fns = observable()
   router.start() // autostart the router
   return router
 }
 
+/**
+ * Get hash part of current URL
+ * @returns {string} hash string
+ */
 function hash() {
   return loc.href.split('#')[1] || '' // why not loc.hash.splice(1) ?
 }
 
+/**
+ * Default parser. You can replace it via router.parser method.
+ * @param {string} path - current path
+ * @returns {*} array or object as you like
+ */
 function parser(path) {
   return path.split('/')
 }
@@ -42,14 +60,23 @@ var router = function(arg) {
   }
 }
 
+/**
+ * Exec routing right now
+ * @param {function} fn - your action
+ */
 router.exec = function(fn) {
   fn.apply(null, parser(hash()))
 }
 
+/**
+ * Replace the default router to yours
+ * @param {function} fn - your parser function
+ */
 router.parser = function(fn) {
   parser = fn
 }
 
+/** Stop routing **/
 router.stop = function () {
   if (started) {
     if (win.removeEventListener) win.removeEventListener(EVT, emit, false) //@IE8 - the if()
@@ -59,6 +86,7 @@ router.stop = function () {
   }
 }
 
+/** Start routing **/
 router.start = function () {
   if (!started) {
     if (win.addEventListener) win.addEventListener(EVT, emit, false) //@IE8 - the if()
