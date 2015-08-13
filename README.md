@@ -9,11 +9,11 @@
 
 ## Installation
 
-### Npm
+### Npm (not yet published)
 
 `$ npm install riot-route --save`
 
-### Bower
+### Bower (not yet published)
 
 `$ bower install riot-route --save`
 
