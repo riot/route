@@ -1,0 +1,38 @@
+{
+  "name": "riot-route",
+  "version": "2.0.0-beta",
+  "description": "Simple client-side router",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "make test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/riot/router.git"
+  },
+  "keywords": [
+    "riot",
+    "router"
+  ],
+  "dependencies": {
+    "riot-observable": "^2.0.0-beta"
+  },
+  "devDependencies": {
+    "coveralls": "^2.11.3",
+    "eslint": "^1.0.0",
+    "expect.js": "^0.3.1",
+    "karma": "^0.13.3",
+    "karma-coverage": "^0.4.2",
+    "karma-mocha": "^0.2.0",
+    "karma-phantomjs-launcher": "^0.2.0"
+  },
+  "author": "Muut, Inc. and other contributors",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/riot/router/issues"
+  },
+  "homepage": "https://github.com/riot/router#readme"
+}
