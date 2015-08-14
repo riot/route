@@ -1,6 +1,6 @@
 # Router
 
-Router is a generic tool to take care of the URL and the back button. It's the smallest implementation you can find and it works on all browsers including IE8. It can do the following:
+Router is a generic tool to take care of the URL and the back button. It's the smallest implementation you can find and it works on all browsers including IE9. It can do the following:
 
 1. Change the hash part of the URL
 2. Notify when the hash changes

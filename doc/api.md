@@ -1,6 +1,6 @@
 # Router API
 
-The Riot Router is the most minimal router implementation you can find and it works consistently on all browsers including IE8. It only listens to changes on the URL hash (the part after the `#` character). Most single page applications deal with the hash only but if you really care about full URL changes you should use a different router implementation.
+The Riot Router is the most minimal router implementation you can find and it works consistently on all browsers including IE9. It only listens to changes on the URL hash (the part after the `#` character). Most single page applications deal with the hash only but if you really care about full URL changes you should use a different router implementation.
 
 The Riot router is best in routing schemes in which the route's hierarchical parts, after the "#", are separated with the "/" character. In that case Riot gives you direct access to these parts.
 
@@ -9,7 +9,7 @@ The Riot router is best in routing schemes in which the route's hierarchical par
 
 Execute the given `callback` when the URL hash changes. For example
 
-``` js
+```javascript
 router(function(collection, id, action) {
 
 })
@@ -18,7 +18,7 @@ router(function(collection, id, action) {
 If for example the hash changes to `#customers/987987/edit` then in the above example the arguments would be:
 
 
-``` js
+```javascript
 collection = 'customers'
 id = '987987'
 action = 'edit'
@@ -34,7 +34,7 @@ The hash can change in the following ways:
 
 Start listening the window hash changes and it's automatically called when riot gets loaded. You typically use this method together with [route.stop](#route-stop). Example:
 
-``` js
+```javascript
 router.stop() // clear all the old router callbacks
 router.start() // start again
 ```
@@ -43,7 +43,7 @@ router.start() // start again
 
 Remove the hashchange listeners clearing also the [route.route](#route) callbacks.
 
-``` js
+```javascript
 router.stop()
 ```
 
@@ -53,7 +53,7 @@ Stopping the default router allow the use of a different router on your appliact
 
 Changes the browser URL and notifies all the listeners assigned with `router(callback)`. For example:
 
-``` javascript
+```javascript
 router('customers/267393/edit')
 ```
 
@@ -61,7 +61,7 @@ router('customers/267393/edit')
 
 Study the current hash "in place" using given `callback` without waiting for it to change. For example
 
-``` js
+```javascript
 router.exec(function(collection, id, action) {
 
 })
@@ -73,7 +73,7 @@ Changes the default parser to a custom one. Here's one that parses paths like th
 
 `!/user/activation?token=xyz`
 
-``` js
+```javascript
 router.parser(function(path) {
   var raw = path.slice(2).split('?'),
       uri = raw[0].split('/'),
@@ -94,7 +94,7 @@ router.parser(function(path) {
 
 And here you'll receive the params when the URL changes:
 
-```
+```javascript
 router(function(target, action, params) {
 
   /*
