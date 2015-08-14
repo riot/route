@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+
+  <head>
+    <title>Riot Router</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="style.css">
+  </head>
+
+  <body>
+    <navigation></navigation>
+    <page></page>
+
+    <script type="riot/tag">
+      <navigation>
+        <a each={ opts.records } href="#{ id }">{ title }</a>
+      </navigation>
+      <page>
+        <h1>{ opts.title || 'Not found' }</h1>
+        <p>{ opts.body || 'Specified id is not found.' }</p>
+      </page>
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/g/riot@2.2(riot.min.js+compiler.min.js)"></script>
+    <script src="../../node_modules/riot-observable/index.js"></script>
+    <script src="../../index.js"></script>
+
+    <script>
+      var records = [
+        { id: "", title: "Home", body: "Click the link above." },
+        { id: "1", title: "First", body: "This is the first page." },
+        { id: "2", title: "Second", body: "This is the second page." }
+      ]
+      function show(id) {
+        var record = records.filter(function(r) { return r.id == id })[0] || {}
+        riot.mount('page', record)
+      }
+      router(show)
+      router.exec(show)
+      riot.mount('navigation', { records: records })
+    </script>
+  </body>
+
+</html>
