@@ -4,9 +4,13 @@ ISTANBUL = ./node_modules/karma-coverage/node_modules/.bin/istanbul
 ESLINT = ./node_modules/eslint/bin/eslint.js
 MOCHA = ./node_modules/mocha/bin/_mocha
 COVERALLS = ./node_modules/coveralls/bin/coveralls.js
+CHOKIDAR = ./node_modules/.bin/chokidar
 
 build:
 	@ cat lib/wrap/start.frag lib/index.js lib/wrap/end.frag > index.js
+
+watch:
+	@ $(CHOKIDAR) lib/* lib/**/* -c 'make build'
 
 test: eslint test-karma
 

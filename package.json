@@ -21,6 +21,7 @@
     "riot-observable": "^2.0.0-beta"
   },
   "devDependencies": {
+    "chokidar-cli": "^1.0.1",
     "coveralls": "^2.11.3",
     "eslint": "^1.0.0",
     "expect.js": "^0.3.1",
