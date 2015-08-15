@@ -17,6 +17,10 @@
 
 `$ bower install riot-route --save`
 
+## Demos
+
+- [Page switching](http://riotjs.com/router/demo/page-switching/) ([source](https://github.com/riot/router/tree/master/demo/page-switching))
+
 [travis-image]:https://img.shields.io/travis/riot/observable.svg?style=flat-square
 [travis-url]:https://travis-ci.org/riot/router
 
