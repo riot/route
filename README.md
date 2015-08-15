@@ -19,7 +19,7 @@
 
 ## Demos
 
-- [Page switching](http://riotjs.com/router/demo/page-switching/) ([source](https://github.com/riot/router/tree/master/demo/page-switching))
+- [Page switching](http://plnkr.co/edit/xkKigXrmX0SaGCgeQKtO?p=preview)
 
 [travis-image]:https://img.shields.io/travis/riot/observable.svg?style=flat-square
 [travis-url]:https://travis-ci.org/riot/router
