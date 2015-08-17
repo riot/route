@@ -1,0 +1,7 @@
+{
+  "name": "riot-router-test",
+  "dependencies": {
+    "requirejs": "~2.1.20",
+    "riot-observable": "*"
+  }
+}
