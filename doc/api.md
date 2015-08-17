@@ -1,16 +1,23 @@
-# Router API
+---
+title: Router
+layout: default
+class: apidoc
+---
 
-The Riot Router is the most minimal router implementation you can find and it works consistently on all browsers including IE9. It only listens to changes on the URL hash (the part after the `#` character). Most single page applications deal with the hash only but if you really care about full URL changes you should use a different router implementation.
+{% include api-tabs.html %}
+
+
+The Riot Router is the most minimal router implementation you can find. It only listens to changes on the URL hash (the part after the `#` character) since that's what most applications do. If you really care about full URL changes you must pick from the large list of other router implementations on the wild.
 
 The Riot router is best in routing schemes in which the route's hierarchical parts, after the "#", are separated with the "/" character. In that case Riot gives you direct access to these parts.
 
 
-### router(callback) | #router
+### <a name="route"></a> riot.route(callback)
 
 Execute the given `callback` when the URL hash changes. For example
 
-```javascript
-router(function(collection, id, action) {
+``` js
+riot.route(function(collection, id, action) {
 
 })
 ```
@@ -18,7 +25,7 @@ router(function(collection, id, action) {
 If for example the hash changes to `#customers/987987/edit` then in the above example the arguments would be:
 
 
-```javascript
+``` js
 collection = 'customers'
 id = '987987'
 action = 'edit'
@@ -28,53 +35,53 @@ The hash can change in the following ways:
 
 1. A new hash is typed into the location bar
 2. When the back/forward buttons are pressed
-3. When `router(to)` is called
+3. When `riot.route(to)` is called
 
-### router.start() | #router-start
+### <a name="route-start"></a> riot.route.start()
 
 Start listening the window hash changes and it's automatically called when riot gets loaded. You typically use this method together with [route.stop](#route-stop). Example:
 
-```javascript
-router.stop() // clear all the old router callbacks
-router.start() // start again
+``` js
+riot.route.stop() // clear all the old riot.route callbacks
+riot.route.start() // start again
 ```
 
-### router.stop() | #router-stop
+### <a name="route-stop"></a> riot.route.stop()
 
 Remove the hashchange listeners clearing also the [route.route](#route) callbacks.
 
-```javascript
-router.stop()
+``` javascript
+riot.route.stop()
 ```
 
 Stopping the default router allow the use of a different router on your appliaction.
 
-### router(to) | #route-to
+### <a name="route-to"></a> riot.route(to)
 
-Changes the browser URL and notifies all the listeners assigned with `router(callback)`. For example:
+Changes the browser URL and notifies all the listeners assigned with `riot.route(callback)`. For example:
 
-```javascript
-router('customers/267393/edit')
+``` javascript
+riot.route('customers/267393/edit')
 ```
 
-### router.exec(callback) | #route-exec
+### <a name="route-exec"></a> riot.route.exec(callback)
 
 Study the current hash "in place" using given `callback` without waiting for it to change. For example
 
-```javascript
-router.exec(function(collection, id, action) {
+``` js
+riot.route.exec(function(collection, id, action) {
 
 })
 ```
 
-### router.parser(parser) | #route-parser
+### <a name="route-parser"></a> riot.route.parser(parser)
 
 Changes the default parser to a custom one. Here's one that parses paths like this:
 
 `!/user/activation?token=xyz`
 
-```javascript
-router.parser(function(path) {
+``` js
+riot.route.parser(function(path) {
   var raw = path.slice(2).split('?'),
       uri = raw[0].split('/'),
       qs = raw[1],
@@ -94,8 +101,8 @@ router.parser(function(path) {
 
 And here you'll receive the params when the URL changes:
 
-```javascript
-router(function(target, action, params) {
+``` js
+riot.route(function(target, action, params) {
 
   /*
     target = 'user'
