@@ -10,4 +10,4 @@ $ ss
 ```
 
 Then open the url (like `http://localhost:3474/test/requirejs/`).
-It's OK if there's "Hello!" message on the console.
+It's OK if there's "Hello RequireJS!" message on the console.
