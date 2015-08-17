@@ -1,0 +1,11 @@
+{
+  "name": "riot-router-test",
+  "private": true,
+  "devDependencies": {
+    "browserify": "^11.0.1",
+    "riot-route": "riot/router#new-umd"
+  },
+  "scripts": {
+    "build": "browserify index.js -o bundle.js"
+  }
+}

@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+
+  <head>
+    <title>Riot Router Test</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  </head>
+
+  <body>
+    <script src="bower_components/requirejs/require.js"></script>
+    <script>
+    require.config({
+      paths: {
+        'riot-observable': 'bower_components/riot-observable/index',
+        'riot-route': '../../index'
+      }
+    })
+    require(['riot-route'], function(router) {
+      router.exec(function() {
+        console.log('Hello RequireJS!')
+      })
+    })
+    </script>
+  </body>
+
+</html>
