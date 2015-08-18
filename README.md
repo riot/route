@@ -17,7 +17,7 @@ You can place routing logic everywhere; in custom tags or non-UI modules. Some a
 
 Every browser application needs routing since there is always an URL in the location bar.
 
-# Documentation
+## Documentation
 
 - [API (English)](doc/)
 - [API (日本語)](doc/ja/)
