@@ -34,7 +34,7 @@ Every browser application needs routing since there is always an URL in the loca
 
 ## Demos
 
-- [Page switching](http://plnkr.co/edit/xkKigXrmX0SaGCgeQKtO?p=preview)
+- [Page switching](http://riotjs.com/examples/plunker/?app=router-page-switcher)
 
 [travis-image]:https://img.shields.io/travis/riot/observable.svg?style=flat-square
 [travis-url]:https://travis-ci.org/riot/router
