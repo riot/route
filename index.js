@@ -1,26 +1,28 @@
-;(function(window) {
+;(function() {
+  /** Browser global settings **/
+  var EXPORT_TO = 'router', MOD_MAP = { 'riot-observable': 'observable' }
+
+  /* istanbul ignore next */
+  var d = (typeof define === 'function' && define.amd) ? define : (function(f) {
+    var c = typeof exports === 'object' && !exports.nodeType,
+      r = c ? require : function(name) { return window[MOD_MAP[name] || name] },
+      m = c ? module : { _g: true }
+    f(r, 0, m)
+  })
+  d(function(require, exports, module) {
 /**
  * Simple client-side router
  * @module riot-route
  */
 
+var observable = require('riot-observable')
+
 var EVT = 'hashchange',
   win = window,
   loc = win.location,
   started = false,
-  current,
-  fns
-
-/**
- * Bootstrap this module: passing dependencies via arguments
- * @param {Object} observable - riot-observable
- * @returns {Object} router object
- */
-function bootstrap(observable) {
-  fns = observable()
-  router.start() // autostart the router
-  return router
-}
+  fns = observable(),
+  current
 
 /**
  * Get hash part of current URL
@@ -92,17 +94,11 @@ router.start = function () {
     started = true
   }
 }
-  /* istanbul ignore next */
-  // support CommonJS, AMD & browser
-  if (typeof exports === 'object')
-    module.exports = bootstrap(require('riot-observable'))
-  else if (typeof define === 'function' && define.amd)
-    define(function(require) {
-      return bootstrap(require('riot-observable'))
-    })
-  else if (window.observable)
-    window.router = bootstrap(observable)
-  else
-    throw new Error('riot-observable is required')
 
-})(typeof window != 'undefined' ? window : undefined);
+/** Autostart the router **/
+router.start()
+
+module.exports = router
+    if (module._g) window[EXPORT_TO] = module.exports
+  })
+})();
