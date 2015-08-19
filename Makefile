@@ -3,6 +3,7 @@ KARMA = ./node_modules/karma/bin/karma
 ISTANBUL = ./node_modules/karma-coverage/node_modules/.bin/istanbul
 ESLINT = ./node_modules/eslint/bin/eslint.js
 MOCHA = ./node_modules/mocha/bin/_mocha
+UGLIFY = ./node_modules/uglify-js/bin/uglifyjs
 COVERALLS = ./node_modules/coveralls/bin/coveralls.js
 CHOKIDAR = ./node_modules/.bin/chokidar
 
@@ -14,6 +15,7 @@ SED_MATCHER2 = "s/module.exports = route//"
 
 build:
 	@ cat lib/wrap/start.frag lib/index.js lib/wrap/end.frag > dist/route.js
+	@ $(UGLIFY) dist/route.js --comments --mangle -o dist/route.min.js
 	@ echo $(RIOT_START_FRAG) > dist/riot.route.js
 	@ cat lib/index.js | sed $(SED_MATCHER1) | sed $(SED_MATCHER2) >> dist/riot.route.js
 	@ echo $(RIOT_END_FRAG) >> dist/riot.route.js
