@@ -2,7 +2,7 @@
   "name": "riot-route",
   "version": "2.0.0-beta",
   "description": "Simple client-side router",
-  "main": "index.js",
+  "main": "dist/router.js",
   "directories": {
     "lib": "lib"
   },

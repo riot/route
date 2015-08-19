@@ -6,8 +6,17 @@ MOCHA = ./node_modules/mocha/bin/_mocha
 COVERALLS = ./node_modules/coveralls/bin/coveralls.js
 CHOKIDAR = ./node_modules/.bin/chokidar
 
+# Riot adapter
+RIOT_START_FRAG = ';(function(riot) {\n'
+RIOT_END_FRAG = 'riot.router = router })(riot)'
+SED_MACHER1 = "s/var observable = require('riot-observable')//"
+SED_MACHER2 = "s/module.exports = router//"
+
 build:
-	@ cat lib/wrap/start.frag lib/index.js lib/wrap/end.frag > index.js
+	@ cat lib/wrap/start.frag lib/index.js lib/wrap/end.frag > dist/router.js
+	@ echo $(RIOT_START_FRAG) > dist/riot.router.js
+	@ cat lib/index.js | sed $(SED_MACHER1) | sed $(SED_MACHER2) >> dist/riot.router.js
+	@ echo $(RIOT_END_FRAG) >> dist/riot.router.js
 
 watch:
 	@ $(CHOKIDAR) lib/* lib/**/* -c 'make build'
