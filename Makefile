@@ -7,8 +7,8 @@ COVERALLS = ./node_modules/coveralls/bin/coveralls.js
 CHOKIDAR = ./node_modules/.bin/chokidar
 
 # Riot adapter
-RIOT_START_FRAG = ';(function(riot) {\n'
-RIOT_END_FRAG = 'riot.router = router })(riot)'
+RIOT_START_FRAG = ';(function(riot) { if (!window) return;\n' #TODO: remove `if` after server-side supported
+RIOT_END_FRAG = 'riot.route = router })(riot)'
 SED_MATCHER1 = "s/var observable = require('riot-observable')//"
 SED_MATCHER2 = "s/module.exports = router//"
 
