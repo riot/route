@@ -24,28 +24,16 @@ Every browser application needs routing since there is always an URL in the loca
 
 ## Installation
 
-### Npm (not yet published)
+### npm
 
 ```bash
 $ npm install --save riot-route
 ```
 
-or from GitHub directly:
-
-```bash
-$ npm install --save riot/route
-```
-
-### Bower (not yet published)
+### Bower
 
 ```bash
 $ bower install --save riot-route
-```
-
-or from GitHub directly:
-
-```bash
-$ bower install --save riot/route
 ```
 
 ## Demos
