@@ -58,7 +58,7 @@ $ bower install --save riot-route
 [npm-url]:https://npmjs.org/package/riot-route
 
 [coverage-image]:https://img.shields.io/coveralls/riot/route/master.svg?style=flat-square
-[coverage-url]:https://coveralls.io/r/riot/route/?branch=master
+[coverage-url]:https://coveralls.io/github/riot/route/?branch=master
 
 [codeclimate-image]:https://img.shields.io/codeclimate/github/riot/route.svg?style=flat-square
 [codeclimate-url]:https://codeclimate.com/github/riot/route
