@@ -26,15 +26,38 @@ Every browser application needs routing since there is always an URL in the loca
 
 ### Npm (not yet published)
 
-`$ npm install riot-route --save`
+```bash
+$ npm install --save riot-route
+```
+
+or from GitHub directly:
+
+```bash
+$ npm install --save riot/router
+```
 
 ### Bower (not yet published)
 
-`$ bower install riot-route --save`
+```bash
+$ bower install --save riot-route
+```
+
+or from GitHub directly:
+
+```bash
+$ bower install --save riot/router
+```
 
 ## Demos
 
 - [Page switching](http://riotjs.com/examples/plunker/?app=router-page-switcher)
+
+## Development
+
+- `$ npm install` to setup
+- `$ make build` to build it once
+- `$ make watch` to watch and build it continuously
+- `$ npm test` to test
 
 [travis-image]:https://img.shields.io/travis/riot/observable.svg?style=flat-square
 [travis-url]:https://travis-ci.org/riot/router
