@@ -5,7 +5,7 @@ The Riot Router is the most minimal router implementation you can find and it wo
 The Riot Router is best in routing schemes in which the route's hierarchical parts, after the "#", are separated with the "/" character. In that case Riot gives you direct access to these parts.
 
 
-### route(callback) | #route
+### route(callback)
 
 Execute the given `callback` when the URL hash changes. For example
 
@@ -30,7 +30,7 @@ The hash can change in the following ways:
 2. When the back/forward buttons are pressed
 3. When `route(to)` is called
 
-### route.start() | #route-start
+### route.start()
 
 Start listening the window hash changes and it's automatically called when riot gets loaded. You typically use this method together with [route.stop](#route-stop). Example:
 
@@ -39,7 +39,7 @@ route.stop() // clear all the old router callbacks
 route.start() // start again
 ```
 
-### route.stop() | #route-stop
+### route.stop()
 
 Remove the hashchange listeners clearing also the [route.route](#route) callbacks.
 
@@ -49,7 +49,7 @@ route.stop()
 
 Stopping the default router allow the use of a different router on your appliaction.
 
-### route(to) | #route-to
+### route(to)
 
 Changes the browser URL and notifies all the listeners assigned with `route(callback)`. For example:
 
@@ -57,7 +57,7 @@ Changes the browser URL and notifies all the listeners assigned with `route(call
 route('customers/267393/edit')
 ```
 
-### route.exec(callback) | #route-exec
+### route.exec(callback)
 
 Study the current hash "in place" using given `callback` without waiting for it to change. For example
 
@@ -67,7 +67,7 @@ route.exec(function(collection, id, action) {
 })
 ```
 
-### route.parser(parser) | #route-parser
+### route.parser(parser)
 
 Changes the default parser to a custom one. Here's one that parses paths like this:
 
