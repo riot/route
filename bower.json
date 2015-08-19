@@ -1,6 +1,6 @@
 {
   "name": "riot-route",
-  "main": "index.js",
+  "main": "dist/router.js",
   "homepage": "https://github.com/riot/router",
   "authors": ["Muut, Inc. and other contributors"],
   "description": "Simple client-side router",
