@@ -12,11 +12,11 @@
     require.config({
       paths: {
         'riot-observable': 'bower_components/riot-observable/index',
-        'riot-route': '../../dist/router'
+        'riot-route': '../../dist/route'
       }
     })
-    require(['riot-route'], function(router) {
-      router.exec(function() {
+    require(['riot-route'], function(route) {
+      route.exec(function() {
         console.log('Hello RequireJS!')
       })
     })

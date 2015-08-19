@@ -1,6 +1,6 @@
 ;(function() {
   /** Browser global settings **/
-  var EXPORT_TO = 'router', MOD_MAP = { 'riot-observable': 'observable' }
+  var EXPORT_TO = 'route', MOD_MAP = { 'riot-observable': 'observable' }
 
   /* istanbul ignore next */
   var d = (typeof define === 'function' && define.amd) ? define : (function(f) {

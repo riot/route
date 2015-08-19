@@ -1,11 +1,21 @@
-;(function(riot) {
+;(function() {
+  /** Browser global settings **/
+  var EXPORT_TO = 'route', MOD_MAP = { 'riot-observable': 'observable' }
 
+  /* istanbul ignore next */
+  var d = (typeof define === 'function' && define.amd) ? define : (function(f) {
+    var c = typeof exports === 'object' && !exports.nodeType,
+      r = c ? require : function(name) { return window[MOD_MAP[name] || name] },
+      m = c ? module : { _g: true }
+    f(r, 0, m)
+  })
+  d(function(require, exports, module) {
 /**
  * Simple client-side router
  * @module riot-route
  */
 
-
+var observable = require('riot-observable')
 
 var EVT = 'hashchange',
   win = window,
@@ -40,7 +50,7 @@ function emit(path) {
   }
 }
 
-var router = function(arg) {
+var route = function(arg) {
   // string
   if (arg[0]) {
     loc.hash = arg
@@ -56,7 +66,7 @@ var router = function(arg) {
  * Exec routing right now
  * @param {function} fn - your action
  */
-router.exec = function(fn) {
+route.exec = function(fn) {
   fn.apply(null, parser(hash()))
 }
 
@@ -64,12 +74,12 @@ router.exec = function(fn) {
  * Replace the default router to yours
  * @param {function} fn - your parser function
  */
-router.parser = function(fn) {
+route.parser = function(fn) {
   parser = fn
 }
 
 /** Stop routing **/
-router.stop = function () {
+route.stop = function () {
   if (started) {
     win.removeEventListener(EVT, emit, false)
     fns.off('*')
@@ -78,7 +88,7 @@ router.stop = function () {
 }
 
 /** Start routing **/
-router.start = function () {
+route.start = function () {
   if (!started) {
     win.addEventListener(EVT, emit, false)
     started = true
@@ -86,7 +96,9 @@ router.start = function () {
 }
 
 /** Autostart the router **/
-router.start()
+route.start()
 
-
-riot.router = router })(riot)
+module.exports = route
+    if (module._g) window[EXPORT_TO] = module.exports
+  })
+})();

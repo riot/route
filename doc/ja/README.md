@@ -5,12 +5,12 @@ Riot Routeerは最もミニマルなルータの実装であり、​​IE9を�
 Riot Routerは、`#`に続く部分についてルートの階層構造を`/`で分けているなら、最適なルーティングスキームです。その場合、Riotはその(URLの)部分に直接のアクセスを提供します。
 
 
-### router(callback) | #router
+### route(callback) | #route
 
 URLハッシュが変更されると、与えられた`callback`を実行します。こんな感じです。
 
 ```javascript
-router(function(collection, id, action) {
+route(function(collection, id, action) {
 
 })
 ```
@@ -28,53 +28,53 @@ action = 'edit'
 
 1.新しいハッシュが、ロケーションバーに入力された
 2.戻る/進むボタンが押されたとき
-3.`router(to)`が呼び出されたとき
+3.`route(to)`が呼び出されたとき
 
-### router.start() | #router-start
+### route.start() | #route-start
 
 ウィンドウのハッシュ変更の検知を開始します。これは、Riotが読み込まれた際に自動的に呼び出されます。[route.stop](#route-stop)と合わせて使うのが典型的です。次はその例です。
 
 ```javascript
-router.stop() // clear all the old router callbacks
-router.start() // start again
+route.stop() // clear all the old router callbacks
+route.start() // start again
 ```
 
-### router.stop() | #router-stop
+### route.stop() | #route-stop
 
 ハッシュ変更検知を停止して、[route.route](#route)コールバックもクリアします。
 
 ```javascript
-router.stop()
+route.stop()
 ```
 
 デフォルトルーターを停止しておけば、アプリケーションで別のルータを使うことも可能です。
 
-### router(to) | #route-to
+### route(to) | #route-to
 
-ブラウザのURLを変更して、`router(callback)`で登録されたすべてのリスナに通知します。例:
+ブラウザのURLを変更して、`route(callback)`で登録されたすべてのリスナに通知します。例:
 
 ```javascript
-router('customers/267393/edit')
+route('customers/267393/edit')
 ```
 
-### router.exec(callback) | #route-exec
+### route.exec(callback) | #route-exec
 
 現在のハッシュを調べて、与えられた`callback`をハッシュ変更なしに「その場で」実行します。こんな感じです。
 
 ```javascript
-router.exec(function(collection, id, action) {
+route.exec(function(collection, id, action) {
 
 })
 ```
 
-### router.parser(parser) | #route-parser
+### route.parser(parser) | #route-parser
 
 デフォルトパーサーを独自のものに変更します。これは、こんなパスを解析するための例です。
 
 `!/user/activation?token=xyz`
 
 ```javascript
-router.parser(function(path) {
+route.parser(function(path) {
   var raw = path.slice(2).split('?'),
       uri = raw[0].split('/'),
       qs = raw[1],
@@ -95,7 +95,7 @@ router.parser(function(path) {
 そして、これがURLが変更された場合に受け取るだろうパラメータです。
 
 ```
-router(function(target, action, params) {
+route(function(target, action, params) {
 
   /*
     target = 'user'

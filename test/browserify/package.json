@@ -1,9 +1,9 @@
 {
-  "name": "riot-router-test",
+  "name": "riot-route-test",
   "private": true,
   "devDependencies": {
     "browserify": "^11.0.1",
-    "riot-route": "riot/router"
+    "riot-route": "*"
   },
   "scripts": {
     "build": "browserify index.js -o bundle.js"

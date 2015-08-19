@@ -1,5 +1,5 @@
 {
-  "name": "riot-router-test",
+  "name": "riot-route-test",
   "private": true,
   "dependencies": {
     "requirejs": "~2.1.20",

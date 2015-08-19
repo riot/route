@@ -9,21 +9,21 @@ describe('Core specs', function() {
   })
   afterEach(function() {
     counter = 0
-    router.stop()
+    route.stop()
   })
 
   it('it detecs the hash params', function() {
 
-    router(function(first, second) {
+    route(function(first, second) {
       counter++
       expect(first).to.be('mummypowder')
       expect(['logo-and-key', 'http%3A%2F%2Fxxx.yyy']).to.contain(second)
     })
 
-    router('mummypowder/logo-and-key')
-    router('mummypowder/http%3A%2F%2Fxxx.yyy')
+    route('mummypowder/logo-and-key')
+    route('mummypowder/http%3A%2F%2Fxxx.yyy')
 
-    router.exec(function(first, second) {
+    route.exec(function(first, second) {
       counter++
       expect(first).to.be('mummypowder')
       expect(second).to.be('http%3A%2F%2Fxxx.yyy')
@@ -35,7 +35,7 @@ describe('Core specs', function() {
 
   it('custom parser', function() {
 
-    router.parser(function(path) {
+    route.parser(function(path) {
       var raw = path.slice(2).split('?'),
           uri = raw[0].split('/'),
           qs = raw[1],
@@ -52,14 +52,14 @@ describe('Core specs', function() {
       return uri
     })
 
-    router(function(first, second, params) {
+    route(function(first, second, params) {
       counter++
       expect(first).to.be('user')
       expect(second).to.be('activation')
       expect(JSON.stringify(params)).to.be(JSON.stringify({ token: 'xyz' }))
     })
 
-    router('!/user/activation?token=xyz')
+    route('!/user/activation?token=xyz')
 
     expect(counter).to.be(1)
 

@@ -2,7 +2,7 @@
   "name": "riot-route",
   "version": "2.0.0-beta",
   "description": "Simple client-side router",
-  "main": "dist/router.js",
+  "main": "dist/route.js",
   "directories": {
     "lib": "lib"
   },
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/riot/router.git"
+    "url": "git+https://github.com/riot/route.git"
   },
   "keywords": [
     "riot",
@@ -33,7 +33,7 @@
   "author": "Muut, Inc. and other contributors",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/riot/router/issues"
+    "url": "https://github.com/riot/route/issues"
   },
-  "homepage": "https://github.com/riot/router#readme"
+  "homepage": "https://github.com/riot/route#readme"
 }
