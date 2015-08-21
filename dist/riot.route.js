@@ -6,7 +6,6 @@
  */
 
 
-
 var EVT = 'hashchange', win = window, loc = win.location, started = false, fns = observable(), current
 
 /**
@@ -82,6 +81,5 @@ route.start = function () {
 
 /** Autostart the router **/
 route.start()
-
 
 riot.route = route })(riot)

@@ -10,8 +10,8 @@ CHOKIDAR = ./node_modules/.bin/chokidar
 # Riot adapter
 RIOT_START_FRAG = ';(function(riot) { if (!window) return;\n' #TODO: remove `if` after server-side supported
 RIOT_END_FRAG = 'riot.route = route })(riot)'
-SED_MATCHER1 = "s/var observable = require('riot-observable')//"
-SED_MATCHER2 = "s/module.exports = route//"
+SED_MATCHER1 = "/var observable = require('riot-observable')/d"
+SED_MATCHER2 = "/module.exports = route/d"
 
 build:
 	@ cat lib/wrap/start.frag lib/index.js lib/wrap/end.frag > dist/route.js
