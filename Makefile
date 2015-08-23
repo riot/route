@@ -16,9 +16,9 @@ SED_MATCHER2 = "/module.exports = route/d"
 build:
 	@ cat lib/wrap/start.frag lib/index.js lib/wrap/end.frag > dist/route.js
 	@ $(UGLIFY) dist/route.js --comments --mangle -o dist/route.min.js
-	@ echo $(RIOT_START_FRAG) > dist/route.riot.js
-	@ cat lib/index.js | sed $(SED_MATCHER1) | sed $(SED_MATCHER2) >> dist/route.riot.js
-	@ echo $(RIOT_END_FRAG) >> dist/route.riot.js
+	@ echo $(RIOT_START_FRAG) > dist/riot.route.js
+	@ cat lib/index.js | sed $(SED_MATCHER1) | sed $(SED_MATCHER2) >> dist/riot.route.js
+	@ echo $(RIOT_END_FRAG) >> dist/riot.route.js
 
 watch:
 	@ $(CHOKIDAR) lib/* lib/**/* -c 'make build'
