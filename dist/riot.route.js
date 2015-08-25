@@ -6,7 +6,7 @@
  */
 
 
-var EVT = 'hashchange', win = window, loc = win.location, started = false, fns = observable(), current
+var EVT = 'hashchange', win = window, loc = win.location, started = false, fns = riot.observable(), current
 
 /**
  * Get hash part of current URL

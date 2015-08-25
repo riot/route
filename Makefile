@@ -12,12 +12,13 @@ RIOT_START_FRAG = ';(function(riot) { if (!window) return;\n' #TODO: remove `if`
 RIOT_END_FRAG = 'riot.route = route })(riot)'
 SED_MATCHER1 = "/var observable = require('riot-observable')/d"
 SED_MATCHER2 = "/module.exports = route/d"
+SED_MATCHER3 = "s/observable()/riot.observable()/g"
 
 build:
 	@ cat lib/wrap/start.frag lib/index.js lib/wrap/end.frag > dist/route.js
 	@ $(UGLIFY) dist/route.js --comments --mangle -o dist/route.min.js
 	@ echo $(RIOT_START_FRAG) > dist/riot.route.js
-	@ cat lib/index.js | sed $(SED_MATCHER1) | sed $(SED_MATCHER2) >> dist/riot.route.js
+	@ cat lib/index.js | sed $(SED_MATCHER1) | sed $(SED_MATCHER2) | sed $(SED_MATCHER3) >> dist/riot.route.js
 	@ echo $(RIOT_END_FRAG) >> dist/riot.route.js
 
 watch:

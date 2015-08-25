@@ -12,7 +12,7 @@ module.exports = function(config) {
     files: [
       '../node_modules/mocha/mocha.js',
       '../node_modules/expect.js/index.js',
-      '../node_modules/riot-observable/index.js',
+      '../node_modules/riot-observable/dist/observable.js',
       '../dist/route.js',
       'specs/core.specs.js'
     ],
