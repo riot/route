@@ -17,18 +17,30 @@
 
 var observable = require('riot-observable')
 
-var EVT = 'hashchange', win = window, loc = win.location, started = false, fns = observable(), current
+var EVT = 'hashchange', win = window, loc = win.location, started = false,
+  fns = observable(), current, base = '#'
 
 /**
- * Get hash part of current URL
+ * Get part of current URL which contains the router params
  * @returns {string} hash string
  */
 function hash() {
-  return loc.href.split('#')[1] || '' // why not loc.hash.splice(1) ?
+  return loc.href.replace(root(), '')
 }
 
 /**
- * Default parser. You can replace it via router.parser method.
+ * Get root path of the app
+ * @returns {string} app's root
+ */
+function root() {
+  var origin = loc.protocol + '//' + loc.host // isolated origin, avoid manipulating with it
+  var remain = loc.href.substr(origin.length)
+  var i = remain.indexOf(base)
+  return origin + (i > 0 ? remain.substr(0, i) : remain) + base
+}
+
+/**
+ * Default parser. You can replace it via route.parser method
  * @param {string} path - current path
  * @returns {*} array or object as you like
  */
@@ -42,13 +54,13 @@ function emit(path) {
   if (path != current) {
     fns.trigger.apply(null, ['H'].concat(parser(path)))
     current = path
+    loc.href = root() + current
   }
 }
 
 var route = function(arg) {
   // string
   if (arg[0]) {
-    loc.hash = arg
     emit(arg)
 
   // function
@@ -63,6 +75,14 @@ var route = function(arg) {
  */
 route.exec = function(fn) {
   fn.apply(null, parser(hash()))
+}
+
+/**
+ * Replace the default '#' base to yours,
+ * @param {string} str - string which separates app's root and router params (first match from left)
+ */
+route.base = function(str) {
+  base = str
 }
 
 /**
