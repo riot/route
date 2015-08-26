@@ -22,10 +22,8 @@ function hash() {
  * @returns {string} app's root
  */
 function root() {
-  var origin = loc.protocol + '//' + loc.host // isolated origin, avoid manipulating with it
-  var remain = loc.href.substr(origin.length)
-  var i = remain.indexOf(base)
-  return origin + (i > 0 ? remain.substr(0, i) : remain) + base
+  var i = loc.href.indexOf(base)
+  return (i > 0 ? loc.href.substr(0, i) : loc.href) + base
 }
 
 /**
