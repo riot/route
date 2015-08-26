@@ -17,15 +17,20 @@
 
 var observable = require('riot-observable')
 
-var EVT = 'hashchange', win = window, loc = win.location, started = false,
-  fns = observable(), current, base = '#'
+var EVT = 'hashchange', win = window, loc = win.location, started = false, fns = observable(), current,
+  base = '#' // the string which match the first occurrence and divide into the base url and the path we need
+
+
+function href() {
+  return loc.href.replace(/^.+?\/+[^\/]+/, '')
+}
 
 /**
  * Get part of current URL which contains the router params
  * @returns {string} hash string
  */
 function hash() {
-  return loc.href.replace(root(), '')
+  return href().replace(root(), '')
 }
 
 /**
@@ -33,9 +38,10 @@ function hash() {
  * @returns {string} app's root
  */
 function root() {
-  var i = loc.href.indexOf(base)
-  return (i > 0 ? loc.href.substr(0, i) : loc.href) + base
+  return (href().split(base)[0] || '') + base
 }
+
+
 
 /**
  * Default parser. You can replace it via route.parser method
