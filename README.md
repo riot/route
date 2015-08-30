@@ -19,8 +19,12 @@ Every browser application needs routing since there is always an URL in the loca
 
 ## Documentation
 
-- [API (English)](doc/)
-- [API (日本語)](doc/ja/)
+- [API (latest)](doc/)
+
+See also riotjs.com:
+
+- [API (English)](http://riotjs.com/api/route/)
+- [API (Japanese)](http://riotjs.com/ja/api/route/)
 
 ## Installation
 
