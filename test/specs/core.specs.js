@@ -23,13 +23,7 @@ describe('Core specs', function() {
     route('mummypowder/logo-and-key')
     route('mummypowder/http%3A%2F%2Fxxx.yyy')
 
-    route.exec(function(first, second) {
-      counter++
-      expect(first).to.be('mummypowder')
-      expect(second).to.be('http%3A%2F%2Fxxx.yyy')
-    })
-
-    expect(counter).to.be(3)
+    expect(counter).to.be(2)
 
   })
 

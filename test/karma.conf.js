@@ -13,6 +13,7 @@ module.exports = function(config) {
       '../node_modules/mocha/mocha.js',
       '../node_modules/expect.js/index.js',
       '../node_modules/riot-observable/dist/observable.js',
+      'polyfill.js',
       '../dist/route.js',
       'specs/core.specs.js'
     ],
