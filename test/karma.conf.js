@@ -20,7 +20,7 @@ module.exports = function(config) {
 
     browsers: ['PhantomJS'],
 
-    reporters: ['progress', 'saucelabs', 'coverage'],
+    reporters: ['progress', 'coverage'],
     preprocessors: {
       '../dist/route.js': ['coverage']
     },

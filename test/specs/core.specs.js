@@ -14,10 +14,11 @@ function fireEvent(node, eventName) {
 
 describe('Core specs', function() {
 
-  var counter = 0, $
+  var counter = 0, $, $$
 
   before(function() {
     $ = document.querySelector.bind(document)
+    $$ = document.querySelectorAll.bind(document)
     html = document.createElement('div')
     html.innerHTML =
       '<a class="tag-a" href="#">A</a>' +
@@ -30,13 +31,21 @@ describe('Core specs', function() {
       '<a class="tag-h" href="/fruit/apple">H</a>' +
       '<a class="tag-i" href="/fruit/orange">I</a>' +
       '<a class="tag-j" href="/search?keyword=test&limit=30">J</a>' +
-      '<a class="tag-k" href="mailto:aaaaa@bbbbbbb.com">K</a>' +
-      '<a class="tag-l" href="http://somewhereelse.io/">L</a>' +
-      '<a class="tag-m" href="/download/" download>M</a>' +
+      '<a class="tag-k prevented" href="mailto:aaaaa@bbbbbbb.com">K</a>' +
+      '<a class="tag-l prevented" href="http://somewhereelse.io/">L</a>' +
+      '<a class="tag-m prevented" href="/download/" download>M</a>' +
       '<a class="tag-n" href="/other/" targer="_self">N</a>' +
       '<a class="tag-o" href="/other/" targer="_blank">O</a>' +
+      '<a class="tag-p prevented" href="/no-go/">no go</a>' +
       '<p class="tag-z">O</p>'
     document.body.appendChild(html)
+
+    // fix the page reload issue
+    Array.prototype.slice.call($$('.prevented')).forEach(function(el) {
+      el.addEventListener('click', function(e) {
+        e.preventDefault()
+      })
+    })
   })
 
   after(function() {
@@ -85,13 +94,15 @@ describe('Core specs', function() {
     expect(counter).to.be(1)
     expect(counter).to.be(1)
 
-    /* TODO: find the way to stop full page reload
     fireEvent($('.tag-k'), 'click')
     fireEvent($('.tag-l'), 'click')
     fireEvent($('.tag-m'), 'click')
     fireEvent($('.tag-o'), 'click')
+
+    console.log(counter)
+
     expect(counter).to.be(1)
-    */
+
   })
 
   it('sets hashbang to base', function() {
@@ -293,6 +304,49 @@ describe('Core specs', function() {
     fireEvent($('.tag-h'), 'click')
     fireEvent($('.tag-i'), 'click')
     expect(counter).to.be(4)
+  })
+
+  it('metakeys events get skipped', function() {
+
+    route(function() {
+      counter++
+    })
+
+    // Emulate the metaKey event
+    // initMouseEvent is deprecated but it's useful for our test
+    var
+      evt = document.createEvent('MouseEvents'),
+      e = {
+        bubbles: true,
+        cancelable: true,
+        view: window,
+        detail: 0,
+        screenX: 0,
+        screenY: 0,
+        clientX: 0,
+        clientY: 0,
+        ctrlKey: true,
+        altKey: true,
+        shiftKey: false,
+        metaKey: true,
+        button: 0,
+        relatedTarget: undefined
+      },
+      el = $('.tag-p')
+
+    evt.initMouseEvent('click',
+      e.bubbles, e.cancelable, e.view, e.detail,
+      e.screenX, e.screenY, e.clientX, e.clientY,
+      e.ctrlKey, e.altKey, e.shiftKey, e.metaKey,
+      e.button, document.body.parentNode)
+
+    el.addEventListener('click', function(e) {
+      e.preventDefault()
+    })
+
+    el.dispatchEvent(evt)
+    expect(counter).to.be(0)
+
   })
 
 })
