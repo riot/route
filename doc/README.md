@@ -19,7 +19,7 @@ route(function(collection, id, action) {
 })
 ```
 
-If for example the hash changes to `#customers/987987/edit` then in the above example the arguments would be:
+If for example the url changes to `customers/987987/edit` then in the above example the arguments would be:
 
 
 ```javascript
@@ -28,11 +28,12 @@ id = '987987'
 action = 'edit'
 ```
 
-The hash can change in the following ways:
+The url can change in the following ways:
 
 1. A new hash is typed into the location bar
 2. When the back/forward buttons are pressed
 3. When `route(to)` is called
+4. Anchor tag is clicked
 
 ### route(filter, callback)
 
@@ -122,7 +123,7 @@ route('customers/267393/edit', 'Editing customer page')
 
 ### route.start()
 
-Start listening the window hash changes and it's automatically called when riot gets loaded. You typically use this method together with [route.stop](#route-stop). Example:
+Start listening the url changes and it's automatically called when riot gets loaded. You typically use this method together with [route.stop](#route-stop). Example:
 
 ```javascript
 route.stop() // clear all the old router callbacks
@@ -131,13 +132,25 @@ route.start() // start again
 
 ### route.stop()
 
-Remove the hashchange listeners clearing also the [route.route](#route) callbacks.
+Stop the all routings. It'll removes the listeners and clear also the callbacks.
 
 ```javascript
 route.stop()
 ```
 
-Stopping the default router allow the use of a different router on your appliaction.
+To use different router with Riot on your application, you need to call this, at the first.
+
+### subRoute.stop()
+
+<span class="tag red">&gt;= v2.3</span>
+
+Stop only subRoute's routings. It'll removes the listeners and clear also the callbacks.
+
+```javascript
+var subRoute = route.create()
+subRoute('/fruit/apple', function() { /* */ })
+subRoute.stop()
+```
 
 ### route.exec()
 
