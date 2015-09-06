@@ -22,7 +22,7 @@ module.exports = function(config) {
 
     reporters: ['progress', 'saucelabs', 'coverage'],
     preprocessors: {
-      '../index.js': ['coverage']
+      '../dist/route.js': ['coverage']
     },
 
     coverageReporter: {
