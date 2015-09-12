@@ -1,13 +1,17 @@
 # Router API
 
-The Riot Router is the most minimal router implementation you can find and it works consistently on all browsers including IE9. It only listens to changes on the URL hash (the part after the `#` character). Most single page applications deal with the hash only but if you really care about full URL changes you should use a different router implementation.
+The Riot Router is the minimal router implementation with such technologies:
 
-The Riot Router is best in routing schemes in which the route's hierarchical parts, after the "#", are separated with the "/" character. In that case Riot gives you direct access to these parts.
+- pushState and history API
+- multiple routing groups
+- replacable parser
+- compatible with IE9 and higher
 
+## Setup routing
 
 ### route(callback)
 
-Execute the given `callback` when the URL hash changes. For example
+Execute the given `callback` when the URL changes. For example
 
 ```javascript
 route(function(collection, id, action) {
@@ -15,7 +19,7 @@ route(function(collection, id, action) {
 })
 ```
 
-If for example the hash changes to `#customers/987987/edit` then in the above example the arguments would be:
+If for example the url changes to `customers/987987/edit` then in the above example the arguments would be:
 
 
 ```javascript
@@ -24,15 +28,102 @@ id = '987987'
 action = 'edit'
 ```
 
-The hash can change in the following ways:
+The url can change in the following ways:
 
 1. A new hash is typed into the location bar
 2. When the back/forward buttons are pressed
 3. When `route(to)` is called
+4. Anchor tag is clicked
+
+### route(filter, callback)
+
+<span class="tag red">&gt;= v2.3</span>
+
+Execute the given `callback` when the URL changes and it match the `filter`. For example:
+
+```javascript
+// matches to just `/fruit`
+route('/fruit', function(name) {
+  console.log('The list of fruits')
+})
+```
+
+Wildcards(`*`) are allowed in `filter` and you can capture them as arguments:
+
+```javascript
+// if the url change to `/fruit/apple`,
+// this will match and catch 'apple' as `name`
+route('/fruit/*', function(name) {
+  console.log('The detail of ' + name)
+})
+
+// if the url change to `/blog/2015-09/01`,
+// this will match and catch '2015', '09' and '01'
+route('/blog/*-*/*', function(year, month, date) {
+  console.log('The page of ' + year + '-' + month + '-' date)
+})
+```
+
+If you want to match the url `/old` and `/old/and/anything`, it could be written with `..`:
+
+```javascript
+route('/old..', function() {
+  console.log('The pages under /old was moved.')
+})
+```
+
+It could be useful when the url includes search queries.
+
+```javascript
+// if the url change to `/search?keyword=Apple` this will match
+route('/search..', function() {
+  var q = route.query()
+  console.log('Search keyword: ' + q.keyword)
+})
+
+// it could be written like this,
+// but be aware that `*` can match only alphanumerics and underscore
+route('/search?keyword=*', function(keyword) {
+  console.log('Search keyword: ' + keyword)
+})
+```
+
+<span class="tag red">Note:</span> Internally wildcards are converted to such regular expressions:
+
+- `*`: `(\w+)`
+- `..`: `.*`
+
+### route.create()
+
+<span class="tag red">&gt;= v2.3</span>
+
+Returns a new routing context. For example:
+
+```javascript
+var subRoute = route.create()
+subRoute('/fruit/apple', function() { /* */ })
+```
+
+See also [Routing group](#routing-group) and [Routing priority](#routing-priority) section, for detail.
+
+## Use router
+
+### route(to[, title])
+
+Changes the browser URL and notifies all the listeners assigned with `route(callback)`. For example:
+
+```javascript
+route('customers/267393/edit')
+```
+From v2.3, you can set the title, too:
+
+```javascript
+route('customers/267393/edit', 'Editing customer page')
+```
 
 ### route.start()
 
-Start listening the window hash changes and it's automatically called when riot gets loaded. You typically use this method together with [route.stop](#route-stop). Example:
+Start listening the url changes and it's automatically called when riot gets loaded. You typically use this method together with [route.stop](#route-stop). Example:
 
 ```javascript
 route.stop() // clear all the old router callbacks
@@ -41,33 +132,73 @@ route.start() // start again
 
 ### route.stop()
 
-Remove the hashchange listeners clearing also the [route.route](#route) callbacks.
+Stop the all routings. It'll removes the listeners and clear also the callbacks.
 
 ```javascript
 route.stop()
 ```
 
-Stopping the default router allow the use of a different router on your appliaction.
+To use different router with Riot on your application, you need to call this, at the first.
 
-### route(to)
+### subRoute.stop()
 
-Changes the browser URL and notifies all the listeners assigned with `route(callback)`. For example:
+<span class="tag red">&gt;= v2.3</span>
+
+Stop only subRoute's routings. It'll removes the listeners and clear also the callbacks.
 
 ```javascript
-route('customers/267393/edit')
+var subRoute = route.create()
+subRoute('/fruit/apple', function() { /* */ })
+subRoute.stop()
 ```
 
-### route.exec(callback)
+### route.exec()
 
-Study the current hash "in place" using given `callback` without waiting for it to change. For example
+Study the current path "in place" emit routing without waiting for it to change. For example:
 
 ```javascript
-route.exec(function(collection, id, action) {
+route(function() { /* define routing */ })
+route.exec()
+```
 
+<span class="tag red">Warning:</span> `route.exec(callback)` was deprecated from `v2.3`.
+
+### route.query()
+
+<span class="tag red">&gt;= v2.3</span>
+
+This is an utility function to extract the query from the url. For example:
+
+```javascript
+// if the url change to `/search?keyword=Apple&limit=30` this will match
+route('/search..', function() {
+  var q = route.query()
+  console.log('Search keyword: ' + q.keyword)
+  console.log('Search limit: ' + q.limit)
 })
 ```
 
-### route.parser(parser)
+## Customize router
+
+### route.base(base)
+
+Change the base path. If you have the url like this:
+
+`http://riotexample.com/app/fruit/apple`
+
+You could set the base to `/app`, then you will have to take care of only `/fruit/apple`.
+
+```javascript
+route.base('/app')
+```
+
+The default `base` value is "#". If you'd like to use hashbang, change it to `#!`.
+
+```javascript
+route.base('#!')
+```
+
+### route.parser(parser[, secondParser])
 
 Changes the default parser to a custom one. Here's one that parses paths like this:
 
@@ -104,4 +235,96 @@ route(function(target, action, params) {
   */
 
 })
+```
+
+#### Second parser
+
+<span class="tag red">&gt;= v2.3</span>
+
+If you specify `secondParser`, you can change the second parser, too. The second parser is used with url filter:
+
+```javascript
+// This is the default parser
+function second(path, filter) {
+  var re = new RegExp('^' + filter.replace(/\*/g, '(\\w+)').replace(/\.\./, '.*') + '$')
+  if (args = path.match(re)) return args.slice(1)
+}
+
+route.parser(first, second)
+```
+
+If the parser return nothing, the next route matching will be tried.
+
+## Routing groups
+
+Traditional router on server-side is highly centralized, but recently we use routers everywhere on the page. Think about this case:
+
+```html
+<first-tag>
+  <p>First tag</p>
+  <script>
+    route('/fruit/*', function(name) {
+      /* do something common */
+    })
+  </script>
+</first-tag>
+
+<second-tag>
+  <p>Second tag</p>
+  <script>
+    route('/fruit/apple', function(name) {
+      /* do something SPECIAL */
+    })
+  </script>
+</second-tag>
+```
+
+Two tags have routings, and looks good? No, this won't work. Because only one routing will emit and we can't know which routing will, too. Then, we have to make separated routing groups for each tag definition. For example:
+
+```html
+<first-tag>
+  <p>First tag</p>
+  <script>
+    var subRoute = route.create() // create another routing context
+    subRoute('/fruit/*', function(name) {
+      /* do something common */
+    })
+  </script>
+</first-tag>
+
+<second-tag>
+  <p>Second tag</p>
+  <script>
+    var subRoute = route.create() // create another routing context
+    subRoute('/fruit/apple', function(name) {
+      /* do something SPECIAL */
+    })
+  </script>
+</second-tag>
+```
+
+## Routing priority
+
+The router will try to match routing from the first. So in the next case, routing-B and -C will never emit.
+
+```javascript
+route('/fruit/*', function(name) { /* */ }) // routing-A (1)
+route('/fruit/apple', function() { /* */ }) // routing-B (2)
+route('/fruit/orange', function() { /* */ }) // routing-C (3)
+```
+
+This will work fine:
+
+```javascript
+route('/fruit/apple', function() { /* */ }) // routing-B (1)
+route('/fruit/orange', function() { /* */ }) // routing-C (2)
+route('/fruit/*', function(name) { /* */ }) // routing-A (3)
+```
+
+And routings *with filter* has higher priority than routing *without filter*. It means that routing-X is defined first but execute at last in the next example:
+
+```javascript
+route(function() { /* */ }) // routing-X (3)
+route('/fruit/*', function() { /* */ }) // routing-Y (1)
+route('/sweet/*', function() { /* */ }) // routing-Z (2)
 ```
