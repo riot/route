@@ -99,8 +99,6 @@ describe('Core specs', function() {
     fireEvent($('.tag-m'), 'click')
     fireEvent($('.tag-o'), 'click')
 
-    console.log(counter)
-
     expect(counter).to.be(1)
 
   })
