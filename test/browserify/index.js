@@ -1,5 +1,6 @@
 var route = require('riot-route')
 
-route.exec(function() {
+route(function() {
   console.log('Hello Browserify!')
 })
+route.exec()

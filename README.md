@@ -7,15 +7,14 @@
 
 # Riot Router
 
-Router is a generic tool to take care of the URL and the back button. It's the smallest implementation you can find and it works on all browsers including IE9. It can do the following:
+The Riot Router is the minimal router implementation with such technologies:
 
-1. Change the hash part of the URL
-2. Notify when the hash changes
-3. Study the current hash
+- pushState and history API
+- multiple routing groups
+- replacable parser
+- compatible with IE9 and higher
 
-You can place routing logic everywhere; in custom tags or non-UI modules. Some application frameworks make the router a central element that dispatches work to the other pieces of the application. Some take a milder approach where URL events are like keyboard events, not affecting the overall architecture.
-
-Every browser application needs routing since there is always an URL in the location bar.
+A part of Riot.js, but it also works without Riot.js.
 
 ## Documentation
 
@@ -25,6 +24,21 @@ See also riotjs.com:
 
 - [API (English)](http://riotjs.com/api/route/)
 - [API (Japanese)](http://riotjs.com/ja/api/route/)
+
+## Downloads
+
+We have 3 editions:
+
+- **Standalone**:
+  - [route.js](https://raw.githubusercontent.com/riot/route/master/dist/route.js)
+  - [route.min.js](https://raw.githubusercontent.com/riot/route/master/dist/route.min.js)
+- **AMD**:
+  - *for RequireJS*
+  - [amd.route.js](https://raw.githubusercontent.com/riot/route/master/dist/amd.route.js)
+  - [amd.route.min.js](https://raw.githubusercontent.com/riot/route/master/dist/amd.route.min.js)
+- **CommonJS**
+  - *for Browserify, Webpack, ...etc*
+  - download via npm
 
 ## Installation
 
@@ -43,6 +57,7 @@ $ bower install --save riot-route
 ## Demos
 
 - [Page switching](http://riotjs.com/examples/plunker/?app=router-page-switcher)
+- [Complex routings](http://riotjs.com/examples/plunker/?app=router-complex)
 
 ## Development
 
