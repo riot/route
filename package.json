@@ -30,6 +30,7 @@
     "karma": "^0.13.9",
     "karma-coverage": "^0.5.1",
     "karma-mocha": "^0.2.0",
+    "karma-mocha-reporter": "^1.1.1",
     "karma-phantomjs-launcher": "^0.2.1",
     "uglify-js": "latest"
   },
