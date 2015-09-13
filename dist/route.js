@@ -1,5 +1,6 @@
 ;(function() {
-/* istanbul ignore next */
+ 'use strict'
+ /* istanbul ignore next */
 
 var observable = function(el) {
 
@@ -142,8 +143,10 @@ function DEFAULT_PARSER(path) {
  * @returns {array} array
  */
 function DEFAULT_SECOND_PARSER(path, filter) {
-  var re = new RegExp('^' + filter[REPLACE](/\*/g, '(\\w+)')[REPLACE](/\.\./, '.*') + '$')
-  if (args = path.match(re)) return args.slice(1)
+  var re = new RegExp('^' + filter[REPLACE](/\*/g, '(\\w+)')[REPLACE](/\.\./, '.*') + '$'),
+    args = path.match(re)
+
+  if (args) return args.slice(1)
 }
 
 /**
@@ -351,4 +354,5 @@ route.base()
 route.parser()
 route.start()
 
-window.route = route })();
+window.route = route
+})();

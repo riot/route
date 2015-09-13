@@ -13,16 +13,16 @@ REPLACER2 = "/module.exports = route/d"
 REPLACER3 = "s/observable()/riot.observable()/g"
 
 # Riot adapter
-R_START_FRAG = ';(function(riot) { if (!window) return;\n' #TODO: remove `if` after server-side supported
-R_END_FRAG   = 'riot.route = route })(riot)'
+R_START_FRAG = ";(function(riot) { if (!window) return;\n" #TODO: remove `if` after server-side supported
+R_END_FRAG   = "riot.route = route\n})(riot)"
 
 # AMD adapter
-A_START_FRAG = ';(function() { define(function(require, exports, module) {\n'
-A_END_FRAG   = '})})();'
+A_START_FRAG = ";define(function(require, exports, module) {\n 'use strict' \n"
+A_END_FRAG   = "});"
 
 # Standalone adapter
-S_START_FRAG = ';(function() {\n/* istanbul ignore next */\n'
-S_END_FRAG   = 'window.route = route })();'
+S_START_FRAG = ";(function() {\n 'use strict'\n /* istanbul ignore next */\n"
+S_END_FRAG   = "window.route = route\n})();"
 
 build:
 	# Riot
@@ -31,7 +31,7 @@ build:
 	@ echo $(R_END_FRAG) >> dist/riot.route.js
 	# AMD
 	@ echo $(A_START_FRAG) > dist/amd.route.js
-	@ cat lib/index.js | sed $(REPLACER1) | sed $(REPLACER2) >> dist/amd.route.js
+	@ cat lib/index.js >> dist/amd.route.js
 	@ echo $(A_END_FRAG) >> dist/amd.route.js
 	@ $(UGLIFY) dist/amd.route.js --comments --mangle -o dist/amd.route.min.js
 	# Standalone

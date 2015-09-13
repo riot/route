@@ -1,10 +1,12 @@
-;(function() { define(function(require, exports, module) {
+;define(function(require, exports, module) {
+ 'use strict' 
 
 /**
  * Simple client-side router
  * @module riot-route
  */
 
+var observable = require('riot-observable')
 
 var RE_ORIGIN = /^.+?\/+[^\/]+/,
   EVENT_LISTENER = 'EventListener',
@@ -39,8 +41,10 @@ function DEFAULT_PARSER(path) {
  * @returns {array} array
  */
 function DEFAULT_SECOND_PARSER(path, filter) {
-  var re = new RegExp('^' + filter[REPLACE](/\*/g, '(\\w+)')[REPLACE](/\.\./, '.*') + '$')
-  if (args = path.match(re)) return args.slice(1)
+  var re = new RegExp('^' + filter[REPLACE](/\*/g, '(\\w+)')[REPLACE](/\.\./, '.*') + '$'),
+    args = path.match(re)
+
+  if (args) return args.slice(1)
 }
 
 /**
@@ -248,4 +252,5 @@ route.base()
 route.parser()
 route.start()
 
-})})();
+module.exports = route
+});
