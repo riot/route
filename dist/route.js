@@ -1,4 +1,5 @@
 ;(function() {
+/* istanbul ignore next */
 
 var observable = function(el) {
 

@@ -21,7 +21,7 @@ A_START_FRAG = ';(function() { define(function(require, exports, module) {\n'
 A_END_FRAG   = '})})();'
 
 # Standalone adapter
-S_START_FRAG = ';(function() {\n'
+S_START_FRAG = ';(function() {\n/* istanbul ignore next */\n'
 S_END_FRAG   = 'window.route = route })();'
 
 build:
