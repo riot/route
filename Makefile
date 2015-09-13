@@ -10,7 +10,7 @@ CHOKIDAR  = ./node_modules/.bin/chokidar
 # Replacer
 REPLACER1 = "/var observable = require('riot-observable')/d"
 REPLACER2 = "/module.exports = route/d"
-REPLACER3 = "s/observable()/riot.observable()/g"
+REPLACER3 = "s/observable(/riot.observable(/g"
 
 # Riot adapter
 R_START_FRAG = ";(function(riot) { if (!window) return;\n" #TODO: remove `if` after server-side supported

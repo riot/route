@@ -50,7 +50,7 @@ function DEFAULT_SECOND_PARSER(path, filter) {
  */
 function Router() {
   this.$ = []
-  observable(this) // make it observable
+  riot.observable(this) // make it observable
   central.on('stop', this.s.bind(this))
   central.on('emit', this.e.bind(this))
 }
