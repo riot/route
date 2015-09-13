@@ -2,7 +2,7 @@
   "name": "riot-route",
   "version": "2.3.0-beta",
   "description": "Simple client-side router",
-  "main": "dist/route.js",
+  "main": "lib/index.js",
   "directories": {
     "lib": "lib",
     "doc": "doc"
@@ -30,6 +30,7 @@
     "karma": "^0.13.9",
     "karma-coverage": "^0.5.1",
     "karma-mocha": "^0.2.0",
+    "karma-mocha-reporter": "^1.1.1",
     "karma-phantomjs-launcher": "^0.2.1",
     "uglify-js": "latest"
   },
