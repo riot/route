@@ -1,25 +1,45 @@
 # Command line paths
-KARMA = ./node_modules/karma/bin/karma
-ISTANBUL = ./node_modules/karma-coverage/node_modules/.bin/istanbul
-ESLINT = ./node_modules/eslint/bin/eslint.js
-MOCHA = ./node_modules/mocha/bin/_mocha
-UGLIFY = ./node_modules/uglify-js/bin/uglifyjs
+KARMA     = ./node_modules/karma/bin/karma
+ISTANBUL  = ./node_modules/karma-coverage/node_modules/.bin/istanbul
+ESLINT    = ./node_modules/eslint/bin/eslint.js
+MOCHA     = ./node_modules/mocha/bin/_mocha
+UGLIFY    = ./node_modules/uglify-js/bin/uglifyjs
 COVERALLS = ./node_modules/coveralls/bin/coveralls.js
-CHOKIDAR = ./node_modules/.bin/chokidar
+CHOKIDAR  = ./node_modules/.bin/chokidar
+
+# Replacer
+REPLACER1 = "/var observable = require('riot-observable')/d"
+REPLACER2 = "/module.exports = route/d"
+REPLACER3 = "s/observable()/riot.observable()/g"
 
 # Riot adapter
-RIOT_START_FRAG = ';(function(riot) { if (!window) return;\n' #TODO: remove `if` after server-side supported
-RIOT_END_FRAG = 'riot.route = route })(riot)'
-SED_MATCHER1 = "/var observable = require('riot-observable')/d"
-SED_MATCHER2 = "/module.exports = route/d"
-SED_MATCHER3 = "s/observable()/riot.observable()/g"
+R_START_FRAG = ';(function(riot) { if (!window) return;\n' #TODO: remove `if` after server-side supported
+R_END_FRAG   = 'riot.route = route })(riot)'
+
+# AMD adapter
+A_START_FRAG = ';(function() { define(function(require, exports, module) {\n'
+A_END_FRAG   = '})})();'
+
+# Standalone adapter
+S_START_FRAG = ';(function() {\n'
+S_END_FRAG   = 'window.route = route })();'
 
 build:
-	@ cat lib/wrap/start.frag lib/index.js lib/wrap/end.frag > dist/route.js
+	# Riot
+	@ echo $(R_START_FRAG) > dist/riot.route.js
+	@ cat lib/index.js | sed $(REPLACER1) | sed $(REPLACER2) | sed $(REPLACER3) >> dist/riot.route.js
+	@ echo $(R_END_FRAG) >> dist/riot.route.js
+	# AMD
+	@ echo $(A_START_FRAG) > dist/amd.route.js
+	@ cat lib/index.js | sed $(REPLACER1) | sed $(REPLACER2) >> dist/amd.route.js
+	@ echo $(A_END_FRAG) >> dist/amd.route.js
+	@ $(UGLIFY) dist/amd.route.js --comments --mangle -o dist/amd.route.min.js
+	# Standalone
+	@ echo $(S_START_FRAG) > dist/route.js
+	@ cat node_modules/riot-observable/lib/index.js >> dist/route.js
+	@ cat lib/index.js | sed $(REPLACER1) | sed $(REPLACER2) >> dist/route.js
+	@ echo $(S_END_FRAG) >> dist/route.js
 	@ $(UGLIFY) dist/route.js --comments --mangle -o dist/route.min.js
-	@ echo $(RIOT_START_FRAG) > dist/riot.route.js
-	@ cat lib/index.js | sed $(SED_MATCHER1) | sed $(SED_MATCHER2) | sed $(SED_MATCHER3) >> dist/riot.route.js
-	@ echo $(RIOT_END_FRAG) >> dist/riot.route.js
 
 watch:
 	@ $(CHOKIDAR) lib/* lib/**/* -c 'make build'
