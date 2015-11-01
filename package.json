@@ -1,6 +1,6 @@
 {
   "name": "riot-route",
-  "version": "2.3.0-beta.3",
+  "version": "2.3.0-beta.4",
   "description": "Simple client-side router",
   "main": "lib/index.js",
   "directories": {
@@ -20,19 +20,19 @@
     "router"
   ],
   "dependencies": {
-    "riot-observable": "^2.0.0-beta.2"
+    "riot-observable": "^2.3.0-beta.4"
   },
   "devDependencies": {
-    "chokidar-cli": "^1.0.1",
+    "chokidar-cli": "^1.1.1",
     "coveralls": "^2.11.4",
-    "eslint": "^1.4.1",
+    "eslint": "^1.8.0",
     "expect.js": "^0.3.1",
-    "karma": "^0.13.9",
-    "karma-coverage": "^0.5.2",
+    "karma": "^0.13.14",
+    "karma-coverage": "^0.5.3",
     "karma-mocha": "^0.2.0",
     "karma-mocha-reporter": "^1.1.1",
     "karma-phantomjs-launcher": "^0.2.1",
-    "uglify-js": "latest"
+    "uglify-js": "^2.5.0"
   },
   "author": "Muut, Inc. and other contributors",
   "license": "MIT",
