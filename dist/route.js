@@ -16,7 +16,15 @@ var observable = function(el) {
    */
 
   var callbacks = {},
-    onEachEvent = function(e, fn) { e.replace(/\S+/g, fn) }
+    onEachEvent = function(e, fn) { e.replace(/\S+/g, fn) },
+    defineProperty = function (key, value) {
+      Object.defineProperty(el, key, {
+        value: value,
+        enumerable: false,
+        writable: false,
+        configurable: false
+      })
+    }
 
   /**
    * Listen to the given space separated list of `events` and execute the `callback` each time an event is triggered.
@@ -25,7 +33,7 @@ var observable = function(el) {
    * @returns { Object } el
    */
 
-  el.on = function(events, fn) {
+  defineProperty('on', function(events, fn) {
     if (typeof fn != 'function')  return el
 
     onEachEvent(events, function(name, pos) {
@@ -34,7 +42,7 @@ var observable = function(el) {
     })
 
     return el
-  }
+  })
 
   /**
    * Removes the given space separated list of `events` listeners
@@ -43,7 +51,7 @@ var observable = function(el) {
    * @returns { Object } el
    */
 
-  el.off = function(events, fn) {
+  defineProperty('off', function(events, fn) {
     if (events == '*') callbacks = {}
     else {
       onEachEvent(events, function(name) {
@@ -56,7 +64,7 @@ var observable = function(el) {
       })
     }
     return el
-  }
+  })
 
   /**
    * Listen to the given space separated list of `events` and execute the `callback` at most once
@@ -65,13 +73,22 @@ var observable = function(el) {
    * @returns { Object } el
    */
 
-  el.one = function(events, fn) {
+  defineProperty('one', function(events, fn) {
     function on() {
       el.off(events, on)
-      fn.apply(el, arguments)
+
+      // V8 performance optimization
+      // https://github.com/petkaantonov/bluebird/wiki/Optimization-killers#3-managing-arguments
+      var arglen = arguments.length
+      var args = new Array(arglen)
+      for (var i = 0; i < arglen; i++) {
+        args[i] = arguments[i]
+      }
+
+      fn.apply(el, args)
     }
     return el.on(events, on)
-  }
+  })
 
   /**
    * Execute all callback functions that listen to the given space separated list of `events`
@@ -79,18 +96,29 @@ var observable = function(el) {
    * @returns { Object } el
    */
 
-  el.trigger = function(events) {
-    var args = [].slice.call(arguments, 1)
+  defineProperty('trigger', function(events) {
+    // V8 performance optimization
+    // https://github.com/petkaantonov/bluebird/wiki/Optimization-killers#3-managing-arguments
+    var arglen = arguments.length - 1
+    var args = new Array(arglen)
+    for (var i = 0; i < arglen; i++) {
+      args[i] = arguments[i + 1] // skip first argument
+    }
 
     onEachEvent(events, function(name) {
 
-      var fns = callbacks[name] || []
+      var fns = (callbacks[name] || []).slice(0)
 
       for (var i = 0, fn; fn = fns[i]; ++i) {
         if (fn.busy) return
         fn.busy = 1
-        fn.apply(el, fn.typed ? [name].concat(args) : args)
-        if (fns[i] !== fn) i--
+        // avoid that this fn.busy gets stuck in case of errors it fixes #3
+        // TODO: try/catch should be removed
+        // https://github.com/petkaantonov/bluebird/wiki/Optimization-killers#2-unsupported-syntax
+        try {
+          fn.apply(el, fn.typed ? [name].concat(args) : args)
+        } catch (e) { /* error */}
+        if (fns[i] !== fn) { i-- }
         fn.busy = 0
       }
 
@@ -100,11 +128,12 @@ var observable = function(el) {
     })
 
     return el
-  }
+  })
 
   return el
 
-}/**
+}
+/**
  * Simple client-side router
  * @module riot-route
  */
@@ -143,7 +172,7 @@ function DEFAULT_PARSER(path) {
  * @returns {array} array
  */
 function DEFAULT_SECOND_PARSER(path, filter) {
-  var re = new RegExp('^' + filter[REPLACE](/\*/g, '(\\w+)')[REPLACE](/\.\./, '.*') + '$'),
+  var re = new RegExp('^' + filter[REPLACE](/\*/g, '([^/?#]+?)')[REPLACE](/\.\./, '.*') + '$'),
     args = path.match(re)
 
   if (args) return args.slice(1)
