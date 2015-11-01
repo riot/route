@@ -29,6 +29,7 @@ describe('Core specs', function() {
       '<a class="tag-f" href="/">F</a>' +
       '<a class="tag-g" href="/fruit">G</a>' +
       '<a class="tag-h" href="/fruit/apple">H</a>' +
+      '<a class="tag-h2" href="/fruit/red-apple">H2</a>' +
       '<a class="tag-i" href="/fruit/orange">I</a>' +
       '<a class="tag-j" href="/search?keyword=test&limit=30">J</a>' +
       '<a class="tag-k prevented" href="mailto:aaaaa@bbbbbbb.com">K</a>' +
@@ -159,13 +160,17 @@ describe('Core specs', function() {
     route.base('/')
     route('fruit/*', function(first) {
       counter++
-      expect(first).to.be('apple')
+      expect(['apple', 'red-apple']).to.contain(first)
     })
+
     route('fruit')
     route('fruit/apple')
+    route('fruit/red-apple') // see issue #20
     fireEvent($('.tag-g'), 'click')
     fireEvent($('.tag-h'), 'click')
-    expect(counter).to.be(2)
+    fireEvent($('.tag-h2'), 'click') // see issue #20
+
+    expect(counter).to.be(4)
   })
 
   it('sets routing and filter without dots(..)', function() {
