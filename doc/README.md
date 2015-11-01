@@ -90,7 +90,7 @@ route('/search?keyword=*', function(keyword) {
 
 <span class="tag red">Note:</span> Internally wildcards are converted to such regular expressions:
 
-- `*`: `(\w+)`
+- `*`: `([^/?#]+?)`
 - `..`: `.*`
 
 ### route.create()
@@ -246,7 +246,7 @@ If you specify `secondParser`, you can change the second parser, too. The second
 ```javascript
 // This is the default parser
 function second(path, filter) {
-  var re = new RegExp('^' + filter.replace(/\*/g, '(\\w+)').replace(/\.\./, '.*') + '$')
+  var re = new RegExp('^' + filter.replace(/\*/g, '([^/?#]+?)').replace(/\.\./, '.*') + '$')
   if (args = path.match(re)) return args.slice(1)
 }
 
