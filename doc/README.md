@@ -132,7 +132,7 @@ route.start()
 <span class="tag red">&gt;= v2.3</span>
 
 Riot doesn't `start` its router automatically. DON'T FORGET TO START IT BY YOURSELF. This also means that you can choose your favorite router.
-(Note: before v2.3 Riot starts the router automatically. The behavior was changed)
+(Note: before v2.3 Riot started the router automatically. The behavior was changed)
 
 ### route.stop()
 
@@ -148,8 +148,6 @@ You typically use this method together with [route.start](#route-start). Example
 route.stop() // clear all the old router callbacks
 route.start() // start again
 ```
-
-To use different router with Riot on your application, you need to call this, at the first.
 
 ### subRoute.stop()
 
