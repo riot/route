@@ -247,10 +247,9 @@ route.start = function () {
   }
 }
 
-/** Autostart the router **/
+/** Prepare the router **/
 route.base()
 route.parser()
-route.start()
 
 module.exports = route
 });

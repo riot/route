@@ -245,10 +245,9 @@ route.start = function () {
   }
 }
 
-/** Autostart the router **/
+/** Prepare the router **/
 route.base()
 route.parser()
-route.start()
 
 riot.route = route
 })(riot)

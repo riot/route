@@ -1,6 +1,6 @@
 {
   "name": "riot-route",
-  "version": "2.3.0-beta.4",
+  "version": "2.3.0-beta.5",
   "description": "Simple client-side router",
   "main": "lib/index.js",
   "directories": {

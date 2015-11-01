@@ -47,6 +47,9 @@ describe('Core specs', function() {
         e.preventDefault()
       })
     })
+
+    // start router
+    route.start()
   })
 
   after(function() {
