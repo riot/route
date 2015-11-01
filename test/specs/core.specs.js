@@ -1,3 +1,26 @@
+var route  = route  || require('../../lib/index')
+var expect = expect || require('expect.js')
+
+var isBrowser = typeof document != 'undefined'
+var $  = isBrowser && document.querySelector.bind(document)
+var $$ = isBrowser && document.querySelectorAll.bind(document)
+
+var isoHrefs = {
+  'tag-g': '/fruit',
+  'tag-h': '/fruit/apple',
+  'tag-h2': '/fruit/red-apple',
+  'tag-i': '/fruit/orange',
+  'tag-j': '/search?keyword=test&limit=30'
+}
+
+function fireNavigationForTag(tag) {
+  if (isBrowser) {
+    fireEvent($('.' + tag), 'click')
+  } else {
+    route.exec(isoHrefs[tag])
+  }
+}
+
 function fireEvent(node, eventName) {
   var event = document.createEvent('MouseEvents')
   // https://developer.mozilla.org/en-US/docs/Web/API/event.initMouseEvent
@@ -12,45 +35,48 @@ function fireEvent(node, eventName) {
   node.dispatchEvent(event)
 }
 
-describe('Core specs', function() {
+describe('Core specs (' + (isBrowser ? 'browser' : 'server') + ')', function() {
 
-  var counter = 0, $, $$
+  var counter = 0
 
   before(function() {
-    $ = document.querySelector.bind(document)
-    $$ = document.querySelectorAll.bind(document)
-    html = document.createElement('div')
-    html.innerHTML =
-      '<a class="tag-a" href="#">A</a>' +
-      '<a class="tag-b" href="#fruit">B</a>' +
-      '<a class="tag-c" href="#fruit/apple">C</a>' +
-      '<a class="tag-d" href="#fruit/orange">D</a>' +
-      '<a class="tag-e" href="#search?keyword=test&limit=30">E</a>' +
-      '<a class="tag-f" href="/">F</a>' +
-      '<a class="tag-g" href="/fruit">G</a>' +
-      '<a class="tag-h" href="/fruit/apple">H</a>' +
-      '<a class="tag-h2" href="/fruit/red-apple">H2</a>' +
-      '<a class="tag-i" href="/fruit/orange">I</a>' +
-      '<a class="tag-j" href="/search?keyword=test&limit=30">J</a>' +
-      '<a class="tag-k prevented" href="mailto:aaaaa@bbbbbbb.com">K</a>' +
-      '<a class="tag-l prevented" href="http://somewhereelse.io/">L</a>' +
-      '<a class="tag-m prevented" href="/download/" download>M</a>' +
-      '<a class="tag-n" href="/other/" targer="_self">N</a>' +
-      '<a class="tag-o" href="/other/" targer="_blank">O</a>' +
-      '<a class="tag-p prevented" href="/no-go/">no go</a>' +
-      '<p class="tag-z">O</p>'
-    document.body.appendChild(html)
+    if (isBrowser) {
+      var html = document.createElement('div')
+      html.innerHTML =
+        '<a class="tag-a" href="#">A</a>' +
+        '<a class="tag-b" href="#fruit">B</a>' +
+        '<a class="tag-c" href="#fruit/apple">C</a>' +
+        '<a class="tag-d" href="#fruit/orange">D</a>' +
+        '<a class="tag-e" href="#search?keyword=test&limit=30">E</a>' +
+        '<a class="tag-f" href="/">F</a>' +
+        '<a class="tag-g" href="' + isoHrefs['tag-g'] + '">G</a>' +
+        '<a class="tag-h" href="' + isoHrefs['tag-h'] + '">H</a>' +
+        '<a class="tag-h2" href="' + isoHrefs['tag-h2'] + '">H2</a>' +
+        '<a class="tag-i" href="' + isoHrefs['tag-i'] + '">I</a>' +
+        '<a class="tag-j" href="' + isoHrefs['tag-j'] + '">J</a>' +
+        '<a class="tag-k prevented" href="mailto:aaaaa@bbbbbbb.com">K</a>' +
+        '<a class="tag-l prevented" href="http://somewhereelse.io/">L</a>' +
+        '<a class="tag-m prevented" href="/download/" download>M</a>' +
+        '<a class="tag-n" href="/other/" targer="_self">N</a>' +
+        '<a class="tag-o" href="/other/" targer="_blank">O</a>' +
+        '<a class="tag-p prevented" href="/no-go/">no go</a>' +
+        '<p class="tag-z">O</p>'
+      document.body.appendChild(html)
 
-    // fix the page reload issue
-    Array.prototype.slice.call($$('.prevented')).forEach(function(el) {
-      el.addEventListener('click', function(e) {
-        e.preventDefault()
+      // fix the page reload issue
+      Array.prototype.slice.call($$('.prevented')).forEach(function(el) {
+        el.addEventListener('click', function(e) {
+          e.preventDefault()
+        })
       })
-    })
+    }
+    
+    // start router
+    route.start()
   })
 
   after(function() {
-    if (window.history && window.history.replaceState) {
+    if (isBrowser && window.history && window.history.replaceState) {
       window.history.replaceState(null, '', window.location.pathname)
     }
   })
@@ -74,36 +100,6 @@ describe('Core specs', function() {
     expect(counter).to.be(2)
   })
 
-  it('detects link clicked', function() {
-    route(function(first, second) {
-      counter++
-      expect(first).to.be('fruit')
-      expect(['apple', 'orange']).to.contain(second)
-    })
-    fireEvent($('.tag-c'), 'click')
-    fireEvent($('.tag-d'), 'click')
-    expect(counter).to.be(2)
-  })
-
-  it('ignore link clicked in some cases', function() {
-    route(function() {
-      counter++
-    })
-    fireEvent($('.tag-z'), 'click')
-    expect(counter).to.be(0)
-    fireEvent($('.tag-n'), 'click')
-    expect(counter).to.be(1)
-    expect(counter).to.be(1)
-
-    fireEvent($('.tag-k'), 'click')
-    fireEvent($('.tag-l'), 'click')
-    fireEvent($('.tag-m'), 'click')
-    fireEvent($('.tag-o'), 'click')
-
-    expect(counter).to.be(1)
-
-  })
-
   it('sets hashbang to base', function() {
     route.base('#!')
     route(function(first, second) {
@@ -125,8 +121,8 @@ describe('Core specs', function() {
     })
     route('fruit/apple')
     route('fruit/orange')
-    fireEvent($('.tag-h'), 'click')
-    fireEvent($('.tag-i'), 'click')
+    fireNavigationForTag('tag-h')
+    fireNavigationForTag('tag-i')
     expect(counter).to.be(4)
   })
 
@@ -138,8 +134,8 @@ describe('Core specs', function() {
     })
     route('apple')
     route('orange')
-    fireEvent($('.tag-h'), 'click')
-    fireEvent($('.tag-i'), 'click')
+    fireNavigationForTag('tag-h')
+    fireNavigationForTag('tag-i')
     expect(counter).to.be(4)
   })
 
@@ -151,8 +147,8 @@ describe('Core specs', function() {
     })
     route('fruit')
     route('fruit/apple')
-    fireEvent($('.tag-g'), 'click')
-    fireEvent($('.tag-h'), 'click')
+    fireNavigationForTag('tag-g')
+    fireNavigationForTag('tag-h')
     expect(counter).to.be(2)
   })
 
@@ -166,10 +162,9 @@ describe('Core specs', function() {
     route('fruit')
     route('fruit/apple')
     route('fruit/red-apple') // see issue #20
-    fireEvent($('.tag-g'), 'click')
-    fireEvent($('.tag-h'), 'click')
-    fireEvent($('.tag-h2'), 'click') // see issue #20
-
+    fireNavigationForTag('tag-g')
+    fireNavigationForTag('tag-h')
+    fireNavigationForTag('tag-h2') // see issue #20
     expect(counter).to.be(4)
   })
 
@@ -180,8 +175,8 @@ describe('Core specs', function() {
     })
     route('fruit')
     route('search?keyword=test&limit=30')
-    fireEvent($('.tag-g'), 'click')
-    fireEvent($('.tag-j'), 'click')
+    fireNavigationForTag('tag-g')
+    fireNavigationForTag('tag-j')
     expect(counter).to.be(0)
   })
 
@@ -192,8 +187,8 @@ describe('Core specs', function() {
     })
     route('fruit')
     route('search?keyword=test&limit=30')
-    fireEvent($('.tag-g'), 'click')
-    fireEvent($('.tag-j'), 'click')
+    fireNavigationForTag('tag-g')
+    fireNavigationForTag('tag-j')
     expect(counter).to.be(2)
   })
 
@@ -214,7 +209,7 @@ describe('Core specs', function() {
     route('fruit')
     route('fruit/apple')
     route('fruit/apple')
-    fireEvent($('.tag-h'), 'click')
+    if (isBrowser) { fireEvent($('.tag-k'), 'click') }
     expect(counter).to.be(2)
   })
 
@@ -304,51 +299,84 @@ describe('Core specs', function() {
     })
     route('fruit/apple')
     route('fruit/orange')
-    fireEvent($('.tag-h'), 'click')
-    fireEvent($('.tag-i'), 'click')
+    fireNavigationForTag('tag-h')
+    fireNavigationForTag('tag-i')
     expect(counter).to.be(4)
   })
 
-  it('metakeys events get skipped', function() {
+  describe('Browser link specs', function() {
 
-    route(function() {
-      counter++
+    if (!isBrowser) { return }
+
+    it('detects link clicked', function() {
+      route(function(first, second) {
+        counter++
+        expect(first).to.be('fruit')
+        expect(['apple', 'orange']).to.contain(second)
+      })
+      fireEvent($('.tag-c'), 'click')
+      fireEvent($('.tag-d'), 'click')
+      expect(counter).to.be(2)
     })
 
-    // Emulate the metaKey event
-    // initMouseEvent is deprecated but it's useful for our test
-    var
-      evt = document.createEvent('MouseEvents'),
-      e = {
-        bubbles: true,
-        cancelable: true,
-        view: window,
-        detail: 0,
-        screenX: 0,
-        screenY: 0,
-        clientX: 0,
-        clientY: 0,
-        ctrlKey: true,
-        altKey: true,
-        shiftKey: false,
-        metaKey: true,
-        button: 0,
-        relatedTarget: undefined
-      },
-      el = $('.tag-p')
+    it('ignore link clicked in some cases', function() {
+      route(function() {
+        counter++
+      })
+      fireEvent($('.tag-z'), 'click')
+      expect(counter).to.be(0)
+      fireEvent($('.tag-n'), 'click')
+      expect(counter).to.be(1)
+      expect(counter).to.be(1)
 
-    evt.initMouseEvent('click',
-      e.bubbles, e.cancelable, e.view, e.detail,
-      e.screenX, e.screenY, e.clientX, e.clientY,
-      e.ctrlKey, e.altKey, e.shiftKey, e.metaKey,
-      e.button, document.body.parentNode)
+      fireEvent($('.tag-k'), 'click')
+      fireEvent($('.tag-l'), 'click')
+      fireEvent($('.tag-m'), 'click')
+      fireEvent($('.tag-o'), 'click')
 
-    el.addEventListener('click', function(e) {
-      e.preventDefault()
+      expect(counter).to.be(1)
     })
 
-    el.dispatchEvent(evt)
-    expect(counter).to.be(0)
+    it('metakeys events get skipped', function() {
+      route(function() {
+        counter++
+      })
+
+      // Emulate the metaKey event
+      // initMouseEvent is deprecated but it's useful for our test
+      var
+        evt = document.createEvent('MouseEvents'),
+        e = {
+          bubbles: true,
+          cancelable: true,
+          view: window,
+          detail: 0,
+          screenX: 0,
+          screenY: 0,
+          clientX: 0,
+          clientY: 0,
+          ctrlKey: true,
+          altKey: true,
+          shiftKey: false,
+          metaKey: true,
+          button: 0,
+          relatedTarget: undefined
+        },
+        el = $('.tag-p')
+
+      evt.initMouseEvent('click',
+        e.bubbles, e.cancelable, e.view, e.detail,
+        e.screenX, e.screenY, e.clientX, e.clientY,
+        e.ctrlKey, e.altKey, e.shiftKey, e.metaKey,
+        e.button, document.body.parentNode)
+
+      el.addEventListener('click', function(e) {
+        e.preventDefault()
+      })
+
+      el.dispatchEvent(evt)
+      expect(counter).to.be(0)
+    })
 
   })
 

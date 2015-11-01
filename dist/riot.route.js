@@ -1,4 +1,4 @@
-;(function(riot) { if (!window) return;
+;(function(riot) {
 
 /**
  * Simple client-side router
@@ -14,9 +14,10 @@ var RE_ORIGIN = /^.+?\/+[^\/]+/,
   REPLACE = 'replace',
   POPSTATE = 'popstate',
   TRIGGER = 'trigger',
-  win = window,
-  doc = document,
-  loc = win.history.location || win.location, // see html5-history-api
+  win = typeof window != 'undefined' && window,
+  doc = win && document,
+  hist = win && history,
+  loc = win && (hist.location || win.location), // see html5-history-api
   prot = Router.prototype, // to minify more
   clickEvent = doc && doc.ontouchstart ? 'touchstart' : 'click',
   started = false,
@@ -29,7 +30,7 @@ var RE_ORIGIN = /^.+?\/+[^\/]+/,
  * @returns {array} array
  */
 function DEFAULT_PARSER(path) {
-  return path.split(/[/?#]/)
+  return (path || '').split(/[/?#]/)
 }
 
 /**
@@ -56,7 +57,7 @@ function Router() {
 }
 
 function normalize(path) {
-  return path[REPLACE](/^\/|\/$/, '')
+  return (path || '')[REPLACE](/^\/|\/$/, '')
 }
 
 /**
@@ -65,7 +66,7 @@ function normalize(path) {
  * @returns {string} path from root
  */
 function getPathFromRoot(href) {
-  return (href || loc.href)[REPLACE](RE_ORIGIN, '')
+  return (href || loc.href || '')[REPLACE](RE_ORIGIN, '')
 }
 
 /**
@@ -75,16 +76,20 @@ function getPathFromRoot(href) {
  */
 function getPathFromBase(href) {
   return base[0] == '#'
-    ? (href || loc.href).split(base)[1] || ''
-    : getPathFromRoot(href)[REPLACE](base, '')
+    ? (href || loc.href || '').split(base)[1] || href
+    : (getPathFromRoot(href) || href || '')[REPLACE](new RegExp('^' + base), '')
 }
 
-function emit(force) {
-  var path = getPathFromBase()
+function emit(path, force) {
+  path = getPathFromBase(path)
   if (force || path != current) {
     central[TRIGGER]('emit', path)
     current = path
   }
+}
+
+function popstate() {
+  emit() // so emit isn't passed the PopStateEvent object
 }
 
 function click(e) {
@@ -119,10 +124,10 @@ function click(e) {
 function go(path, title) {
   title = title || doc.title
   // browsers ignores the second parameter `title`
-  history.pushState(null, title, base + path)
+  hist && hist.pushState(null, title, base + path)
   // so we need to set it manually
   doc.title = title
-  emit()
+  emit(path)
 }
 
 /**
@@ -196,9 +201,12 @@ route.base = function(arg) {
   current = getPathFromBase() // recalculate current path
 }
 
-/** Exec routing right now **/
-route.exec = function() {
-  emit(true)
+/**
+ * Exec routing right now
+ * @param {string} [path] - optional starting path (only for server-side use)
+ */
+route.exec = function(path) {
+  emit(path, true)
 }
 
 /**
@@ -222,15 +230,18 @@ route.parser = function(fn, fn2) {
  */
 route.query = function() {
   var q = {}
-  loc.href[REPLACE](/[?&](.+?)=([^&]*)/g, function(_, k, v) { q[k] = v })
+  var href = loc.href || current
+  href[REPLACE](/[?&](.+?)=([^&]*)/g, function(_, k, v) { q[k] = v })
   return q
 }
 
 /** Stop routing **/
 route.stop = function () {
   if (started) {
-    win[REMOVE_EVENT_LISTENER](POPSTATE, emit)
-    doc[REMOVE_EVENT_LISTENER](clickEvent, click)
+    if (win) {
+      win[REMOVE_EVENT_LISTENER](POPSTATE, popstate)
+      doc[REMOVE_EVENT_LISTENER](clickEvent, click)
+    }
     central[TRIGGER]('stop')
     started = false
   }
@@ -239,16 +250,17 @@ route.stop = function () {
 /** Start routing **/
 route.start = function () {
   if (!started) {
-    win[ADD_EVENT_LISTENER](POPSTATE, emit)
-    doc[ADD_EVENT_LISTENER](clickEvent, click)
+    if (win) {
+      win[ADD_EVENT_LISTENER](POPSTATE, popstate)
+      doc[ADD_EVENT_LISTENER](clickEvent, click)
+    }
     started = true
   }
 }
 
-/** Autostart the router **/
+/** Prepare the router **/
 route.base()
 route.parser()
-route.start()
 
 riot.route = route
 })(riot)
