@@ -46,6 +46,9 @@ watch:
 
 test: eslint test-karma
 
+test-browsers:
+	@ BROWSERSTACK=1 $(KARMA) start test/karma.conf.js
+
 eslint:
 	# check code style
 	@ $(ESLINT) -c ./.eslintrc lib

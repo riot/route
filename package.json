@@ -1,6 +1,6 @@
 {
   "name": "riot-route",
-  "version": "2.3.0-beta.5",
+  "version": "2.3.0",
   "description": "Simple client-side router",
   "main": "lib/index.js",
   "directories": {
@@ -30,6 +30,7 @@
     "karma": "^0.13.14",
     "karma-coverage": "^0.5.3",
     "karma-mocha": "^0.2.0",
+    "karma-browserstack-launcher": "^0.1.6",
     "karma-mocha-reporter": "^1.1.1",
     "karma-phantomjs-launcher": "^0.2.1",
     "mocha": "^2.3.3",

@@ -10,5 +10,7 @@ branches:
 after_success:
   make test-coveralls
 
+sudo: false
+
 notifications:
   email: false

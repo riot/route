@@ -1,4 +1,15 @@
 module.exports = function(config) {
+
+  var browsers,
+    customLaunchers = []
+
+  if (process.env.BROWSERSTACK) {
+    customLaunchers = require('./browsers')
+    browsers = Object.keys(customLaunchers)
+    browsers.forEach(function(browser) { customLaunchers[browser].base = 'BrowserStack' })
+  } else
+    browsers = ['PhantomJS']
+
   config.set({
     basePath: '',
     frameworks: ['mocha'],
@@ -6,6 +17,7 @@ module.exports = function(config) {
       'karma-mocha',
       'karma-mocha-reporter',
       'karma-coverage',
+      'karma-browserstack-launcher',
       'karma-phantomjs-launcher'
     ],
     files: [
@@ -14,7 +26,8 @@ module.exports = function(config) {
       '../dist/route.js',
       'specs/core.specs.js'
     ],
-    browsers: ['PhantomJS'],
+    browsers: browsers,
+    customLaunchers: customLaunchers,
     reporters: ['mocha', 'coverage'],
     preprocessors: {
       '../dist/route.js': ['coverage']

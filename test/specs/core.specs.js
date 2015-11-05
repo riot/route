@@ -35,8 +35,8 @@ describe('Core specs', function() {
       '<a class="tag-k prevented" href="mailto:aaaaa@bbbbbbb.com">K</a>' +
       '<a class="tag-l prevented" href="http://somewhereelse.io/">L</a>' +
       '<a class="tag-m prevented" href="/download/" download>M</a>' +
-      '<a class="tag-n" href="/other/" targer="_self">N</a>' +
-      '<a class="tag-o" href="/other/" targer="_blank">O</a>' +
+      '<a class="tag-n" href="/other/" target="_self">N</a>' +
+      '<a class="tag-o" href="/other/" target="_blank">O</a>' +
       '<a class="tag-p prevented" href="/no-go/">no go</a>' +
       '<p class="tag-z">O</p>'
     document.body.appendChild(html)
