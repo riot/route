@@ -355,4 +355,13 @@ describe('Core specs', function() {
 
   })
 
+  it('go to the root (/)', function() {
+    route.base('/')
+    route(function() {
+      counter++
+    })
+    route('/')
+    expect(counter).to.be(1)
+  })
+
 })
