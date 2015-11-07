@@ -364,4 +364,16 @@ describe('Core specs', function() {
     expect(counter).to.be(1)
   })
 
+  it('redirecting inside the router', function() {
+    var str
+    route.base('/')
+    route(function(first) {
+      counter++
+      if (first == 'fruit') route('/vegitable')
+    })
+    route('fruit')
+    expect(window.location.pathname).to.be('/vegitable')
+    expect(counter).to.be(2)
+  })
+
 })
