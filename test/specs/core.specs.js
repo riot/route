@@ -364,6 +364,18 @@ describe('Core specs', function() {
     expect(counter).to.be(1)
   })
 
+  it('sets routing for root', function() {
+    route.base('/')
+    route('', function() {
+      counter++
+    })
+    route('other')
+    route('/')
+    route('other')
+    route('')
+    expect(counter).to.be(2)
+  })
+
   it('redirecting inside the router', function() {
     var str
     route.base('/')
