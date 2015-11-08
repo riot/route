@@ -14,6 +14,7 @@ var RE_ORIGIN = /^.+?\/+[^\/]+/,
   REPLACE = 'replace',
   POPSTATE = 'popstate',
   TRIGGER = 'trigger',
+  MAX_EMIT_STACK_LEVEL = 3,
   win = window,
   doc = document,
   loc = win.history.location || win.location, // see html5-history-api
@@ -21,7 +22,7 @@ var RE_ORIGIN = /^.+?\/+[^\/]+/,
   clickEvent = doc && doc.ontouchstart ? 'touchstart' : 'click',
   started = false,
   central = riot.observable(),
-  base, current, parser, secondParser
+  base, current, parser, secondParser, emitStack = [], emitStackLevel = 0
 
 /**
  * Default parser. You can replace it via router.parser method.
@@ -80,10 +81,24 @@ function getPathFromBase(href) {
 }
 
 function emit(force) {
-  var path = getPathFromBase()
-  if (force || path != current) {
-    central[TRIGGER]('emit', path)
-    current = path
+  // the stack is needed for redirections
+  var isRoot = emitStackLevel == 0
+  if (MAX_EMIT_STACK_LEVEL <= emitStackLevel) return
+
+  emitStackLevel++
+  emitStack.push(function() {
+    var path = getPathFromBase()
+    if (force || path != current) {
+      central[TRIGGER]('emit', path)
+      current = path
+    }
+  })
+  if (isRoot) {
+    while (emitStack.length) {
+      emitStack[0]()
+      emitStack.shift()
+    }
+    emitStackLevel = 0
   }
 }
 
@@ -119,7 +134,7 @@ function click(e) {
 function go(path, title) {
   title = title || doc.title
   // browsers ignores the second parameter `title`
-  history.pushState(null, title, base + path)
+  history.pushState(null, title, base + normalize(path))
   // so we need to set it manually
   doc.title = title
   emit()

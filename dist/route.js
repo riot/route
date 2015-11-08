@@ -76,16 +76,7 @@ var observable = function(el) {
   defineProperty('one', function(events, fn) {
     function on() {
       el.off(events, on)
-
-      // V8 performance optimization
-      // https://github.com/petkaantonov/bluebird/wiki/Optimization-killers#3-managing-arguments
-      var arglen = arguments.length
-      var args = new Array(arglen)
-      for (var i = 0; i < arglen; i++) {
-        args[i] = arguments[i]
-      }
-
-      fn.apply(el, args)
+      fn.apply(el, arguments)
     }
     return el.on(events, on)
   })
@@ -97,12 +88,13 @@ var observable = function(el) {
    */
 
   defineProperty('trigger', function(events) {
-    // V8 performance optimization
-    // https://github.com/petkaantonov/bluebird/wiki/Optimization-killers#3-managing-arguments
-    var arglen = arguments.length - 1
-    var args = new Array(arglen)
+
+    // getting the arguments
+    // skipping the first one
+    var arglen = arguments.length - 1,
+      args = new Array(arglen)
     for (var i = 0; i < arglen; i++) {
-      args[i] = arguments[i + 1] // skip first argument
+      args[i] = arguments[i + 1]
     }
 
     onEachEvent(events, function(name) {
@@ -145,6 +137,7 @@ var RE_ORIGIN = /^.+?\/+[^\/]+/,
   REPLACE = 'replace',
   POPSTATE = 'popstate',
   TRIGGER = 'trigger',
+  MAX_EMIT_STACK_LEVEL = 3,
   win = window,
   doc = document,
   loc = win.history.location || win.location, // see html5-history-api
@@ -152,7 +145,7 @@ var RE_ORIGIN = /^.+?\/+[^\/]+/,
   clickEvent = doc && doc.ontouchstart ? 'touchstart' : 'click',
   started = false,
   central = observable(),
-  base, current, parser, secondParser
+  base, current, parser, secondParser, emitStack = [], emitStackLevel = 0
 
 /**
  * Default parser. You can replace it via router.parser method.
@@ -211,10 +204,24 @@ function getPathFromBase(href) {
 }
 
 function emit(force) {
-  var path = getPathFromBase()
-  if (force || path != current) {
-    central[TRIGGER]('emit', path)
-    current = path
+  // the stack is needed for redirections
+  var isRoot = emitStackLevel == 0
+  if (MAX_EMIT_STACK_LEVEL <= emitStackLevel) return
+
+  emitStackLevel++
+  emitStack.push(function() {
+    var path = getPathFromBase()
+    if (force || path != current) {
+      central[TRIGGER]('emit', path)
+      current = path
+    }
+  })
+  if (isRoot) {
+    while (emitStack.length) {
+      emitStack[0]()
+      emitStack.shift()
+    }
+    emitStackLevel = 0
   }
 }
 
@@ -250,7 +257,7 @@ function click(e) {
 function go(path, title) {
   title = title || doc.title
   // browsers ignores the second parameter `title`
-  history.pushState(null, title, base + path)
+  history.pushState(null, title, base + normalize(path))
   // so we need to set it manually
   doc.title = title
   emit()
