@@ -232,6 +232,16 @@ describe('Core specs', function() {
     expect(counter).to.be(2)
   })
 
+  it('start with autoExec option', function() {
+    route.base('/')
+    route(function() {
+      counter++
+    })
+    var autoExec = true
+    route.start(autoExec)
+    expect(counter).to.be(1)
+  })
+
   it('sets routings in weird order', function() {
     route.base('/')
     route(function() {
