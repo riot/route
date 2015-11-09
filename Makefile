@@ -20,6 +20,9 @@ R_END_FRAG   = "riot.route = route\n})(riot)"
 A_START_FRAG = ";define(function(require, exports, module) {\n 'use strict' \n"
 A_END_FRAG   = "});"
 
+# ES6
+ES6_END_FRAG   = "export default route"
+
 # Standalone adapter
 S_START_FRAG = ";(function() {\n 'use strict'\n /* istanbul ignore next */\n"
 S_END_FRAG   = "window.route = route\n})();"
@@ -40,6 +43,9 @@ build:
 	@ cat lib/index.js | sed $(REPLACER1) | sed $(REPLACER2) >> dist/route.js
 	@ echo $(S_END_FRAG) >> dist/route.js
 	@ $(UGLIFY) dist/route.js --comments --mangle -o dist/route.min.js
+	# ES6
+	@ cat node_modules/riot-observable/lib/index.js >> dist/es6.route.js
+	@ echo $(ES6_END_FRAG) >> dist/es6.route.js
 
 watch:
 	@ $(CHOKIDAR) lib/* lib/**/* -c 'make build'

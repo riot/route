@@ -1,5 +1,6 @@
 # Logs
 logs
+.DS_Store
 *.log
 
 # Runtime data
