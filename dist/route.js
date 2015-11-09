@@ -183,6 +183,10 @@ function normalize(path) {
   return path[REPLACE](/^\/|\/$/, '')
 }
 
+function isString(str) {
+  return typeof str == 'string'
+}
+
 /**
  * Get the part after domain name
  * @param {string} href - fullpath
@@ -273,7 +277,7 @@ function go(path, title) {
  * @param {(string|RegExp|function)} second - title / action
  */
 prot.m = function(first, second) {
-  if (first[0] && (!second || second[0])) go(first, second)
+  if (isString(first) && (!second || isString(second))) go(first, second)
   else if (second) this.r(first, second)
   else this.r('@', first)
 }
@@ -306,7 +310,10 @@ prot.e = function(path) {
  * @param {function} action - action to register
  */
 prot.r = function(filter, action) {
-  if (filter != '@') this.$.push(filter)
+  if (filter != '@') {
+    filter = '/' + normalize(filter)
+    this.$.push(filter)
+  }
   this.on(filter, action)
 }
 
@@ -374,13 +381,17 @@ route.stop = function () {
   }
 }
 
-/** Start routing **/
-route.start = function () {
+/**
+ * Start routing
+ * @param {boolean} autoExec - automatically exec after starting if true
+ */
+route.start = function (autoExec) {
   if (!started) {
     win[ADD_EVENT_LISTENER](POPSTATE, emit)
     doc[ADD_EVENT_LISTENER](clickEvent, click)
     started = true
   }
+  if (autoExec) emit(true)
 }
 
 /** Prepare the router **/
