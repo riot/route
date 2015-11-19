@@ -22,6 +22,7 @@ var RE_ORIGIN = /^.+?\/+[^\/]+/,
   clickEvent = doc && doc.ontouchstart ? 'touchstart' : 'click',
   started = false,
   central = riot.observable(),
+  routeFound = false,
   base, current, parser, secondParser, emitStack = [], emitStackLevel = 0
 
 /**
@@ -124,9 +125,13 @@ function click(e) {
   ) return
 
   if (el.href != loc.href) {
-    if (el.href.split('#')[0] == loc.href.split('#')[0]) return // internal jump
-    go(getPathFromBase(el.href), el.title || doc.title)
+    if (
+      el.href.split('#')[0] == loc.href.split('#')[0] // internal jump
+      || base != '#' && getPathFromRoot(el.href).indexOf(base) !== 0 // outside of base
+      || !go(getPathFromBase(el.href), el.title || doc.title) // route not found
+    ) return
   }
+
   e.preventDefault()
 }
 
@@ -141,7 +146,9 @@ function go(path, title) {
   history.pushState(null, title, base + normalize(path))
   // so we need to set it manually
   doc.title = title
+  routeFound = false
   emit()
+  return routeFound
 }
 
 /**
@@ -176,7 +183,7 @@ prot.e = function(path) {
     var args = (filter == '@' ? parser : secondParser)(normalize(path), normalize(filter))
     if (args) {
       this[TRIGGER].apply(null, [filter].concat(args))
-      return true // exit from loop
+      return routeFound = true // exit from loop
     }
   }, this)
 }
