@@ -241,6 +241,7 @@ describe('Core specs', function() {
   })
 
   it('start with autoExec option', function() {
+    route.stop()
     route.base('/')
     route(function() {
       counter++

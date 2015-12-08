@@ -67,17 +67,15 @@ function debounce(fn, delay) {
 
 /**
  * Set the listener to trigger the routes
+ * and trigger automatically the first route
+ * @param {boolean} autoExec - see route.start
  */
-function start() {
-  if (!started) return
-  // the timeout is needed to solve
-  // a weird safari bug https://github.com/riot/route/issues/33
-  setTimeout(function() {
-    debouncedEmit = debounce(emit, 1)
-    win[ADD_EVENT_LISTENER](POPSTATE, debouncedEmit)
-    win[ADD_EVENT_LISTENER](HASHCHANGE, debouncedEmit)
-    doc[ADD_EVENT_LISTENER](clickEvent, click)
-  }, 1)
+function start(autoExec) {
+  debouncedEmit = debounce(emit, 1)
+  win[ADD_EVENT_LISTENER](POPSTATE, debouncedEmit)
+  win[ADD_EVENT_LISTENER](HASHCHANGE, debouncedEmit)
+  doc[ADD_EVENT_LISTENER](clickEvent, click)
+  if (autoExec) emit(true)
 }
 
 /**
@@ -292,7 +290,7 @@ route.query = function() {
 /** Stop routing **/
 route.stop = function () {
   if (started) {
-    win[REMOVE_EVENT_LISTENER](POPSTATE, emit)
+    win[REMOVE_EVENT_LISTENER](POPSTATE, debouncedEmit)
     win[REMOVE_EVENT_LISTENER](HASHCHANGE, debouncedEmit)
     doc[REMOVE_EVENT_LISTENER](clickEvent, click)
     central[TRIGGER]('stop')
@@ -306,11 +304,14 @@ route.stop = function () {
  */
 route.start = function (autoExec) {
   if (!started) {
+    if (document.readyState == 'complete') start(autoExec)
+    // the timeout is needed to solve
+    // a weird safari bug https://github.com/riot/route/issues/33
+    else win[ADD_EVENT_LISTENER]('load', function() {
+      setTimeout(function() { start(autoExec) }, 1)
+    })
     started = true
-    if (document.readyState == 'complete') start()
-    else win[ADD_EVENT_LISTENER]('load', start)
   }
-  if (autoExec) emit(true)
 }
 
 /** Prepare the router **/
