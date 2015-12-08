@@ -67,7 +67,7 @@ describe('Core specs', function() {
 
   it('autostart triggers the route only once', function() {
     route.stop()
-    route(function(){
+    route(function() {
       counter++
     })
     route.start(true)
@@ -241,6 +241,7 @@ describe('Core specs', function() {
   })
 
   it('start with autoExec option', function() {
+    route.stop()
     route.base('/')
     route(function() {
       counter++

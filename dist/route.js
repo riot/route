@@ -107,7 +107,7 @@ var observable = function(el) {
 
         try {
           fn.apply(el, fn.typed ? [name].concat(args) : args)
-        } catch (e) { /* error */}
+        } catch (e) { el.trigger('error', e) }
         if (fns[i] !== fn) { i-- }
         fn.busy = 0
       }
@@ -173,14 +173,10 @@ function DEFAULT_SECOND_PARSER(path, filter) {
 /**
  * Set the listener to trigger the routes
  */
-function start() {
-  if (!started) return
-  // the timeout is needed to solve
-  // a weird safari bug https://github.com/riot/route/issues/33
-  setTimeout(function(){
-    win[ADD_EVENT_LISTENER](POPSTATE, emit)
-    doc[ADD_EVENT_LISTENER](clickEvent, click)
-  }, 1)
+function start(autoExec) {
+  win[ADD_EVENT_LISTENER](POPSTATE, emit)
+  doc[ADD_EVENT_LISTENER](clickEvent, click)
+  if (autoExec) emit(true)
 }
 
 /**
@@ -407,11 +403,14 @@ route.stop = function () {
  */
 route.start = function (autoExec) {
   if (!started) {
+    if (document.readyState == 'complete') start(autoExec)
+    // the timeout is needed to solve
+    // a weird safari bug https://github.com/riot/route/issues/33
+    else win[ADD_EVENT_LISTENER]('load', function() {
+      setTimeout(function() { start(autoExec) }, 1)
+    })
     started = true
-    if (document.readyState == 'complete') start()
-    else win[ADD_EVENT_LISTENER]('load', start)
   }
-  if (autoExec) emit(true)
 }
 
 /** Prepare the router **/
