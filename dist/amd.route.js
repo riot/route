@@ -50,6 +50,19 @@ function DEFAULT_SECOND_PARSER(path, filter) {
 }
 
 /**
+ * Set the listener to trigger the routes
+ */
+function start() {
+  if (!started) return
+  // the timeout is needed to solve
+  // a weird safari bug https://github.com/riot/route/issues/33
+  setTimeout(function(){
+    win[ADD_EVENT_LISTENER](POPSTATE, emit)
+    doc[ADD_EVENT_LISTENER](clickEvent, click)
+  }, 1)
+}
+
+/**
  * Router class
  */
 function Router() {
@@ -273,9 +286,9 @@ route.stop = function () {
  */
 route.start = function (autoExec) {
   if (!started) {
-    win[ADD_EVENT_LISTENER](POPSTATE, emit)
-    doc[ADD_EVENT_LISTENER](clickEvent, click)
     started = true
+    if (document.readyState == 'complete') start()
+    else win[ADD_EVENT_LISTENER]('load', start)
   }
   if (autoExec) emit(true)
 }

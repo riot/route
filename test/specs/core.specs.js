@@ -47,7 +47,6 @@ describe('Core specs', function() {
         e.preventDefault()
       })
     })
-
     // start router
     route.start()
   })
@@ -64,6 +63,15 @@ describe('Core specs', function() {
     route.base() // reset base
     route.parser() // reset parser
     route.start() // start router again
+  })
+
+  it('autostart triggers the route only once', function() {
+    route.stop()
+    route(function(){
+      counter++
+    })
+    route.start(true)
+    expect(counter).to.be(1)
   })
 
   it('detects the params', function() {
