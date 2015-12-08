@@ -67,7 +67,7 @@ describe('Core specs', function() {
 
   it('autostart triggers the route only once', function() {
     route.stop()
-    route(function(){
+    route(function() {
       counter++
     })
     route.start(true)
@@ -85,7 +85,7 @@ describe('Core specs', function() {
     expect(counter).to.be(2)
   })
 
-  it('detects link clicked', function() {
+  it('detects link clicked', function(done) {
     route(function(first, second) {
       counter++
       expect(first).to.be('fruit')

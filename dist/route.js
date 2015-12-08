@@ -107,7 +107,7 @@ var observable = function(el) {
 
         try {
           fn.apply(el, fn.typed ? [name].concat(args) : args)
-        } catch (e) { /* error */}
+        } catch (e) { el.trigger('error', e) }
         if (fns[i] !== fn) { i-- }
         fn.busy = 0
       }
@@ -177,7 +177,7 @@ function start() {
   if (!started) return
   // the timeout is needed to solve
   // a weird safari bug https://github.com/riot/route/issues/33
-  setTimeout(function(){
+  setTimeout(function() {
     win[ADD_EVENT_LISTENER](POPSTATE, emit)
     doc[ADD_EVENT_LISTENER](clickEvent, click)
   }, 1)
