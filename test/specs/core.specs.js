@@ -85,7 +85,7 @@ describe('Core specs', function() {
     expect(counter).to.be(2)
   })
 
-  it('detects link clicked', function(done) {
+  it('detects link clicked', function() {
     route(function(first, second) {
       counter++
       expect(first).to.be('fruit')

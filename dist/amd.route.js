@@ -15,6 +15,7 @@ var RE_ORIGIN = /^.+?\/+[^\/]+/,
   HAS_ATTRIBUTE = 'hasAttribute',
   REPLACE = 'replace',
   POPSTATE = 'popstate',
+  HASHCHANGE = 'hashchange',
   TRIGGER = 'trigger',
   MAX_EMIT_STACK_LEVEL = 3,
   win = window,
@@ -25,6 +26,7 @@ var RE_ORIGIN = /^.+?\/+[^\/]+/,
   started = false,
   central = observable(),
   routeFound = false,
+  debouncedEmit,
   base, current, parser, secondParser, emitStack = [], emitStackLevel = 0
 
 /**
@@ -50,6 +52,20 @@ function DEFAULT_SECOND_PARSER(path, filter) {
 }
 
 /**
+ * Simple/cheap debounce implementation
+ * @param   {function} fn - callback
+ * @param   {number} delay - delay in seconds
+ * @returns {function} debounced function
+ */
+function debounce(fn, delay) {
+  var t
+  return function () {
+    clearTimeout(t)
+    t = setTimeout(fn, delay)
+  }
+}
+
+/**
  * Set the listener to trigger the routes
  */
 function start() {
@@ -57,7 +73,9 @@ function start() {
   // the timeout is needed to solve
   // a weird safari bug https://github.com/riot/route/issues/33
   setTimeout(function() {
-    win[ADD_EVENT_LISTENER](POPSTATE, emit)
+    debouncedEmit = debounce(emit, 1)
+    win[ADD_EVENT_LISTENER](POPSTATE, debouncedEmit)
+    win[ADD_EVENT_LISTENER](HASHCHANGE, debouncedEmit)
     doc[ADD_EVENT_LISTENER](clickEvent, click)
   }, 1)
 }
@@ -154,6 +172,7 @@ function click(e) {
  * Go to the path
  * @param {string} path - destination path
  * @param {string} title - page title
+ * @returns {boolean} - route not found flag
  */
 function go(path, title) {
   title = title || doc.title
@@ -274,6 +293,7 @@ route.query = function() {
 route.stop = function () {
   if (started) {
     win[REMOVE_EVENT_LISTENER](POPSTATE, emit)
+    win[REMOVE_EVENT_LISTENER](HASHCHANGE, debouncedEmit)
     doc[REMOVE_EVENT_LISTENER](clickEvent, click)
     central[TRIGGER]('stop')
     started = false
