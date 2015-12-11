@@ -35,9 +35,12 @@ describe('Core specs', function() {
       '<a class="tag-k prevented" href="mailto:aaaaa@bbbbbbb.com">K</a>' +
       '<a class="tag-l prevented" href="http://somewhereelse.io/">L</a>' +
       '<a class="tag-m prevented" href="/download/" download>M</a>' +
-      '<a class="tag-n" href="/other/" target="_self">N</a>' +
-      '<a class="tag-o" href="/other/" target="_blank">O</a>' +
+      '<a class="tag-n prevented" href="/go-there/" target="_self">N</a>' +
+      '<a class="tag-o prevented" href="/got-there/" target="_blank">O</a>' +
       '<a class="tag-p prevented" href="/no-go/">no go</a>' +
+      '<a class="tag-q" href="/dont-go-q/">Q</a>' +
+      '<a class="tag-r" href="/dont-go-r/">R</a>' +
+      '<a class="tag-s" href="/dont-go-s/" target>S</a>' +
       '<p class="tag-z">O</p>'
     document.body.appendChild(html)
 
@@ -97,21 +100,27 @@ describe('Core specs', function() {
   })
 
   it('ignore link clicked in some cases', function() {
-    route(function() {
+    route.base('/')
+    route(function(name) {
       counter++
     })
     fireEvent($('.tag-z'), 'click')
-    expect(counter).to.be(0)
     fireEvent($('.tag-n'), 'click')
-    expect(counter).to.be(1)
-    expect(counter).to.be(1)
-
     fireEvent($('.tag-k'), 'click')
     fireEvent($('.tag-l'), 'click')
     fireEvent($('.tag-m'), 'click')
     fireEvent($('.tag-o'), 'click')
 
+    expect(counter).to.be(0)
+
+    fireEvent($('.tag-q'), 'click')
     expect(counter).to.be(1)
+
+    fireEvent($('.tag-r'), 'click')
+    expect(counter).to.be(2)
+
+    fireEvent($('.tag-s'), 'click')
+    expect(counter).to.be(2)
 
   })
 
