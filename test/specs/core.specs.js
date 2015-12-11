@@ -35,9 +35,12 @@ describe('Core specs', function() {
       '<a class="tag-k prevented" href="mailto:aaaaa@bbbbbbb.com">K</a>' +
       '<a class="tag-l prevented" href="http://somewhereelse.io/">L</a>' +
       '<a class="tag-m prevented" href="/download/" download>M</a>' +
-      '<a class="tag-n" href="/other/" target="_self">N</a>' +
-      '<a class="tag-o" href="/other/" target="_blank">O</a>' +
+      '<a class="tag-n prevented" href="/go-there/" target="_self">N</a>' +
+      '<a class="tag-o prevented" href="/got-there/" target="_blank">O</a>' +
       '<a class="tag-p prevented" href="/no-go/">no go</a>' +
+      '<a class="tag-q" href="/dont-go-q/">Q</a>' +
+      '<a class="tag-r" href="/dont-go-r/">R</a>' +
+      '<a class="tag-s prevented" href="/dont-go-s/" target>S</a>' +
       '<p class="tag-z">O</p>'
     document.body.appendChild(html)
 
@@ -96,22 +99,40 @@ describe('Core specs', function() {
     expect(counter).to.be(2)
   })
 
+  it('detects link clicked with deconstructor', function() {
+    route.base('/')
+    route(function(first, second) {
+      counter++
+    }, function(){
+      counter--
+    })
+    fireEvent($('.tag-g'), 'click') // + 1
+    fireEvent($('.tag-h'), 'click') // deconstruct -1 + 1
+    expect(counter).to.be(1)
+  })
+
   it('ignore link clicked in some cases', function() {
-    route(function() {
+    route.base('/')
+    route(function(name) {
       counter++
     })
     fireEvent($('.tag-z'), 'click')
-    expect(counter).to.be(0)
     fireEvent($('.tag-n'), 'click')
-    expect(counter).to.be(1)
-    expect(counter).to.be(1)
-
     fireEvent($('.tag-k'), 'click')
     fireEvent($('.tag-l'), 'click')
     fireEvent($('.tag-m'), 'click')
     fireEvent($('.tag-o'), 'click')
 
+    expect(counter).to.be(0)
+
+    fireEvent($('.tag-q'), 'click')
     expect(counter).to.be(1)
+
+    fireEvent($('.tag-r'), 'click')
+    expect(counter).to.be(2)
+
+    fireEvent($('.tag-s'), 'click')
+    expect(counter).to.be(2)
 
   })
 
@@ -165,6 +186,21 @@ describe('Core specs', function() {
     fireEvent($('.tag-g'), 'click')
     fireEvent($('.tag-h'), 'click')
     expect(counter).to.be(2)
+  })
+
+  it('set routing and filter with deconstructor', function() {
+    route.base('/')
+    route('fruit', function(first) {
+      counter++
+      expect(first).to.be(undefined)
+    }, function(){
+      counter--
+    })
+    route('fruit') // +1
+    route('fruit/apple') // no match -1 from deconstructor
+    fireEvent($('.tag-g'), 'click') // +1
+    fireEvent($('.tag-h'), 'click') // no match -1 from deconstructor
+    expect(counter).to.be(0)
   })
 
   it('sets routing and filter with wildcard(*)', function() {

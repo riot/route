@@ -25,7 +25,8 @@ var RE_ORIGIN = /^.+?\/+[^\/]+/,
   started = false,
   central = observable(),
   routeFound = false,
-  base, current, parser, secondParser, emitStack = [], emitStackLevel = 0
+  base, current, parser, secondParser, emitStack = [], emitStackLevel = 0,
+  currentDeconstructor, deconstructStack = []
 
 /**
  * Default parser. You can replace it via router.parser method.
@@ -51,6 +52,8 @@ function DEFAULT_SECOND_PARSER(path, filter) {
 
 /**
  * Set the listener to trigger the routes
+ * and trigger automatically the first route
+ * @param {boolean} autoExec - see route.start
  */
 function start(autoExec) {
   win[ADD_EVENT_LISTENER](POPSTATE, emit)
@@ -131,7 +134,7 @@ function click(e) {
     !el || el.nodeName != 'A' // not A tag
     || el[HAS_ATTRIBUTE]('download') // has download attr
     || !el[HAS_ATTRIBUTE]('href') // has no href attr
-    || el.target && el.target != '_self' // another window or frame
+    || el[HAS_ATTRIBUTE]('target') // has target attr
     || el.href.indexOf(loc.href.match(RE_ORIGIN)[0]) == -1 // cross origin
   ) return
 
@@ -142,7 +145,6 @@ function click(e) {
       || !go(getPathFromBase(el.href), el.title || doc.title) // route not found
     ) return
   }
-
   e.preventDefault()
 }
 
@@ -150,8 +152,13 @@ function click(e) {
  * Go to the path
  * @param {string} path - destination path
  * @param {string} title - page title
+ * @returns {boolean} routeFound
  */
 function go(path, title) {
+  // Call any deconstructors on current stack
+  while (currentDeconstructor = deconstructStack.shift())
+    currentDeconstructor.apply(null)
+
   title = title || doc.title
   // browsers ignores the second parameter `title`
   history.pushState(null, title, base + normalize(path))
@@ -167,14 +174,20 @@ function go(path, title) {
  * a single string:                go there
  * two strings:                    go there with setting a title
  * a single function:              set an action on the default route
+  * two functions:                 set an action and deconstructor on default route
  * a string/RegExp and a function: set an action on the route
+ * a string/RegExp and a function: set an action and deconstructor on route
+ *   deconstructor will be called when navigating away from the registered route
  * @param {(string|function)} first - path / action / filter
- * @param {(string|RegExp|function)} second - title / action
+ * @param {(string|RegExp|function)} second - title / action / deconstructor if first is function
+ * @param {(function)} third - deconstructor
  */
-prot.m = function(first, second) {
+prot.m = function(first, second, third) {
   if (isString(first) && (!second || isString(second))) go(first, second)
-  else if (second) this.r(first, second)
-  else this.r('@', first)
+  else if (typeof first === 'function' && second)
+    this.r('@', first, second)
+  else if (second) this.r(first, second, third)
+  else this.r('@', first, second)
 }
 
 /**
@@ -203,13 +216,18 @@ prot.e = function(path) {
  * Register route
  * @param {string} filter - filter for matching to url
  * @param {function} action - action to register
+ * @param {function} deconstruct - action when navigating away from route
  */
-prot.r = function(filter, action) {
+prot.r = function(filter, action, deconstruct) {
   if (filter != '@') {
     filter = '/' + normalize(filter)
     this.$.push(filter)
   }
-  this.on(filter, action)
+  this.on(filter, function() {
+    if (typeof deconstruct === 'function')
+      deconstructStack.push(deconstruct)
+    action.apply(this, arguments)
+  }.bind(this))
 }
 
 var mainRouter = new Router()
@@ -273,6 +291,7 @@ route.stop = function () {
     doc[REMOVE_EVENT_LISTENER](clickEvent, click)
     central[TRIGGER]('stop')
     started = false
+    deconstructStack = []
   }
 }
 
