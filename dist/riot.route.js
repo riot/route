@@ -49,6 +49,8 @@ function DEFAULT_SECOND_PARSER(path, filter) {
 
 /**
  * Set the listener to trigger the routes
+ * and trigger automatically the first route
+ * @param {boolean} autoExec - see route.start
  */
 function start(autoExec) {
   win[ADD_EVENT_LISTENER](POPSTATE, emit)
@@ -129,7 +131,7 @@ function click(e) {
     !el || el.nodeName != 'A' // not A tag
     || el[HAS_ATTRIBUTE]('download') // has download attr
     || !el[HAS_ATTRIBUTE]('href') // has no href attr
-    || el.target && el.target != '_self' // another window or frame
+    || el[HAS_ATTRIBUTE]('target') // has target attr
     || el.href.indexOf(loc.href.match(RE_ORIGIN)[0]) == -1 // cross origin
   ) return
 
