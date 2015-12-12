@@ -64,8 +64,7 @@ function debounce(fn, delay) {
 }
 
 /**
- * Set the listener to trigger the routes
- * and trigger automatically the first route
+ * Set the window listeners to trigger the routes
  * @param {boolean} autoExec - see route.start
  */
 function start(autoExec) {

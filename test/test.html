@@ -8,16 +8,12 @@
 
   <body>
     <script src="../dist/route.js"></script>
-     <a href="#hi">hi</a>
+     <a href="#hi/there">hi</a>
     <script>
       route(function(path) {
-        console.log('Started')
-      })
-      route('hi', function() {
-        console.log('hi')
+        console.log('path=%s', path)
       })
       route.start(true)
-
     </script>
   </body>
 
