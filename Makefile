@@ -21,6 +21,7 @@ A_START_FRAG = ";define(function(require, exports, module) {\n 'use strict' \n"
 A_END_FRAG   = "});"
 
 # ES6
+ES6_START_FRAG   = "import observable from 'riot-observable'"
 ES6_END_FRAG   = "export default route"
 
 # Standalone adapter
@@ -44,7 +45,8 @@ build:
 	@ echo $(S_END_FRAG) >> dist/route.js
 	@ $(UGLIFY) dist/route.js --comments --mangle -o dist/route.min.js
 	# ES6
-	@ cat node_modules/riot-observable/lib/index.js >> dist/es6.route.js
+	@ echo $(ES6_START_FRAG) > dist/es6.route.js
+	@ cat lib/index.js | sed $(REPLACER1) | sed $(REPLACER2) >> dist/es6.route.js
 	@ echo $(ES6_END_FRAG) >> dist/es6.route.js
 
 watch:
