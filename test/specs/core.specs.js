@@ -110,7 +110,7 @@ describe('Core specs', function() {
       function(){ fireEvent($('.tag-d'), 'click') },
       function(){ expect(counter).to.be(2) },
       done
-    ], 2)
+    ], 10)
   })
 
   it('ignore link clicked in some cases', function() {
@@ -330,6 +330,18 @@ describe('Core specs', function() {
     })
     route('!/user/activation?token=xyz')
     expect(counter).to.be(1)
+  })
+
+  it('custom parser2', function() {
+    route.parser(function(path) {
+      return path
+    })
+    route(function(first) {
+      counter++
+    })
+    route('test')
+    route('/')
+    expect(counter).to.be(2)
   })
 
   it('custom second parser', function() {
