@@ -12,6 +12,20 @@ function fireEvent(node, eventName) {
   node.dispatchEvent(event)
 }
 
+/**
+ * Simple serial runner with intervals
+ * @param { array } tasks - functions
+ * @param { number } interval - msec
+ */
+function serial(tasks, interval) {
+  function runner() {
+    var task
+    if (task = tasks.shift()) task()
+    if (tasks.length) setTimeout(runner, interval)
+  }
+  runner()
+}
+
 describe('Core specs', function() {
 
   var counter = 0, $, $$
@@ -47,6 +61,8 @@ describe('Core specs', function() {
         e.preventDefault()
       })
     })
+    // start router
+    route.start()
   })
 
   after(function() {
@@ -83,15 +99,18 @@ describe('Core specs', function() {
     expect(counter).to.be(2)
   })
 
-  it('detects link clicked', function() {
+  it('detects link clicked', function(done) {
     route(function(first, second) {
       counter++
       expect(first).to.be('fruit')
       expect(['apple', 'orange']).to.contain(second)
     })
-    fireEvent($('.tag-c'), 'click')
-    fireEvent($('.tag-d'), 'click')
-    expect(counter).to.be(2)
+    serial([
+      function(){ fireEvent($('.tag-c'), 'click') },
+      function(){ fireEvent($('.tag-d'), 'click') },
+      function(){ expect(counter).to.be(2) },
+      done
+    ], 2)
   })
 
   it('ignore link clicked in some cases', function() {
