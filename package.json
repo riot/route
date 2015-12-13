@@ -1,6 +1,6 @@
 {
   "name": "riot-route",
-  "version": "2.3.11",
+  "version": "2.3.12",
   "description": "Simple client-side router",
   "main": "lib/index.js",
   "directories": {
@@ -25,7 +25,7 @@
   },
   "devDependencies": {
     "chokidar-cli": "^1.2.0",
-    "coveralls": "^2.11.4",
+    "coveralls": "^2.11.6",
     "eslint": "^1.10.3",
     "expect.js": "^0.3.1",
     "karma": "^0.13.15",

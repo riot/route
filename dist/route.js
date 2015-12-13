@@ -107,7 +107,7 @@ var observable = function(el) {
 
         try {
           fn.apply(el, fn.typed ? [name].concat(args) : args)
-        } catch (e) { el.trigger('error', e) }
+        } catch (e) { /* error */}
         if (fns[i] !== fn) { i-- }
         fn.busy = 0
       }
@@ -333,7 +333,7 @@ prot.s = function() {
 prot.e = function(path) {
   this.$.concat('@').some(function(filter) {
     var args = (filter == '@' ? parser : secondParser)(normalize(path), normalize(filter))
-    if (args) {
+    if (typeof args != 'undefined') {
       this[TRIGGER].apply(null, [filter].concat(args))
       return routeFound = true // exit from loop
     }
