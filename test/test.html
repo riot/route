@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+
+  <head>
+    <title>Riot Router Test</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  </head>
+
+  <body>
+    <script src="../dist/route.js"></script>
+     <a href="#hi/there">hi</a>
+    <script>
+      route(function(path) {
+        console.log('path=%s', path)
+      })
+      route.start(true)
+    </script>
+  </body>
+
+</html>

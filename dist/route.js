@@ -14,7 +14,6 @@ var observable = function(el) {
   /**
    * Private variables and methods
    */
-
   var callbacks = {},
     onEachEvent = function(e, fn) { e.replace(/\S+/g, fn) },
     defineProperty = function (key, value) {
@@ -32,7 +31,6 @@ var observable = function(el) {
    * @param  { Function } fn - callback function
    * @returns { Object } el
    */
-
   defineProperty('on', function(events, fn) {
     if (typeof fn != 'function')  return el
 
@@ -50,9 +48,8 @@ var observable = function(el) {
    * @param   { Function } fn - callback function
    * @returns { Object } el
    */
-
   defineProperty('off', function(events, fn) {
-    if (events == '*') callbacks = {}
+    if (events == '*' && !fn) callbacks = {}
     else {
       onEachEvent(events, function(name) {
         if (fn) {
@@ -72,20 +69,10 @@ var observable = function(el) {
    * @param   { Function } fn - callback function
    * @returns { Object } el
    */
-
   defineProperty('one', function(events, fn) {
     function on() {
       el.off(events, on)
-
-      // V8 performance optimization
-      // https://github.com/petkaantonov/bluebird/wiki/Optimization-killers#3-managing-arguments
-      var arglen = arguments.length
-      var args = new Array(arglen)
-      for (var i = 0; i < arglen; i++) {
-        args[i] = arguments[i]
-      }
-
-      fn.apply(el, args)
+      fn.apply(el, arguments)
     }
     return el.on(events, on)
   })
@@ -95,14 +82,14 @@ var observable = function(el) {
    * @param   { String } events - events ids
    * @returns { Object } el
    */
-
   defineProperty('trigger', function(events) {
-    // V8 performance optimization
-    // https://github.com/petkaantonov/bluebird/wiki/Optimization-killers#3-managing-arguments
-    var arglen = arguments.length - 1
-    var args = new Array(arglen)
+
+    // getting the arguments
+    // skipping the first one
+    var arglen = arguments.length - 1,
+      args = new Array(arglen)
     for (var i = 0; i < arglen; i++) {
-      args[i] = arguments[i + 1] // skip first argument
+      args[i] = arguments[i + 1]
     }
 
     onEachEvent(events, function(name) {
@@ -112,16 +99,13 @@ var observable = function(el) {
       for (var i = 0, fn; fn = fns[i]; ++i) {
         if (fn.busy) return
         fn.busy = 1
-
-        try {
-          fn.apply(el, fn.typed ? [name].concat(args) : args)
-        } catch (e) { /* error */}
+        fn.apply(el, fn.typed ? [name].concat(args) : args)
         if (fns[i] !== fn) { i-- }
         fn.busy = 0
       }
 
-      if (callbacks.all && name != 'all')
-        el.trigger.apply(el, ['all', name].concat(args))
+      if (callbacks['*'] && name != '*')
+        el.trigger.apply(el, ['*', name].concat(args))
 
     })
 
@@ -144,16 +128,19 @@ var RE_ORIGIN = /^.+?\/+[^\/]+/,
   HAS_ATTRIBUTE = 'hasAttribute',
   REPLACE = 'replace',
   POPSTATE = 'popstate',
+  HASHCHANGE = 'hashchange',
   TRIGGER = 'trigger',
-  win = typeof window != 'undefined' && window,
-  doc = win && document,
-  hist = win && history,
-  loc = win && (hist.location || win.location), // see html5-history-api
+  MAX_EMIT_STACK_LEVEL = 3,
+  win = window,
+  doc = document,
+  loc = win.history.location || win.location, // see html5-history-api
   prot = Router.prototype, // to minify more
   clickEvent = doc && doc.ontouchstart ? 'touchstart' : 'click',
   started = false,
   central = observable(),
-  base, current, parser, secondParser
+  routeFound = false,
+  debouncedEmit,
+  base, current, parser, secondParser, emitStack = [], emitStackLevel = 0
 
 /**
  * Default parser. You can replace it via router.parser method.
@@ -161,7 +148,7 @@ var RE_ORIGIN = /^.+?\/+[^\/]+/,
  * @returns {array} array
  */
 function DEFAULT_PARSER(path) {
-  return (path || '').split(/[/?#]/)
+  return path.split(/[/?#]/)
 }
 
 /**
@@ -178,6 +165,32 @@ function DEFAULT_SECOND_PARSER(path, filter) {
 }
 
 /**
+ * Simple/cheap debounce implementation
+ * @param   {function} fn - callback
+ * @param   {number} delay - delay in seconds
+ * @returns {function} debounced function
+ */
+function debounce(fn, delay) {
+  var t
+  return function () {
+    clearTimeout(t)
+    t = setTimeout(fn, delay)
+  }
+}
+
+/**
+ * Set the window listeners to trigger the routes
+ * @param {boolean} autoExec - see route.start
+ */
+function start(autoExec) {
+  debouncedEmit = debounce(emit, 1)
+  win[ADD_EVENT_LISTENER](POPSTATE, debouncedEmit)
+  win[ADD_EVENT_LISTENER](HASHCHANGE, debouncedEmit)
+  doc[ADD_EVENT_LISTENER](clickEvent, click)
+  if (autoExec) emit(true)
+}
+
+/**
  * Router class
  */
 function Router() {
@@ -188,7 +201,11 @@ function Router() {
 }
 
 function normalize(path) {
-  return (path || '')[REPLACE](/^\/|\/$/, '')
+  return path[REPLACE](/^\/|\/$/, '')
+}
+
+function isString(str) {
+  return typeof str == 'string'
 }
 
 /**
@@ -197,7 +214,7 @@ function normalize(path) {
  * @returns {string} path from root
  */
 function getPathFromRoot(href) {
-  return (href || loc.href || '')[REPLACE](RE_ORIGIN, '')
+  return (href || loc.href)[REPLACE](RE_ORIGIN, '')
 }
 
 /**
@@ -207,20 +224,30 @@ function getPathFromRoot(href) {
  */
 function getPathFromBase(href) {
   return base[0] == '#'
-    ? (href || loc.href || '').split(base)[1] || href
-    : (getPathFromRoot(href) || href || '')[REPLACE](new RegExp('^' + base), '')
+    ? (href || loc.href).split(base)[1] || ''
+    : getPathFromRoot(href)[REPLACE](base, '')
 }
 
-function emit(path, force) {
-  path = getPathFromBase(path)
-  if (force || path != current) {
-    central[TRIGGER]('emit', path)
-    current = path
+function emit(force) {
+  // the stack is needed for redirections
+  var isRoot = emitStackLevel == 0
+  if (MAX_EMIT_STACK_LEVEL <= emitStackLevel) return
+
+  emitStackLevel++
+  emitStack.push(function() {
+    var path = getPathFromBase()
+    if (force || path != current) {
+      central[TRIGGER]('emit', path)
+      current = path
+    }
+  })
+  if (isRoot) {
+    while (emitStack.length) {
+      emitStack[0]()
+      emitStack.shift()
+    }
+    emitStackLevel = 0
   }
-}
-
-function popstate() {
-  emit() // so emit isn't passed the PopStateEvent object
 }
 
 function click(e) {
@@ -241,9 +268,13 @@ function click(e) {
   ) return
 
   if (el.href != loc.href) {
-    if (el.href.split('#')[0] == loc.href.split('#')[0]) return // internal jump
-    go(getPathFromBase(el.href), el.title || doc.title)
+    if (
+      el.href.split('#')[0] == loc.href.split('#')[0] // internal jump
+      || base != '#' && getPathFromRoot(el.href).indexOf(base) !== 0 // outside of base
+      || !go(getPathFromBase(el.href), el.title || doc.title) // route not found
+    ) return
   }
+
   e.preventDefault()
 }
 
@@ -251,14 +282,17 @@ function click(e) {
  * Go to the path
  * @param {string} path - destination path
  * @param {string} title - page title
+ * @returns {boolean} - route not found flag
  */
 function go(path, title) {
   title = title || doc.title
   // browsers ignores the second parameter `title`
-  hist && hist.pushState(null, title, base + path)
+  history.pushState(null, title, base + normalize(path))
   // so we need to set it manually
   doc.title = title
-  emit(path)
+  routeFound = false
+  emit()
+  return routeFound
 }
 
 /**
@@ -271,7 +305,7 @@ function go(path, title) {
  * @param {(string|RegExp|function)} second - title / action
  */
 prot.m = function(first, second) {
-  if (first[0] && (!second || second[0])) go(first, second)
+  if (isString(first) && (!second || isString(second))) go(first, second)
   else if (second) this.r(first, second)
   else this.r('@', first)
 }
@@ -291,9 +325,9 @@ prot.s = function() {
 prot.e = function(path) {
   this.$.concat('@').some(function(filter) {
     var args = (filter == '@' ? parser : secondParser)(normalize(path), normalize(filter))
-    if (args) {
+    if (typeof args != 'undefined') {
       this[TRIGGER].apply(null, [filter].concat(args))
-      return true // exit from loop
+      return routeFound = true // exit from loop
     }
   }, this)
 }
@@ -304,7 +338,10 @@ prot.e = function(path) {
  * @param {function} action - action to register
  */
 prot.r = function(filter, action) {
-  if (filter != '@') this.$.push(filter)
+  if (filter != '@') {
+    filter = '/' + normalize(filter)
+    this.$.push(filter)
+  }
   this.on(filter, action)
 }
 
@@ -332,12 +369,9 @@ route.base = function(arg) {
   current = getPathFromBase() // recalculate current path
 }
 
-/**
- * Exec routing right now
- * @param {string} [path] - optional starting path (only for server-side use)
- */
-route.exec = function(path) {
-  emit(path, true)
+/** Exec routing right now **/
+route.exec = function() {
+  emit(true)
 }
 
 /**
@@ -361,30 +395,33 @@ route.parser = function(fn, fn2) {
  */
 route.query = function() {
   var q = {}
-  var href = loc.href || current
-  href[REPLACE](/[?&](.+?)=([^&]*)/g, function(_, k, v) { q[k] = v })
+  loc.href[REPLACE](/[?&](.+?)=([^&]*)/g, function(_, k, v) { q[k] = v })
   return q
 }
 
 /** Stop routing **/
 route.stop = function () {
   if (started) {
-    if (win) {
-      win[REMOVE_EVENT_LISTENER](POPSTATE, popstate)
-      doc[REMOVE_EVENT_LISTENER](clickEvent, click)
-    }
+    win[REMOVE_EVENT_LISTENER](POPSTATE, debouncedEmit)
+    win[REMOVE_EVENT_LISTENER](HASHCHANGE, debouncedEmit)
+    doc[REMOVE_EVENT_LISTENER](clickEvent, click)
     central[TRIGGER]('stop')
     started = false
   }
 }
 
-/** Start routing **/
-route.start = function () {
+/**
+ * Start routing
+ * @param {boolean} autoExec - automatically exec after starting if true
+ */
+route.start = function (autoExec) {
   if (!started) {
-    if (win) {
-      win[ADD_EVENT_LISTENER](POPSTATE, popstate)
-      doc[ADD_EVENT_LISTENER](clickEvent, click)
-    }
+    if (document.readyState == 'complete') start(autoExec)
+    // the timeout is needed to solve
+    // a weird safari bug https://github.com/riot/route/issues/33
+    else win[ADD_EVENT_LISTENER]('load', function() {
+      setTimeout(function() { start(autoExec) }, 1)
+    })
     started = true
   }
 }

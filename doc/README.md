@@ -5,8 +5,8 @@ The Riot Router is the minimal router implementation with such technologies:
 - pushState and history API
 - multiple routing groups
 - replacable parser
-- compatible with IE9 and higher
-
+- use a [polyfill](https://github.com/devote/HTML5-History-API) for ie9 support and earlier.  Because ie.
+ 
 ## Setup routing
 
 ### route(callback)
@@ -127,6 +127,29 @@ Start listening the url changes.
 
 ```javascript
 route.start()
+<<<<<<< HEAD
+=======
+```
+
+<span class="tag red">&gt;= v2.3</span>
+
+Riot doesn't `start` its router automatically. DON'T FORGET TO START IT BY YOURSELF. This also means that you can choose your favorite router.
+(Note: before v2.3 Riot started the router automatically. The behavior was changed)
+
+### route.start(autoExec)
+
+Start listening the url changes and also exec routing on the current url.
+
+```js
+route.start(true)
+```
+
+This is a shorthand for:
+
+```js
+route.start()
+route.exec()
+>>>>>>> master
 ```
 
 <span class="tag red">&gt;= v2.3</span>
@@ -136,7 +159,7 @@ Riot doesn't `start` its router automatically. DON'T FORGET TO START IT BY YOURS
 
 ### route.stop()
 
-Stop the all routings. It'll removes the listeners and clear also the callbacks.
+Stop all the routings. It'll removes the listeners and clear also the callbacks.
 
 ```javascript
 route.stop()
