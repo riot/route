@@ -52,7 +52,7 @@ build:
 watch:
 	@ $(CHOKIDAR) lib/* lib/**/* -c 'make build'
 
-test: eslint test-karma
+test: eslint test-karma test-server
 
 test-browsers:
 	@ BROWSERSTACK=1 $(KARMA) start test/karma.conf.js
@@ -63,6 +63,9 @@ eslint:
 
 test-karma:
 	@ $(KARMA) start test/karma.conf.js
+
+test-server:
+	@ $(MOCHA) test/specs/server.specs.js
 
 test-coveralls:
 	@ RIOT_COV=1 cat ./coverage/lcov.info ./coverage/report-lcov/lcov.info | $(COVERALLS)
