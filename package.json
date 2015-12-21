@@ -3,7 +3,7 @@
   "version": "2.3.12",
   "description": "Simple client-side router",
   "main": "lib/index.js",
-  "jsnext:main" "lib/es6.route.js"
+  "jsnext:main": "lib/es6.route.js",
   "directories": {
     "lib": "lib",
     "doc": "doc"
