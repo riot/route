@@ -2,8 +2,22 @@ var route  = require('../../lib/index')
 var expect = require('expect.js')
 
 describe('Server-side specs', function() {
+
   it('does not crash when included on server', function() {
     expect(1).to.be.ok()
+  })
+
+  it('can go to routes on server', function() {
+    var counter = 0
+  
+    route.base('/')
+    route('/fruit', function() {
+      counter++
+    })
+
+    route('/veg')
+    route('/fruit')
+    expect(counter).to.equal(1)
   })
 
   describe('Public API can safely be called on server', function() {

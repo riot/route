@@ -184,10 +184,9 @@ subRoute('/fruit/apple', function() { /* */ })
 subRoute.stop()
 ```
 
-### route.exec([path])
+### route.exec()
 
 Study the current browser path "in place" and emit routing without waiting for it to change.  
-For server-side support, the optional `path` parameter needs to be provided from the server.
 
 ```javascript
 route(function() { /* define routing */ })

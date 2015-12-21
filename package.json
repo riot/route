@@ -1,7 +1,7 @@
 {
   "name": "riot-route",
   "version": "2.3.12",
-  "description": "Simple client-side router",
+  "description": "Simple isomorphic router",
   "main": "lib/index.js",
   "jsnext:main": "lib/es6.route.js",
   "directories": {
