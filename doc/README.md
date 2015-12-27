@@ -127,6 +127,8 @@ Start listening the url changes.
 
 ```javascript
 route.start()
+<<<<<<< HEAD
+=======
 ```
 
 <span class="tag red">&gt;= v2.3</span>
@@ -147,7 +149,13 @@ This is a shorthand for:
 ```js
 route.start()
 route.exec()
+>>>>>>> master
 ```
+
+<span class="tag red">&gt;= v2.3</span>
+
+Riot doesn't `start` its router automatically. DON'T FORGET TO START IT BY YOURSELF. This also means that you can choose your favorite router.
+(Note: before v2.3 Riot started the router automatically. The behavior was changed)
 
 ### route.stop()
 
@@ -178,7 +186,7 @@ subRoute.stop()
 
 ### route.exec()
 
-Study the current path "in place" emit routing without waiting for it to change. For example:
+Study the current browser path "in place" and emit routing without waiting for it to change.  
 
 ```javascript
 route(function() { /* define routing */ })

@@ -13,7 +13,7 @@ REPLACER2 = "/module.exports = route/d"
 REPLACER3 = "s/observable(/riot.observable(/g"
 
 # Riot adapter
-R_START_FRAG = ";(function(riot) { if (!window) return;\n" #TODO: remove `if` after server-side supported
+R_START_FRAG = ";(function(riot) {\n"
 R_END_FRAG   = "riot.route = route\n})(riot)"
 
 # AMD adapter
@@ -52,7 +52,7 @@ build:
 watch:
 	@ $(CHOKIDAR) lib/* lib/**/* -c 'make build'
 
-test: eslint test-karma
+test: eslint test-karma test-server
 
 test-browsers:
 	@ BROWSERSTACK=1 $(KARMA) start test/karma.conf.js
@@ -64,8 +64,11 @@ eslint:
 test-karma:
 	@ $(KARMA) start test/karma.conf.js
 
+test-server:
+	@ $(MOCHA) test/specs/server.specs.js
+
 test-coveralls:
 	@ RIOT_COV=1 cat ./coverage/lcov.info ./coverage/report-lcov/lcov.info | $(COVERALLS)
 
 
-.PHONY: build test eslint test-karma test-coveralls
+.PHONY: build test eslint test-karma test-server test-coveralls

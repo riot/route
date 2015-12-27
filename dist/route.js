@@ -14,7 +14,6 @@ var observable = function(el) {
   /**
    * Private variables and methods
    */
-
   var callbacks = {},
     onEachEvent = function(e, fn) { e.replace(/\S+/g, fn) },
     defineProperty = function (key, value) {
@@ -32,7 +31,6 @@ var observable = function(el) {
    * @param  { Function } fn - callback function
    * @returns { Object } el
    */
-
   defineProperty('on', function(events, fn) {
     if (typeof fn != 'function')  return el
 
@@ -50,9 +48,8 @@ var observable = function(el) {
    * @param   { Function } fn - callback function
    * @returns { Object } el
    */
-
   defineProperty('off', function(events, fn) {
-    if (events == '*') callbacks = {}
+    if (events == '*' && !fn) callbacks = {}
     else {
       onEachEvent(events, function(name) {
         if (fn) {
@@ -72,7 +69,6 @@ var observable = function(el) {
    * @param   { Function } fn - callback function
    * @returns { Object } el
    */
-
   defineProperty('one', function(events, fn) {
     function on() {
       el.off(events, on)
@@ -86,7 +82,6 @@ var observable = function(el) {
    * @param   { String } events - events ids
    * @returns { Object } el
    */
-
   defineProperty('trigger', function(events) {
 
     // getting the arguments
@@ -104,16 +99,13 @@ var observable = function(el) {
       for (var i = 0, fn; fn = fns[i]; ++i) {
         if (fn.busy) return
         fn.busy = 1
-
-        try {
-          fn.apply(el, fn.typed ? [name].concat(args) : args)
-        } catch (e) { /* error */}
+        fn.apply(el, fn.typed ? [name].concat(args) : args)
         if (fns[i] !== fn) { i-- }
         fn.busy = 0
       }
 
-      if (callbacks.all && name != 'all')
-        el.trigger.apply(el, ['all', name].concat(args))
+      if (callbacks['*'] && name != '*')
+        el.trigger.apply(el, ['*', name].concat(args))
 
     })
 

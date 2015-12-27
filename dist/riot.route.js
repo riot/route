@@ -1,4 +1,4 @@
-;(function(riot) { if (!window) return;
+;(function(riot) {
 
 /**
  * Simple client-side router
