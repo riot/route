@@ -14,6 +14,7 @@ var observable = function(el) {
   /**
    * Private variables and methods
    */
+
   var callbacks = {},
     onEachEvent = function(e, fn) { e.replace(/\S+/g, fn) },
     defineProperty = function (key, value) {
@@ -31,6 +32,7 @@ var observable = function(el) {
    * @param  { Function } fn - callback function
    * @returns { Object } el
    */
+
   defineProperty('on', function(events, fn) {
     if (typeof fn != 'function')  return el
 
@@ -48,8 +50,9 @@ var observable = function(el) {
    * @param   { Function } fn - callback function
    * @returns { Object } el
    */
+
   defineProperty('off', function(events, fn) {
-    if (events == '*' && !fn) callbacks = {}
+    if (events == '*') callbacks = {}
     else {
       onEachEvent(events, function(name) {
         if (fn) {
@@ -69,6 +72,7 @@ var observable = function(el) {
    * @param   { Function } fn - callback function
    * @returns { Object } el
    */
+
   defineProperty('one', function(events, fn) {
     function on() {
       el.off(events, on)
@@ -82,6 +86,7 @@ var observable = function(el) {
    * @param   { String } events - events ids
    * @returns { Object } el
    */
+
   defineProperty('trigger', function(events) {
 
     // getting the arguments
@@ -99,13 +104,16 @@ var observable = function(el) {
       for (var i = 0, fn; fn = fns[i]; ++i) {
         if (fn.busy) return
         fn.busy = 1
-        fn.apply(el, fn.typed ? [name].concat(args) : args)
+
+        try {
+          fn.apply(el, fn.typed ? [name].concat(args) : args)
+        } catch (e) { /* error */}
         if (fns[i] !== fn) { i-- }
         fn.busy = 0
       }
 
-      if (callbacks['*'] && name != '*')
-        el.trigger.apply(el, ['*', name].concat(args))
+      if (callbacks.all && name != 'all')
+        el.trigger.apply(el, ['all', name].concat(args))
 
     })
 
@@ -131,9 +139,10 @@ var RE_ORIGIN = /^.+?\/+[^\/]+/,
   HASHCHANGE = 'hashchange',
   TRIGGER = 'trigger',
   MAX_EMIT_STACK_LEVEL = 3,
-  win = window,
-  doc = document,
-  loc = win.history.location || win.location, // see html5-history-api
+  win = typeof window != 'undefined' && window,
+  doc = typeof document != 'undefined' && document,
+  hist = win && history,
+  loc = win && (hist.location || win.location), // see html5-history-api
   prot = Router.prototype, // to minify more
   clickEvent = doc && doc.ontouchstart ? 'touchstart' : 'click',
   started = false,
@@ -214,7 +223,7 @@ function isString(str) {
  * @returns {string} path from root
  */
 function getPathFromRoot(href) {
-  return (href || loc.href)[REPLACE](RE_ORIGIN, '')
+  return (href || loc.href || '')[REPLACE](RE_ORIGIN, '')
 }
 
 /**
@@ -224,7 +233,7 @@ function getPathFromRoot(href) {
  */
 function getPathFromBase(href) {
   return base[0] == '#'
-    ? (href || loc.href).split(base)[1] || ''
+    ? (href || loc.href || '').split(base)[1] || ''
     : getPathFromRoot(href)[REPLACE](base, '')
 }
 
@@ -285,14 +294,19 @@ function click(e) {
  * @returns {boolean} - route not found flag
  */
 function go(path, title) {
-  title = title || doc.title
-  // browsers ignores the second parameter `title`
-  history.pushState(null, title, base + normalize(path))
-  // so we need to set it manually
-  doc.title = title
-  routeFound = false
-  emit()
-  return routeFound
+  if (hist) { // if a browser
+    title = title || doc.title
+    // browsers ignores the second parameter `title`
+    hist.pushState(null, title, base + normalize(path))
+    // so we need to set it manually
+    doc.title = title
+    routeFound = false
+    emit()
+    return routeFound
+  }
+
+  // Server-side usage: directly execute handlers for the path
+  return central[TRIGGER]('emit', getPathFromBase(path))
 }
 
 /**
@@ -395,16 +409,19 @@ route.parser = function(fn, fn2) {
  */
 route.query = function() {
   var q = {}
-  loc.href[REPLACE](/[?&](.+?)=([^&]*)/g, function(_, k, v) { q[k] = v })
+  var href = loc.href || current
+  href[REPLACE](/[?&](.+?)=([^&]*)/g, function(_, k, v) { q[k] = v })
   return q
 }
 
 /** Stop routing **/
 route.stop = function () {
   if (started) {
-    win[REMOVE_EVENT_LISTENER](POPSTATE, debouncedEmit)
-    win[REMOVE_EVENT_LISTENER](HASHCHANGE, debouncedEmit)
-    doc[REMOVE_EVENT_LISTENER](clickEvent, click)
+    if (win) {
+      win[REMOVE_EVENT_LISTENER](POPSTATE, debouncedEmit)
+      win[REMOVE_EVENT_LISTENER](HASHCHANGE, debouncedEmit)
+      doc[REMOVE_EVENT_LISTENER](clickEvent, click)
+    }
     central[TRIGGER]('stop')
     started = false
   }
@@ -416,12 +433,14 @@ route.stop = function () {
  */
 route.start = function (autoExec) {
   if (!started) {
-    if (document.readyState == 'complete') start(autoExec)
-    // the timeout is needed to solve
-    // a weird safari bug https://github.com/riot/route/issues/33
-    else win[ADD_EVENT_LISTENER]('load', function() {
-      setTimeout(function() { start(autoExec) }, 1)
-    })
+    if (win) {
+      if (document.readyState == 'complete') start(autoExec)
+      // the timeout is needed to solve
+      // a weird safari bug https://github.com/riot/route/issues/33
+      else win[ADD_EVENT_LISTENER]('load', function() {
+        setTimeout(function() { start(autoExec) }, 1)
+      })
+    }
     started = true
   }
 }
