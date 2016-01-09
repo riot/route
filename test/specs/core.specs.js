@@ -451,4 +451,23 @@ describe('Core specs', function() {
     expect(counter).to.be(3)
   })
 
+  /* history.back() doesn't work with PhantomJS
+  it('push and replace', function() {
+    route.base('/')
+    route(function() {
+      counter++
+    })
+    route('one', 'One')
+    route('two', 'Two')
+    history.back()
+    expect(window.location.pathname).to.be('/one')
+    route('three', 'Three')
+    route('four', 'Four')
+    route('five', 'Five', true)
+    history.back()
+    expect(window.location.pathname).to.be('/three')
+    expect(counter).to.be(5)
+  })
+  */
+
 })
