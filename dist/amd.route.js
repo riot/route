@@ -170,13 +170,17 @@ function click(e) {
  * Go to the path
  * @param {string} path - destination path
  * @param {string} title - page title
+ * @param {boolean} shouldReplace - use replaceState or pushState
  * @returns {boolean} - route not found flag
  */
-function go(path, title) {
+function go(path, title, shouldReplace) {
   if (hist) { // if a browser
+    path = base + normalize(path)
     title = title || doc.title
     // browsers ignores the second parameter `title`
-    hist.pushState(null, title, base + normalize(path))
+    shouldReplace
+      ? hist.replaceState(null, title, path)
+      : hist.pushState(null, title, path)
     // so we need to set it manually
     doc.title = title
     routeFound = false
@@ -192,13 +196,15 @@ function go(path, title) {
  * Go to path or set action
  * a single string:                go there
  * two strings:                    go there with setting a title
+ * two strings and boolean:        replace history with setting a title
  * a single function:              set an action on the default route
  * a string/RegExp and a function: set an action on the route
  * @param {(string|function)} first - path / action / filter
  * @param {(string|RegExp|function)} second - title / action
+ * @param {boolean} third - replace flag
  */
-prot.m = function(first, second) {
-  if (isString(first) && (!second || isString(second))) go(first, second)
+prot.m = function(first, second, third) {
+  if (isString(first) && (!second || isString(second))) go(first, second, third || false)
   else if (second) this.r(first, second)
   else this.r('@', first)
 }

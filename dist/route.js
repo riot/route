@@ -14,8 +14,8 @@ var observable = function(el) {
   /**
    * Private variables and methods
    */
-
   var callbacks = {},
+    slice = Array.prototype.slice,
     onEachEvent = function(e, fn) { e.replace(/\S+/g, fn) },
     defineProperty = function (key, value) {
       Object.defineProperty(el, key, {
@@ -32,7 +32,6 @@ var observable = function(el) {
    * @param  { Function } fn - callback function
    * @returns { Object } el
    */
-
   defineProperty('on', function(events, fn) {
     if (typeof fn != 'function')  return el
 
@@ -50,9 +49,8 @@ var observable = function(el) {
    * @param   { Function } fn - callback function
    * @returns { Object } el
    */
-
   defineProperty('off', function(events, fn) {
-    if (events == '*') callbacks = {}
+    if (events == '*' && !fn) callbacks = {}
     else {
       onEachEvent(events, function(name) {
         if (fn) {
@@ -72,7 +70,6 @@ var observable = function(el) {
    * @param   { Function } fn - callback function
    * @returns { Object } el
    */
-
   defineProperty('one', function(events, fn) {
     function on() {
       el.off(events, on)
@@ -86,34 +83,27 @@ var observable = function(el) {
    * @param   { String } events - events ids
    * @returns { Object } el
    */
-
   defineProperty('trigger', function(events) {
 
     // getting the arguments
     // skipping the first one
-    var arglen = arguments.length - 1,
-      args = new Array(arglen)
-    for (var i = 0; i < arglen; i++) {
-      args[i] = arguments[i + 1]
-    }
+    var args = slice.call(arguments, 1),
+      fns
 
     onEachEvent(events, function(name) {
 
-      var fns = (callbacks[name] || []).slice(0)
+      fns = slice.call(callbacks[name] || [], 0)
 
       for (var i = 0, fn; fn = fns[i]; ++i) {
         if (fn.busy) return
         fn.busy = 1
-
-        try {
-          fn.apply(el, fn.typed ? [name].concat(args) : args)
-        } catch (e) { /* error */}
+        fn.apply(el, fn.typed ? [name].concat(args) : args)
         if (fns[i] !== fn) { i-- }
         fn.busy = 0
       }
 
-      if (callbacks.all && name != 'all')
-        el.trigger.apply(el, ['all', name].concat(args))
+      if (callbacks['*'] && name != '*')
+        el.trigger.apply(el, ['*', name].concat(args))
 
     })
 
@@ -291,13 +281,17 @@ function click(e) {
  * Go to the path
  * @param {string} path - destination path
  * @param {string} title - page title
+ * @param {boolean} shouldReplace - use replaceState or pushState
  * @returns {boolean} - route not found flag
  */
-function go(path, title) {
+function go(path, title, shouldReplace) {
   if (hist) { // if a browser
+    path = base + normalize(path)
     title = title || doc.title
     // browsers ignores the second parameter `title`
-    hist.pushState(null, title, base + normalize(path))
+    shouldReplace
+      ? hist.replaceState(null, title, path)
+      : hist.pushState(null, title, path)
     // so we need to set it manually
     doc.title = title
     routeFound = false
@@ -313,13 +307,15 @@ function go(path, title) {
  * Go to path or set action
  * a single string:                go there
  * two strings:                    go there with setting a title
+ * two strings and boolean:        replace history with setting a title
  * a single function:              set an action on the default route
  * a string/RegExp and a function: set an action on the route
  * @param {(string|function)} first - path / action / filter
  * @param {(string|RegExp|function)} second - title / action
+ * @param {boolean} third - replace flag
  */
-prot.m = function(first, second) {
-  if (isString(first) && (!second || isString(second))) go(first, second)
+prot.m = function(first, second, third) {
+  if (isString(first) && (!second || isString(second))) go(first, second, third || false)
   else if (second) this.r(first, second)
   else this.r('@', first)
 }
