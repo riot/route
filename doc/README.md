@@ -139,8 +139,6 @@ Start listening the url changes.
 
 ```javascript
 route.start()
-<<<<<<< HEAD
-=======
 ```
 
 <span class="tag red">&gt;= v2.3</span>
@@ -161,7 +159,6 @@ This is a shorthand for:
 ```js
 route.start()
 route.exec()
->>>>>>> master
 ```
 
 <span class="tag red">&gt;= v2.3</span>
@@ -198,7 +195,7 @@ subRoute.stop()
 
 ### route.exec()
 
-Study the current browser path "in place" and emit routing without waiting for it to change.  
+Study the current browser path "in place" and emit routing without waiting for it to change.
 
 ```javascript
 route(function() { /* define routing */ })
