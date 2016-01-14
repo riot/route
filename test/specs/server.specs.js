@@ -9,15 +9,19 @@ describe('Server-side specs', function() {
 
   it('can go to routes on server', function() {
     var counter = 0
-  
+
     route.base('/')
     route('/fruit', function() {
+      counter++
+    })
+    route('/fruit/apples', function() {
       counter++
     })
 
     route('/veg')
     route('/fruit')
-    expect(counter).to.equal(1)
+    route('/fruit/apples')
+    expect(counter).to.equal(2)
   })
 
   describe('Public API can safely be called on server', function() {
@@ -34,7 +38,7 @@ describe('Server-side specs', function() {
     it('can create sub route context', function() {
       expect(route.create).to.not.throwException()
     })
-    
+
     it('can define route handlers', function() {
       expect(route).withArgs(function(){}).to.not.throwException()
       expect(route).withArgs('/fruit', function(){}).to.not.throwException()
