@@ -9,7 +9,7 @@ describe('Server-side specs', function() {
 
   it('can go to routes on server', function() {
     var counter = 0
-  
+
     route.base('/')
     route('/fruit', function() {
       counter++
@@ -34,7 +34,12 @@ describe('Server-side specs', function() {
     it('can create sub route context', function() {
       expect(route.create).to.not.throwException()
     })
-    
+
+    it('can terminate sub route context', function() {
+      var subRoute = route.create()
+      expect(subRoute.stop).to.not.throwException()
+    })
+
     it('can define route handlers', function() {
       expect(route).withArgs(function(){}).to.not.throwException()
       expect(route).withArgs('/fruit', function(){}).to.not.throwException()
