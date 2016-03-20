@@ -106,29 +106,30 @@ describe('Core specs', function() {
       expect(['apple', 'orange']).to.contain(second)
     })
     serial([
-      function(){ fireEvent($('.tag-c'), 'click') },
-      function(){ fireEvent($('.tag-d'), 'click') },
-      function(){ expect(counter).to.be(2) },
+      function() { fireEvent($('.tag-c'), 'click') },
+      function() { fireEvent($('.tag-d'), 'click') },
+      function() { expect(counter).to.be(2) },
       done
     ], 10)
   })
 
-  it('ignore link clicked in some cases', function() {
+  it('ignore link clicked in some cases', function(done) {
     route(function() {
       counter++
     })
-    fireEvent($('.tag-z'), 'click')
-    expect(counter).to.be(0)
-    fireEvent($('.tag-n'), 'click')
-    expect(counter).to.be(1)
-    expect(counter).to.be(1)
 
-    fireEvent($('.tag-k'), 'click')
-    fireEvent($('.tag-l'), 'click')
-    fireEvent($('.tag-m'), 'click')
-    fireEvent($('.tag-o'), 'click')
-
-    expect(counter).to.be(1)
+    serial([
+      function() { fireEvent($('.tag-z'), 'click') },
+      function() { expect(counter).to.be(0) },
+      function() { fireEvent($('.tag-n'), 'click') },
+      function() { expect(counter).to.be(1) },
+      function() { fireEvent($('.tag-k'), 'click') },
+      function() { fireEvent($('.tag-l'), 'click') },
+      function() { fireEvent($('.tag-m'), 'click') },
+      function() { fireEvent($('.tag-o'), 'click') },
+      function() { expect(counter).to.be(1) },
+      done
+    ], 10)
 
   })
 
