@@ -6,7 +6,7 @@
  */
 
 
-var RE_ORIGIN = /^.+?\/+[^\/]+/,
+var RE_ORIGIN = /^.+?\/\/+[^\/]+/,
   EVENT_LISTENER = 'EventListener',
   REMOVE_EVENT_LISTENER = 'remove' + EVENT_LISTENER,
   ADD_EVENT_LISTENER = 'add' + EVENT_LISTENER,
@@ -100,7 +100,7 @@ function isString(str) {
  * @returns {string} path from root
  */
 function getPathFromRoot(href) {
-  return (href || loc.href || '')[REPLACE](RE_ORIGIN, '')
+  return (href || loc.href)[REPLACE](RE_ORIGIN, '')
 }
 
 /**
@@ -111,7 +111,7 @@ function getPathFromRoot(href) {
 function getPathFromBase(href) {
   return base[0] == '#'
     ? (href || loc.href || '').split(base)[1] || ''
-    : getPathFromRoot(href)[REPLACE](base, '')
+    : (loc ? getPathFromRoot(href) : href || '')[REPLACE](base, '')
 }
 
 function emit(force) {
