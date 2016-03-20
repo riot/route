@@ -109,7 +109,7 @@ See also [Routing group](#routing-groups) and [Routing priority](#routing-priori
 
 ## Use router
 
-### route(to[, title])
+### route(to[, title, shouldReplace])
 
 Changes the browser URL and notifies all the listeners assigned with `route(callback)`. For example:
 
@@ -122,14 +122,23 @@ From v2.3, you can set the title, too:
 route('customers/267393/edit', 'Editing customer page')
 ```
 
+With the third argument, you can replace the current history. It's useful when the app needs redirect to another page.
+
+```javascript
+route('not-found', 'Not found', true)
+```
+
+Internally...
+
+- without `shouldReplace`, `history.pushState()` will be used.
+- with `shouldReplace`, `history.replaceState()` will be used.
+
 ### route.start()
 
 Start listening the url changes.
 
 ```javascript
 route.start()
-<<<<<<< HEAD
-=======
 ```
 
 <span class="tag red">&gt;= v2.3</span>
@@ -150,7 +159,6 @@ This is a shorthand for:
 ```js
 route.start()
 route.exec()
->>>>>>> master
 ```
 
 <span class="tag red">&gt;= v2.3</span>
@@ -187,7 +195,7 @@ subRoute.stop()
 
 ### route.exec()
 
-Study the current browser path "in place" and emit routing without waiting for it to change.  
+Study the current browser path "in place" and emit routing without waiting for it to change.
 
 ```javascript
 route(function() { /* define routing */ })

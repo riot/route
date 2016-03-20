@@ -39,9 +39,15 @@ describe('Server-side specs', function() {
       expect(route.create).to.not.throwException()
     })
 
+
+    it('can terminate sub route context', function() {
+      var subRoute = route.create()
+      expect(subRoute.stop).to.not.throwException()
+    })
+
     it('can define route handlers', function() {
-      expect(route).withArgs(function(){}).to.not.throwException()
-      expect(route).withArgs('/fruit', function(){}).to.not.throwException()
+      expect(route).withArgs(function() {}).to.not.throwException()
+      expect(route).withArgs('/fruit', function() {}).to.not.throwException()
     })
 
     it('can call route to', function() {
@@ -58,7 +64,7 @@ describe('Server-side specs', function() {
     })
 
     it('can set parsers', function() {
-      expect(route.parser).withArgs(function(){}, function(){}).to.not.throwException()
+      expect(route.parser).withArgs(function() {}, function() {}).to.not.throwException()
     })
   })
 })
