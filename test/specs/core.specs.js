@@ -234,6 +234,15 @@ describe('Core specs', function() {
     expect(q.limit).to.be('30')
   })
 
+  it('gets query from url with decode', function() {
+    route.base('/')
+    var search = window.encodeURIComponent('search?keyword=test&limit=30')
+    route(search)
+    var q = route.query(true)
+    expect(q.keyword).to.be('test')
+    expect(q.limit).to.be('30')
+  })
+
   it('jumps to same url', function() {
     route.base('/')
     route('fruit..', function(first) {
