@@ -220,10 +220,13 @@ prot.s = function() {
  * @param {string} path - path
  */
 prot.e = function(path) {
+  path = normalize(path)
+  var segs = parser(path)
+
   this.$.concat('@').some(function(filter) {
-    var args = (filter == '@' ? parser : secondParser)(normalize(path), normalize(filter))
+    var args = (filter == '@' ? parser : secondParser)(path, normalize(filter))
     if (typeof args != 'undefined') {
-      this[TRIGGER].apply(null, [filter].concat(args))
+      this[TRIGGER].apply(null, [filter].concat(segs))
       return routeFound = true // exit from loop
     }
   }, this)

@@ -12,16 +12,38 @@ var observable = function(el) {
   el = el || {}
 
   /**
-   * Private variables and methods
+   * Private variables
    */
   var callbacks = {},
-    slice = Array.prototype.slice,
-    onEachEvent = function(e, fn) { e.replace(/\S+/g, fn) }
+    slice = Array.prototype.slice
 
-  // extend the object adding the observable methods
+  /**
+   * Private Methods
+   */
+
+  /**
+   * Helper function needed to get and loop all the events in a string
+   * @param   { String }   e - event string
+   * @param   {Function}   fn - callback
+   */
+  function onEachEvent(e, fn) {
+    var es = e.split(' '), l = es.length, i = 0, name, indx
+    for (; i < l; i++) {
+      name = es[i]
+      indx = name.indexOf('.')
+      if (name) fn( ~indx ? name.substring(0, indx) : name, i, ~indx ? name.slice(indx + 1) : null)
+    }
+  }
+
+  /**
+   * Public Api
+   */
+
+  // extend the el object adding the observable methods
   Object.defineProperties(el, {
     /**
-     * Listen to the given space separated list of `events` and execute the `callback` each time an event is triggered.
+     * Listen to the given space separated list of `events` and
+     * execute the `callback` each time an event is triggered.
      * @param  { String } events - events ids
      * @param  { Function } fn - callback function
      * @returns { Object } el
@@ -30,9 +52,10 @@ var observable = function(el) {
       value: function(events, fn) {
         if (typeof fn != 'function')  return el
 
-        onEachEvent(events, function(name, pos) {
+        onEachEvent(events, function(name, pos, ns) {
           (callbacks[name] = callbacks[name] || []).push(fn)
           fn.typed = pos > 0
+          fn.ns = ns
         })
 
         return el
@@ -52,11 +75,11 @@ var observable = function(el) {
       value: function(events, fn) {
         if (events == '*' && !fn) callbacks = {}
         else {
-          onEachEvent(events, function(name) {
-            if (fn) {
+          onEachEvent(events, function(name, pos, ns) {
+            if (fn || ns) {
               var arr = callbacks[name]
               for (var i = 0, cb; cb = arr && arr[i]; ++i) {
-                if (cb == fn) arr.splice(i--, 1)
+                if (cb == fn || ns && cb.ns == ns) arr.splice(i--, 1)
               }
             } else delete callbacks[name]
           })
@@ -69,7 +92,8 @@ var observable = function(el) {
     },
 
     /**
-     * Listen to the given space separated list of `events` and execute the `callback` at most once
+     * Listen to the given space separated list of `events` and
+     * execute the `callback` at most once
      * @param   { String } events - events ids
      * @param   { Function } fn - callback function
      * @returns { Object } el
@@ -88,7 +112,8 @@ var observable = function(el) {
     },
 
     /**
-     * Execute all callback functions that listen to the given space separated list of `events`
+     * Execute all callback functions that listen to
+     * the given space separated list of `events`
      * @param   { String } events - events ids
      * @returns { Object } el
      */
@@ -104,14 +129,14 @@ var observable = function(el) {
           args[i] = arguments[i + 1] // skip first argument
         }
 
-        onEachEvent(events, function(name) {
+        onEachEvent(events, function(name, pos, ns) {
 
           fns = slice.call(callbacks[name] || [], 0)
 
           for (var i = 0, fn; fn = fns[i]; ++i) {
-            if (fn.busy) return
+            if (fn.busy) continue
             fn.busy = 1
-            fn.apply(el, fn.typed ? [name].concat(args) : args)
+            if (!ns || fn.ns == ns) fn.apply(el, fn.typed ? [name].concat(args) : args)
             if (fns[i] !== fn) { i-- }
             fn.busy = 0
           }
@@ -353,10 +378,13 @@ prot.s = function() {
  * @param {string} path - path
  */
 prot.e = function(path) {
+  path = normalize(path)
+  var segs = parser(path)
+
   this.$.concat('@').some(function(filter) {
-    var args = (filter == '@' ? parser : secondParser)(normalize(path), normalize(filter))
+    var args = (filter == '@' ? parser : secondParser)(path, normalize(filter))
     if (typeof args != 'undefined') {
-      this[TRIGGER].apply(null, [filter].concat(args))
+      this[TRIGGER].apply(null, [filter].concat(segs))
       return routeFound = true // exit from loop
     }
   }, this)
