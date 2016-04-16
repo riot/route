@@ -176,7 +176,8 @@ describe('Core specs', function() {
     route.base('/')
     route('fruit', function(first) {
       counter++
-      expect(first).to.be(undefined)
+      // expect(first).to.be(undefined)
+      expect(first).to.be('fruit')
     })
     route('fruit')
     route('fruit/apple')
@@ -187,9 +188,10 @@ describe('Core specs', function() {
 
   it('sets routing and filter with wildcard(*)', function() {
     route.base('/')
-    route('fruit/*', function(first) {
+    route('fruit/*', function(first, second) {
       counter++
-      expect(['apple', 'red-apple']).to.contain(first)
+      // expect(['apple', 'red-apple']).to.contain(first)
+      expect(['apple', 'red-apple']).to.contain(second)
     })
 
     route('fruit')
@@ -238,7 +240,8 @@ describe('Core specs', function() {
     route.base('/')
     route('fruit..', function(first) {
       counter++
-      expect(first).to.be(undefined)
+      // expect(first).to.be(undefined)
+      expect(first).to.be('fruit')
     })
     route('fruit')
     route('fruit/apple')
