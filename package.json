@@ -22,21 +22,21 @@
     "router"
   ],
   "dependencies": {
-    "riot-observable": "^2.3.15"
+    "riot-observable": "^2.4.2"
   },
   "devDependencies": {
     "chokidar-cli": "^1.2.0",
-    "coveralls": "^2.11.8",
-    "eslint": "^2.4.0",
+    "coveralls": "^2.11.9",
+    "eslint": "^2.9.0",
     "expect.js": "^0.3.1",
     "karma": "^0.13.22",
-    "karma-browserstack-launcher": "^0.1.10",
-    "karma-coverage": "^0.5.5",
-    "karma-mocha": "^0.2.2",
-    "karma-mocha-reporter": "^2.0.0",
-    "karma-phantomjs-launcher": "^0.2.3",
+    "karma-browserstack-launcher": "^1.0.0",
+    "karma-coverage": "^1.0.0",
+    "karma-mocha": "^1.0.1",
+    "karma-mocha-reporter": "^2.0.3",
+    "karma-phantomjs-launcher": "^1.0.0",
     "mocha": "^2.4.5",
-    "phantomjs": "^1.9.19",
+    "phantomjs": "^2.1.7",
     "uglify-js": "^2.6.2"
   },
   "author": "Muut, Inc. and other contributors",
