@@ -8,7 +8,7 @@ module.exports = function(config) {
     browsers = Object.keys(customLaunchers)
     browsers.forEach(function(browser) { customLaunchers[browser].base = 'BrowserStack' })
   } else
-    browsers = ['PhantomJS']
+    browsers = ['Electron']
 
   config.set({
     basePath: '',
@@ -18,11 +18,10 @@ module.exports = function(config) {
       'karma-mocha-reporter',
       'karma-coverage',
       'karma-browserstack-launcher',
-      'karma-phantomjs-launcher'
+      'karma-electron'
     ],
     files: [
       '../node_modules/expect.js/index.js',
-      'polyfill.js',
       '../dist/route.js',
       'specs/core.specs.js'
     ],
