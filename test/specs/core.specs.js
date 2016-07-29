@@ -110,7 +110,7 @@ describe('Core specs', function() {
       function() { fireEvent($('.tag-d'), 'click') },
       function() { expect(counter).to.be(2) },
       done
-    ], 10)
+    ], 20)
   })
 
   it('ignore link clicked in some cases', function(done) {
@@ -452,23 +452,26 @@ describe('Core specs', function() {
     expect(counter).to.be(3)
   })
 
-  /* history.back() doesn't work with PhantomJS
-  it('push and replace', function() {
+  it('push and replace', function(done) {
     route.base('/')
     route(function() {
       counter++
     })
-    route('one', 'One')
-    route('two', 'Two')
-    history.back()
-    expect(window.location.pathname).to.be('/one')
-    route('three', 'Three')
-    route('four', 'Four')
-    route('five', 'Five', true)
-    history.back()
-    expect(window.location.pathname).to.be('/three')
-    expect(counter).to.be(5)
+    serial([
+      function() { route('one', 'One') },
+      function() { route('two', 'Two') },
+      function() { history.back() },
+      function() { expect(window.location.pathname).to.be('/one') },
+      function() { route('three', 'Three') },
+      function() { route('four', 'Four') },
+      function() { route('five', 'Five', true) },
+      function() { history.back() },
+      function() {
+        expect(window.location.pathname).to.be('/three')
+        expect(counter).to.be(7)
+      },
+      done
+    ], 30)
   })
-  */
 
 })
