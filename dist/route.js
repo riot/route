@@ -271,7 +271,7 @@ function getPathFromBase(href) {
 
 function emit(force) {
   // the stack is needed for redirections
-  var isRoot = emitStackLevel == 0
+  var isRoot = emitStackLevel == 0, first
   if (MAX_EMIT_STACK_LEVEL <= emitStackLevel) return
 
   emitStackLevel++
@@ -283,10 +283,7 @@ function emit(force) {
     }
   })
   if (isRoot) {
-    while (emitStack.length) {
-      emitStack[0]()
-      emitStack.shift()
-    }
+    while (first = emitStack.shift()) first() // stack increses within this call
     emitStackLevel = 0
   }
 }
@@ -309,13 +306,13 @@ function click(e) {
     || el.href.indexOf(loc.href.match(RE_ORIGIN)[0]) == -1 // cross origin
   ) return
 
-  if (el.href != loc.href) {
-    if (
+  if (el.href != loc.href
+    && (
       el.href.split('#')[0] == loc.href.split('#')[0] // internal jump
-      || base != '#' && getPathFromRoot(el.href).indexOf(base) !== 0 // outside of base
+      || base[0] != '#' && getPathFromRoot(el.href).indexOf(base) !== 0 // outside of base
+      || base[0] == '#' && el.href.split(base)[0] != loc.href.split(base)[0] // outside of #base
       || !go(getPathFromBase(el.href), el.title || doc.title) // route not found
-    ) return
-  }
+    )) return
 
   e.preventDefault()
 }
@@ -328,22 +325,20 @@ function click(e) {
  * @returns {boolean} - route not found flag
  */
 function go(path, title, shouldReplace) {
-  if (hist) { // if a browser
-    path = base + normalize(path)
-    title = title || doc.title
-    // browsers ignores the second parameter `title`
-    shouldReplace
-      ? hist.replaceState(null, title, path)
-      : hist.pushState(null, title, path)
-    // so we need to set it manually
-    doc.title = title
-    routeFound = false
-    emit()
-    return routeFound
-  }
-
   // Server-side usage: directly execute handlers for the path
-  return central[TRIGGER]('emit', getPathFromBase(path))
+  if (!hist) return central[TRIGGER]('emit', getPathFromBase(path))
+
+  path = base + normalize(path)
+  title = title || doc.title
+  // browsers ignores the second parameter `title`
+  shouldReplace
+    ? hist.replaceState(null, title, path)
+    : hist.pushState(null, title, path)
+  // so we need to set it manually
+  doc.title = title
+  routeFound = false
+  emit()
+  return routeFound
 }
 
 /**
