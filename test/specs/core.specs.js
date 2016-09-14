@@ -76,6 +76,7 @@ describe('Core specs', function() {
     route.stop() // detouch all routings
     route.base() // reset base
     route.parser() // reset parser
+	route.normalize() // reset normalize
     route.start() // start router again
   })
 
@@ -344,6 +345,19 @@ describe('Core specs', function() {
     route('test')
     route('/')
     expect(counter).to.be(2)
+  })
+  
+  it('custom normalize', function() {
+    route.normalize(function(path) {
+      return path.replace(/^\//, '')
+    })
+    route(function(first) {
+      counter++
+      expect(first).to.be('vegitable')
+    })
+    route('/vegitable/')
+	expect(window.location.pathname).to.be('/vegitable/')
+	expect(counter).to.be(1)
   })
 
   it('custom second parser', function() {
