@@ -346,19 +346,6 @@ describe('Core specs', function() {
     route('/')
     expect(counter).to.be(2)
   })
-  
-  it('custom normalize', function() {
-    route.normalize(function(path) {
-      return path.replace(/^\//, '')
-    })
-    route(function(first) {
-      counter++
-      expect(first).to.be('vegitable')
-    })
-    route('/vegitable/')
-	expect(window.location.pathname).to.be('/vegitable/')
-	expect(counter).to.be(1)
-  })
 
   it('custom second parser', function() {
     route.base('/')
@@ -376,6 +363,9 @@ describe('Core specs', function() {
     expect(counter).to.be(4)
   })
 
+    
+
+  
   it('metakeys events get skipped', function() {
 
     route(function() {
@@ -467,6 +457,19 @@ describe('Core specs', function() {
     expect(counter).to.be(3)
   })
 
+  it('custom normalize', function() {
+    route.normalize(function(path) {
+      return path.replace(/^\//, '')
+    })
+    route(function(first) {
+      counter++
+      expect(first).to.be('vegitable')
+    })
+    route('/vegitable/')
+	expect(window.location.pathname).to.be('/vegitable/')
+	expect(counter).to.be(1)
+  })
+  
   it('push and replace', function(done) {
     route.base('/')
     route(function() {
