@@ -458,6 +458,9 @@ describe('Core specs', function() {
   })
 
   it('custom normalize', function() {
+	var str
+    route.base('/')
+	
     route.normalize(function(path) {
       return path.replace(/^\//, '')
     })
