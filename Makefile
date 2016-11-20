@@ -12,10 +12,6 @@ REPLACER1 = "/var observable = require('riot-observable')/d"
 REPLACER2 = "/module.exports = route/d"
 REPLACER3 = "s/observable(/riot.observable(/g"
 
-# Riot adapter
-R_START_FRAG = ";(function(riot) {\n"
-R_END_FRAG   = "riot.route = route\n})(riot)"
-
 # AMD adapter
 A_START_FRAG = ";define(function(require, exports, module) {\n 'use strict' \n"
 A_END_FRAG   = "});"
@@ -29,10 +25,6 @@ S_START_FRAG = ";(function() {\n 'use strict'\n /* istanbul ignore next */\n"
 S_END_FRAG   = "window.route = route\n})();"
 
 build:
-	# Riot
-	@ echo $(R_START_FRAG) > dist/riot.route.js
-	@ cat lib/index.js | sed $(REPLACER1) | sed $(REPLACER2) | sed $(REPLACER3) >> dist/riot.route.js
-	@ echo $(R_END_FRAG) >> dist/riot.route.js
 	# AMD
 	@ echo $(A_START_FRAG) > dist/amd.route.js
 	@ cat lib/index.js >> dist/amd.route.js
