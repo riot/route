@@ -18,7 +18,7 @@ Or if you are using es6 syntax you could do:
 import route from 'riot-route' // var route = require('riot-route') is also ok
 ```
 
-# Router API
+# API
 
 The Riot Router is the minimal router implementation with such technologies:
 
