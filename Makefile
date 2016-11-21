@@ -51,7 +51,7 @@ test-browsers:
 
 eslint:
 	# check code style
-	@ $(ESLINT) -c ./.eslintrc lib
+	@ $(ESLINT) -c ./.eslintrc.json lib
 
 test-karma:
 	@ $(KARMA) start test/karma.conf.js
