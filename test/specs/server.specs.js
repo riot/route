@@ -1,4 +1,4 @@
-var route  = require('../../lib/index')
+var route  = require('../../')
 var expect = require('expect.js')
 
 describe('Server-side specs', function() {
