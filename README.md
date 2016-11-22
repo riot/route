@@ -72,8 +72,8 @@ The files are also hosted on [jsdelivr](https://www.jsdelivr.com/?query=riot-rou
 ## Development
 
 - `$ npm install` to setup
-- `$ make build` to build it once
-- `$ make watch` to watch and build it continuously
+- `$ npm run build` to build it once
+- `$ npm run watch` to watch and build it continuously
 - `$ npm test` to test
 
 [travis-image]:https://img.shields.io/travis/riot/observable.svg?style=flat-square

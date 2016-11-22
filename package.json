@@ -9,11 +9,21 @@
     "doc": "doc"
   },
   "scripts": {
-    "pretest": "make build",
-    "test": "make test",
-    "prepublish": "make build",
+    "pretest": "npm run build",
+    "test": "npm run eslint && npm run karma && npm run mocha",
+    "prepublish": "npm run build",
 
-    "rollup": "node rollup.js"
+    "build": "npm run rollup && npm run uglify && npm run uglify-amd",
+    "rollup": "node rollup.js",
+    "uglify": "uglifyjs dist/route.js --comments --mangle -o dist/route.min.js",
+    "uglify-amd": "uglifyjs dist/amd.route.js --comments --mangle -o dist/amd.route.min.js",
+    "watch": "chokidar lib/* lib/**/* -c 'npm run build'",
+
+    "eslint": "eslint lib test/specs",
+    "karma": "karma start test/karma.conf.js",
+    "karma-bs": "BROWSERSTACK=1 karma start test/karma.conf.js",
+    "mocha": "mocha test/specs/server.specs.js",
+    "coveralls": "RIOT_COV=1 cat ./coverage/lcov.info ./coverage/report-lcov/lcov.info | coveralls"
   },
   "repository": {
     "type": "git",
