@@ -2,8 +2,8 @@
   "name": "riot-route",
   "version": "2.5.0",
   "description": "Simple isomorphic router",
-  "main": "lib/index.js",
-  "jsnext:main": "dist/es6.route.js",
+  "main": "dist/cjs.route.js",
+  "jsnext:main": "lib/index.js",
   "directories": {
     "lib": "lib",
     "doc": "doc"
