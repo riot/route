@@ -1,10 +1,8 @@
 # Introduction
 
-The default riot.js bundle does not contain any router allowing you to pick any library
-that fits better to your needs.
+The default riot.js bundle does not contain any router allowing you to pick any library that fits better to your needs.
 
-However we have developed and maintain `riot-route`, a small router library that could be used also as standalone module
-and fits perfectly to the minimal riot philosophy.
+However we have developed and maintain `riot-route`, a small router library that could be used also as standalone module and fits perfectly to the minimal riot philosophy.
 
 If you want to use `riot-route` in your project you just need to include it either adding via `<script>` tag:
 

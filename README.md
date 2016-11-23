@@ -1,11 +1,8 @@
-[![Build Status][travis-image]][travis-url]
-[![Code Quality][codeclimate-image]][codeclimate-url]
-[![NPM version][npm-version-image]][npm-url]
-[![NPM downloads][npm-downloads-image]][npm-url]
-[![MIT License][license-image]][license-url]
-[![Coverage Status][coverage-image]][coverage-url]
-
 # Riot Router
+
+[![Build Status][travis-image]][travis-url] [![Code Quality][codeclimate-image]][codeclimate-url] [![NPM version][npm-version-image]][npm-url] [![NPM downloads][npm-downloads-image]][npm-url] [![MIT License][license-image]][license-url] [![Coverage Status][coverage-image]][coverage-url]
+
+> Simple client-side router
 
 The Riot Router is the minimal router implementation with such technologies:
 
@@ -14,33 +11,34 @@ The Riot Router is the minimal router implementation with such technologies:
 - replacable parser
 - compatible with IE9 and higher
 
-A part of Riot.js, but it also works without Riot.js.
+It started as a part of Riot.js, but now it becomes an independent library. It works with or without Riot.js.
 
-## Documentation
+## Table of Contents
 
-- [API (latest)](doc/)
+- [Install](#install)
+- [Usage](#usage)
+- [Demos](#demos)
+- [Contribute](#contribute)
+- [License](#license)
 
-See also riotjs.com:
+## Install
 
-- [API (English)](http://riotjs.com/api/route/)
-- [API (Japanese)](http://riotjs.com/ja/api/route/)
+We have 4 editions:
 
-## Downloads
+edition | target | file | via
+:-- | :-- | :-- | :--
+**Standalone** | `<script>` tag | `dist/route.min.js` | [jsdelivr](https://www.jsdelivr.com/?query=riot-route) ⋅ Bower ⋅ [download](https://raw.githubusercontent.com/riot/route/master/dist/route.min.js)
+**AMD** | [RequireJS](http://requirejs.org/) | `dist/amd.route.min.js` | [jsdelivr](https://www.jsdelivr.com/?query=riot-route) ⋅ Bower ⋅ [download](https://raw.githubusercontent.com/riot/route/master/dist/amd.route.min.js)
+**CommonJS** | [Browserify](http://browserify.org/), [webpack](https://webpack.github.io/) | `dist/cjs.route.js` | [npm](https://www.npmjs.com/package/riot-route)
+**ES module** | [Rollup](http://rollupjs.org/) | `lib/index.js` | [npm](https://www.npmjs.com/package/riot-route)
 
-We have 3 editions:
+### jsdelivr
 
-- **Standalone**:
-  - [route.js](https://raw.githubusercontent.com/riot/route/master/dist/route.js)
-  - [route.min.js](https://raw.githubusercontent.com/riot/route/master/dist/route.min.js)
-- **AMD**:
-  - *for RequireJS*
-  - [amd.route.js](https://raw.githubusercontent.com/riot/route/master/dist/amd.route.js)
-  - [amd.route.min.js](https://raw.githubusercontent.com/riot/route/master/dist/amd.route.min.js)
-- **CommonJS**
-  - *for Browserify, Webpack, ...etc*
-  - download via npm
+```html
+<script src="https://cdn.jsdelivr.net/riot-route/x.x.x/route.min.js"></script>
+```
 
-## Installation
+*Note*: change the part `x.x.x` to the version numbers what you want to use: ex. `2.5.0` or `3.0.0`.
 
 ### npm
 
@@ -54,27 +52,34 @@ $ npm install --save riot-route
 $ bower install --save riot-route
 ```
 
-### jsdelivr
+### Download by yourself
 
-The files are also hosted on [jsdelivr](https://www.jsdelivr.com/?query=riot-route):
+- [Standalone](https://raw.githubusercontent.com/riot/route/master/dist/route.min.js)
+- [AMD](https://raw.githubusercontent.com/riot/route/master/dist/amd.route.min.js)
 
-```html
-<script src="https://cdn.jsdelivr.net/riot-route/x.x.x/route.min.js"></script>
-```
+## Usage
 
-*Note*: change the part `x.x.x` to the version numbers what you want to use. Ex: `2.5.0` or `3.0.0`.
+- [API Documentation (latest)](doc/)
+
+See also [riotjs.com](http://riotjs.com/api/route/).
 
 ## Demos
 
 - [Page switching](http://riotjs.com/examples/plunker/?app=router-page-switcher)
 - [Complex routings](http://riotjs.com/examples/plunker/?app=router-complex)
 
-## Development
+## Contribute
+
+Feel free to dive in! [Open an issue](https://github.com/riot/route/issues) or submit PRs.
 
 - `$ npm install` to setup
 - `$ npm run build` to build it once
 - `$ npm run watch` to watch and build it continuously
 - `$ npm test` to test
+
+## License
+
+MIT (c) Muut, Inc. and other contributors
 
 [travis-image]:https://img.shields.io/travis/riot/observable.svg?style=flat-square
 [travis-url]:https://travis-ci.org/riot/route
