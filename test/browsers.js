@@ -58,7 +58,7 @@ module.exports = {
   bs_iphone_6: {
     'browserName' : 'iPhone',
     'device' : 'iPhone 6',
-    'os_version': '8.0',
+    'os_version': '8.3',
     'os': 'ios'
   },
   // Android
