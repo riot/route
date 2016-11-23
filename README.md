@@ -54,6 +54,16 @@ $ npm install --save riot-route
 $ bower install --save riot-route
 ```
 
+### jsdelivr
+
+The files are also hosted on [jsdelivr](https://www.jsdelivr.com/?query=riot-route):
+
+```html
+<script src="https://cdn.jsdelivr.net/riot-route/x.x.x/route.min.js"></script>
+```
+
+*Note*: change the part `x.x.x` to the version numbers what you want to use. Ex: `2.5.0` or `3.0.0`.
+
 ## Demos
 
 - [Page switching](http://riotjs.com/examples/plunker/?app=router-page-switcher)
@@ -62,8 +72,8 @@ $ bower install --save riot-route
 ## Development
 
 - `$ npm install` to setup
-- `$ make build` to build it once
-- `$ make watch` to watch and build it continuously
+- `$ npm run build` to build it once
+- `$ npm run watch` to watch and build it continuously
 - `$ npm test` to test
 
 [travis-image]:https://img.shields.io/travis/riot/observable.svg?style=flat-square

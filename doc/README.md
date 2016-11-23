@@ -1,4 +1,24 @@
-# Router API
+# Introduction
+
+The default riot.js bundle does not contain any router allowing you to pick any library
+that fits better to your needs.
+
+However we have developed and maintain `riot-route`, a small router library that could be used also as standalone module
+and fits perfectly to the minimal riot philosophy.
+
+If you want to use `riot-route` in your project you just need to include it either adding via `<script>` tag:
+
+```html
+<script src="path/to/dist/route.js"></script>
+```
+
+Or if you are using es6 syntax you could do:
+
+```js
+import route from 'riot-route' // var route = require('riot-route') is also ok
+```
+
+# API
 
 The Riot Router is the minimal router implementation with such technologies:
 

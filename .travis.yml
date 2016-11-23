@@ -16,7 +16,7 @@ before_script:
   - sleep 3
 
 after_success:
-  make test-coveralls
+  npm run coveralls
 
 sudo: false
 

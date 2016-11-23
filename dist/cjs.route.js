@@ -1,31 +1,41 @@
-import observable from 'riot-observable'
+'use strict';
+
+function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
+
+var observable = _interopDefault(require('riot-observable'));
+
 /**
  * Simple client-side router
  * @module riot-route
  */
 
+const RE_ORIGIN = /^.+?\/\/+[^\/]+/;
+const EVENT_LISTENER = 'EventListener';
+const REMOVE_EVENT_LISTENER = 'remove' + EVENT_LISTENER;
+const ADD_EVENT_LISTENER = 'add' + EVENT_LISTENER;
+const HAS_ATTRIBUTE = 'hasAttribute';
+const REPLACE = 'replace';
+const POPSTATE = 'popstate';
+const HASHCHANGE = 'hashchange';
+const TRIGGER = 'trigger';
+const MAX_EMIT_STACK_LEVEL = 3;
+const win = typeof window != 'undefined' && window;
+const doc = typeof document != 'undefined' && document;
+const hist = win && history;
+const loc = win && (hist.location || win.location);
+const prot = Router.prototype;
+const clickEvent = doc && doc.ontouchstart ? 'touchstart' : 'click';
+const central = observable();
 
-var RE_ORIGIN = /^.+?\/\/+[^\/]+/,
-  EVENT_LISTENER = 'EventListener',
-  REMOVE_EVENT_LISTENER = 'remove' + EVENT_LISTENER,
-  ADD_EVENT_LISTENER = 'add' + EVENT_LISTENER,
-  HAS_ATTRIBUTE = 'hasAttribute',
-  REPLACE = 'replace',
-  POPSTATE = 'popstate',
-  HASHCHANGE = 'hashchange',
-  TRIGGER = 'trigger',
-  MAX_EMIT_STACK_LEVEL = 3,
-  win = typeof window != 'undefined' && window,
-  doc = typeof document != 'undefined' && document,
-  hist = win && history,
-  loc = win && (hist.location || win.location), // see html5-history-api
-  prot = Router.prototype, // to minify more
-  clickEvent = doc && doc.ontouchstart ? 'touchstart' : 'click',
-  started = false,
-  central = observable(),
-  routeFound = false,
-  debouncedEmit,
-  base, current, parser, secondParser, emitStack = [], emitStackLevel = 0
+let started = false;
+let routeFound = false;
+let debouncedEmit;
+let base;
+let current;
+let parser;
+let secondParser;
+let emitStack = [];
+let emitStackLevel = 0;
 
 /**
  * Default parser. You can replace it via router.parser method.
@@ -43,8 +53,8 @@ function DEFAULT_PARSER(path) {
  * @returns {array} array
  */
 function DEFAULT_SECOND_PARSER(path, filter) {
-  var re = new RegExp('^' + filter[REPLACE](/\*/g, '([^/?#]+?)')[REPLACE](/\.\./, '.*') + '$'),
-    args = path.match(re)
+  const re = new RegExp('^' + filter[REPLACE](/\*/g, '([^/?#]+?)')[REPLACE](/\.\./, '.*') + '$'),
+    args = path.match(re);
 
   if (args) return args.slice(1)
 }
@@ -56,10 +66,10 @@ function DEFAULT_SECOND_PARSER(path, filter) {
  * @returns {function} debounced function
  */
 function debounce(fn, delay) {
-  var t
+  let t;
   return function () {
-    clearTimeout(t)
-    t = setTimeout(fn, delay)
+    clearTimeout(t);
+    t = setTimeout(fn, delay);
   }
 }
 
@@ -68,21 +78,21 @@ function debounce(fn, delay) {
  * @param {boolean} autoExec - see route.start
  */
 function start(autoExec) {
-  debouncedEmit = debounce(emit, 1)
-  win[ADD_EVENT_LISTENER](POPSTATE, debouncedEmit)
-  win[ADD_EVENT_LISTENER](HASHCHANGE, debouncedEmit)
-  doc[ADD_EVENT_LISTENER](clickEvent, click)
-  if (autoExec) emit(true)
+  debouncedEmit = debounce(emit, 1);
+  win[ADD_EVENT_LISTENER](POPSTATE, debouncedEmit);
+  win[ADD_EVENT_LISTENER](HASHCHANGE, debouncedEmit);
+  doc[ADD_EVENT_LISTENER](clickEvent, click);
+  if (autoExec) emit(true);
 }
 
 /**
  * Router class
  */
 function Router() {
-  this.$ = []
-  observable(this) // make it observable
-  central.on('stop', this.s.bind(this))
-  central.on('emit', this.e.bind(this))
+  this.$ = [];
+  observable(this); // make it observable
+  central.on('stop', this.s.bind(this));
+  central.on('emit', this.e.bind(this));
 }
 
 function normalize(path) {
@@ -108,60 +118,58 @@ function getPathFromRoot(href) {
  * @returns {string} path from base
  */
 function getPathFromBase(href) {
-  return base[0] == '#'
+  return base[0] === '#'
     ? (href || loc.href || '').split(base)[1] || ''
     : (loc ? getPathFromRoot(href) : href || '')[REPLACE](base, '')
 }
 
 function emit(force) {
   // the stack is needed for redirections
-  var isRoot = emitStackLevel == 0
+  const isRoot = emitStackLevel === 0;
   if (MAX_EMIT_STACK_LEVEL <= emitStackLevel) return
 
-  emitStackLevel++
+  emitStackLevel++;
   emitStack.push(function() {
-    var path = getPathFromBase()
-    if (force || path != current) {
-      central[TRIGGER]('emit', path)
-      current = path
+    const path = getPathFromBase();
+    if (force || path !== current) {
+      central[TRIGGER]('emit', path);
+      current = path;
     }
-  })
+  });
   if (isRoot) {
-    while (emitStack.length) {
-      emitStack[0]()
-      emitStack.shift()
-    }
-    emitStackLevel = 0
+    let first;
+    while (first = emitStack.shift()) first(); // stack increses within this call
+    emitStackLevel = 0;
   }
 }
 
 function click(e) {
   if (
-    e.which != 1 // not left click
+    e.which !== 1 // not left click
     || e.metaKey || e.ctrlKey || e.shiftKey // or meta keys
     || e.defaultPrevented // or default prevented
   ) return
 
-  var el = e.target
-  while (el && el.nodeName != 'A') el = el.parentNode
+  let el = e.target;
+  while (el && el.nodeName !== 'A') el = el.parentNode;
 
   if (
-    !el || el.nodeName != 'A' // not A tag
+    !el || el.nodeName !== 'A' // not A tag
     || el[HAS_ATTRIBUTE]('download') // has download attr
     || !el[HAS_ATTRIBUTE]('href') // has no href attr
-    || el.target && el.target != '_self' // another window or frame
-    || el.href.indexOf(loc.href.match(RE_ORIGIN)[0]) == -1 // cross origin
+    || el.target && el.target !== '_self' // another window or frame
+    || el.href.indexOf(loc.href.match(RE_ORIGIN)[0]) === -1 // cross origin
   ) return
 
-  if (el.href != loc.href) {
-    if (
-      el.href.split('#')[0] == loc.href.split('#')[0] // internal jump
-      || base != '#' && getPathFromRoot(el.href).indexOf(base) !== 0 // outside of base
+  if (el.href !== loc.href
+    && (
+      el.href.split('#')[0] === loc.href.split('#')[0] // internal jump
+      || base[0] !== '#' && getPathFromRoot(el.href).indexOf(base) !== 0 // outside of base
+      || base[0] === '#' && el.href.split(base)[0] !== loc.href.split(base)[0] // outside of #base
       || !go(getPathFromBase(el.href), el.title || doc.title) // route not found
-    ) return
-  }
+    )) return
 
-  e.preventDefault()
+  e.preventDefault();
 }
 
 /**
@@ -172,22 +180,20 @@ function click(e) {
  * @returns {boolean} - route not found flag
  */
 function go(path, title, shouldReplace) {
-  if (hist) { // if a browser
-    path = base + normalize(path)
-    title = title || doc.title
-    // browsers ignores the second parameter `title`
-    shouldReplace
-      ? hist.replaceState(null, title, path)
-      : hist.pushState(null, title, path)
-    // so we need to set it manually
-    doc.title = title
-    routeFound = false
-    emit()
-    return routeFound
-  }
-
   // Server-side usage: directly execute handlers for the path
-  return central[TRIGGER]('emit', getPathFromBase(path))
+  if (!hist) return central[TRIGGER]('emit', getPathFromBase(path))
+
+  path = base + normalize(path);
+  title = title || doc.title;
+  // browsers ignores the second parameter `title`
+  shouldReplace
+    ? hist.replaceState(null, title, path)
+    : hist.pushState(null, title, path);
+  // so we need to set it manually
+  doc.title = title;
+  routeFound = false;
+  emit();
+  return routeFound
 }
 
 /**
@@ -202,18 +208,18 @@ function go(path, title, shouldReplace) {
  * @param {boolean} third - replace flag
  */
 prot.m = function(first, second, third) {
-  if (isString(first) && (!second || isString(second))) go(first, second, third || false)
-  else if (second) this.r(first, second)
-  else this.r('@', first)
-}
+  if (isString(first) && (!second || isString(second))) go(first, second, third || false);
+  else if (second) this.r(first, second);
+  else this.r('@', first);
+};
 
 /**
  * Stop routing
  */
 prot.s = function() {
-  this.off('*')
-  this.$ = []
-}
+  this.off('*');
+  this.$ = [];
+};
 
 /**
  * Emit
@@ -221,13 +227,13 @@ prot.s = function() {
  */
 prot.e = function(path) {
   this.$.concat('@').some(function(filter) {
-    var args = (filter == '@' ? parser : secondParser)(normalize(path), normalize(filter))
+    const args = (filter === '@' ? parser : secondParser)(normalize(path), normalize(filter));
     if (typeof args != 'undefined') {
-      this[TRIGGER].apply(null, [filter].concat(args))
+      this[TRIGGER].apply(null, [filter].concat(args));
       return routeFound = true // exit from loop
     }
-  }, this)
-}
+  }, this);
+};
 
 /**
  * Register route
@@ -235,42 +241,42 @@ prot.e = function(path) {
  * @param {function} action - action to register
  */
 prot.r = function(filter, action) {
-  if (filter != '@') {
-    filter = '/' + normalize(filter)
-    this.$.push(filter)
+  if (filter !== '@') {
+    filter = '/' + normalize(filter);
+    this.$.push(filter);
   }
-  this.on(filter, action)
-}
+  this.on(filter, action);
+};
 
-var mainRouter = new Router()
-var route = mainRouter.m.bind(mainRouter)
+const mainRouter = new Router();
+const route = mainRouter.m.bind(mainRouter);
 
 /**
  * Create a sub router
  * @returns {function} the method of a new Router object
  */
 route.create = function() {
-  var newSubRouter = new Router()
+  const newSubRouter = new Router();
   // assign sub-router's main method
-  var router = newSubRouter.m.bind(newSubRouter)
+  const router = newSubRouter.m.bind(newSubRouter);
   // stop only this sub-router
-  router.stop = newSubRouter.s.bind(newSubRouter)
+  router.stop = newSubRouter.s.bind(newSubRouter);
   return router
-}
+};
 
 /**
  * Set the base of url
  * @param {(str|RegExp)} arg - a new base or '#' or '#!'
  */
 route.base = function(arg) {
-  base = arg || '#'
-  current = getPathFromBase() // recalculate current path
-}
+  base = arg || '#';
+  current = getPathFromBase(); // recalculate current path
+};
 
 /** Exec routing right now **/
 route.exec = function() {
-  emit(true)
-}
+  emit(true);
+};
 
 /**
  * Replace the default router to yours
@@ -280,36 +286,36 @@ route.exec = function() {
 route.parser = function(fn, fn2) {
   if (!fn && !fn2) {
     // reset parser for testing...
-    parser = DEFAULT_PARSER
-    secondParser = DEFAULT_SECOND_PARSER
+    parser = DEFAULT_PARSER;
+    secondParser = DEFAULT_SECOND_PARSER;
   }
-  if (fn) parser = fn
-  if (fn2) secondParser = fn2
-}
+  if (fn) parser = fn;
+  if (fn2) secondParser = fn2;
+};
 
 /**
  * Helper function to get url query as an object
  * @returns {object} parsed query
  */
 route.query = function() {
-  var q = {}
-  var href = loc.href || current
-  href[REPLACE](/[?&](.+?)=([^&]*)/g, function(_, k, v) { q[k] = v })
+  const q = {};
+  const href = loc.href || current;
+  href[REPLACE](/[?&](.+?)=([^&]*)/g, function(_, k, v) { q[k] = v; });
   return q
-}
+};
 
 /** Stop routing **/
 route.stop = function () {
   if (started) {
     if (win) {
-      win[REMOVE_EVENT_LISTENER](POPSTATE, debouncedEmit)
-      win[REMOVE_EVENT_LISTENER](HASHCHANGE, debouncedEmit)
-      doc[REMOVE_EVENT_LISTENER](clickEvent, click)
+      win[REMOVE_EVENT_LISTENER](POPSTATE, debouncedEmit);
+      win[REMOVE_EVENT_LISTENER](HASHCHANGE, debouncedEmit);
+      doc[REMOVE_EVENT_LISTENER](clickEvent, click);
     }
-    central[TRIGGER]('stop')
-    started = false
+    central[TRIGGER]('stop');
+    started = false;
   }
-}
+};
 
 /**
  * Start routing
@@ -318,19 +324,19 @@ route.stop = function () {
 route.start = function (autoExec) {
   if (!started) {
     if (win) {
-      if (document.readyState == 'complete') start(autoExec)
+      if (document.readyState === 'complete') start(autoExec);
       // the timeout is needed to solve
       // a weird safari bug https://github.com/riot/route/issues/33
       else win[ADD_EVENT_LISTENER]('load', function() {
-        setTimeout(function() { start(autoExec) }, 1)
-      })
+        setTimeout(function() { start(autoExec); }, 1);
+      });
     }
-    started = true
+    started = true;
   }
-}
+};
 
 /** Prepare the router **/
-route.base()
-route.parser()
+route.base();
+route.parser();
 
-export default route
+module.exports = route;

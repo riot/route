@@ -28,7 +28,7 @@ function serial(tasks, interval) {
 
 describe('Core specs', function() {
 
-  var counter = 0, $, $$
+  var counter = 0, $, $$, html
 
   before(function() {
     $ = document.querySelector.bind(document)
@@ -338,7 +338,7 @@ describe('Core specs', function() {
     route.parser(function(path) {
       return path
     })
-    route(function(first) {
+    route(function() {
       counter++
     })
     route('test')
@@ -427,11 +427,10 @@ describe('Core specs', function() {
   })
 
   it('redirecting inside the router', function() {
-    var str
     route.base('/')
     route(function(first) {
       counter++
-      if (first == 'fruit') route('/vegitable')
+      if (first === 'fruit') route('/vegitable')
     })
     route('fruit')
     expect(window.location.pathname).to.be('/vegitable')
@@ -439,14 +438,13 @@ describe('Core specs', function() {
   })
 
   it('too many redirection', function() {
-    var str
     route.base('/')
     route(function(first) {
       counter++
-      if (first == 'one') route('/two')
-      if (first == 'two') route('/three')
-      if (first == 'three') route('/four')
-      if (first == 'four') route('/five')
+      if (first === 'one') route('/two')
+      if (first === 'two') route('/three')
+      if (first === 'three') route('/four')
+      if (first === 'four') route('/five')
     })
     route('one')
     expect(window.location.pathname).to.be('/four')
