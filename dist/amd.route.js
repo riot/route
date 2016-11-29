@@ -136,7 +136,6 @@ var EVENT_LISTENER = 'EventListener';
 var REMOVE_EVENT_LISTENER = 'remove' + EVENT_LISTENER;
 var ADD_EVENT_LISTENER = 'add' + EVENT_LISTENER;
 var HAS_ATTRIBUTE = 'hasAttribute';
-var REPLACE = 'replace';
 var POPSTATE = 'popstate';
 var HASHCHANGE = 'hashchange';
 var TRIGGER = 'trigger';
@@ -175,8 +174,12 @@ function DEFAULT_PARSER(path) {
  * @returns {array} array
  */
 function DEFAULT_SECOND_PARSER(path, filter) {
-  var re = new RegExp('^' + filter[REPLACE](/\*/g, '([^/?#]+?)')[REPLACE](/\.\./, '.*') + '$'),
-    args = path.match(re);
+  var f = filter
+    .replace(/\?/g, '\\?')
+    .replace(/\*/g, '([^/?#]+?)')
+    .replace(/\.\./, '.*');
+  var re = new RegExp(("^" + f + "$"));
+  var args = path.match(re);
 
   if (args) { return args.slice(1) }
 }
@@ -218,7 +221,7 @@ function Router() {
 }
 
 function normalize(path) {
-  return path[REPLACE](/^\/|\/$/, '')
+  return path.replace(/^\/|\/$/, '')
 }
 
 function isString(str) {
@@ -231,7 +234,7 @@ function isString(str) {
  * @returns {string} path from root
  */
 function getPathFromRoot(href) {
-  return (href || loc.href)[REPLACE](RE_ORIGIN, '')
+  return (href || loc.href).replace(RE_ORIGIN, '')
 }
 
 /**
@@ -242,7 +245,7 @@ function getPathFromRoot(href) {
 function getPathFromBase(href) {
   return base[0] === '#'
     ? (href || loc.href || '').split(base)[1] || ''
-    : (loc ? getPathFromRoot(href) : href || '')[REPLACE](base, '')
+    : (loc ? getPathFromRoot(href) : href || '').replace(base, '')
 }
 
 function emit(force) {
@@ -422,7 +425,7 @@ route.parser = function(fn, fn2) {
 route.query = function() {
   var q = {};
   var href = loc.href || current;
-  href[REPLACE](/[?&](.+?)=([^&]*)/g, function(_, k, v) { q[k] = v; });
+  href.replace(/[?&](.+?)=([^&]*)/g, function(_, k, v) { q[k] = v; });
   return q
 };
 
