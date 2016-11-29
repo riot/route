@@ -227,6 +227,18 @@ describe('Core specs', function() {
     expect(counter).to.be(2)
   })
 
+  it('sets routing and filter with question mark(?)', function() {
+    route.base('/')
+    route('search?keyword=*&limit=*', function() {
+      counter++
+    })
+    route('fruit')
+    route('search?keyword=test&limit=30')
+    fireEvent($('.tag-g'), 'click')
+    fireEvent($('.tag-j'), 'click')
+    expect(counter).to.be(2)
+  })
+
   it('gets query from url', function() {
     route.base('/')
     route('search?keyword=test&limit=30')
