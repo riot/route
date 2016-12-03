@@ -9,32 +9,32 @@ var observable = _interopDefault(require('riot-observable'));
  * @module riot-route
  */
 
-const RE_ORIGIN = /^.+?\/\/+[^\/]+/;
-const EVENT_LISTENER = 'EventListener';
-const REMOVE_EVENT_LISTENER = 'remove' + EVENT_LISTENER;
-const ADD_EVENT_LISTENER = 'add' + EVENT_LISTENER;
-const HAS_ATTRIBUTE = 'hasAttribute';
-const POPSTATE = 'popstate';
-const HASHCHANGE = 'hashchange';
-const TRIGGER = 'trigger';
-const MAX_EMIT_STACK_LEVEL = 3;
-const win = typeof window != 'undefined' && window;
-const doc = typeof document != 'undefined' && document;
-const hist = win && history;
-const loc = win && (hist.location || win.location);
-const prot = Router.prototype;
-const clickEvent = doc && doc.ontouchstart ? 'touchstart' : 'click';
-const central = observable();
+var RE_ORIGIN = /^.+?\/\/+[^\/]+/;
+var EVENT_LISTENER = 'EventListener';
+var REMOVE_EVENT_LISTENER = 'remove' + EVENT_LISTENER;
+var ADD_EVENT_LISTENER = 'add' + EVENT_LISTENER;
+var HAS_ATTRIBUTE = 'hasAttribute';
+var POPSTATE = 'popstate';
+var HASHCHANGE = 'hashchange';
+var TRIGGER = 'trigger';
+var MAX_EMIT_STACK_LEVEL = 3;
+var win = typeof window != 'undefined' && window;
+var doc = typeof document != 'undefined' && document;
+var hist = win && history;
+var loc = win && (hist.location || win.location);
+var prot = Router.prototype;
+var clickEvent = doc && doc.ontouchstart ? 'touchstart' : 'click';
+var central = observable();
 
-let started = false;
-let routeFound = false;
-let debouncedEmit;
-let base;
-let current;
-let parser;
-let secondParser;
-let emitStack = [];
-let emitStackLevel = 0;
+var started = false;
+var routeFound = false;
+var debouncedEmit;
+var base;
+var current;
+var parser;
+var secondParser;
+var emitStack = [];
+var emitStackLevel = 0;
 
 /**
  * Default parser. You can replace it via router.parser method.
@@ -52,14 +52,14 @@ function DEFAULT_PARSER(path) {
  * @returns {array} array
  */
 function DEFAULT_SECOND_PARSER(path, filter) {
-  const f = filter
+  var f = filter
     .replace(/\?/g, '\\?')
     .replace(/\*/g, '([^/?#]+?)')
     .replace(/\.\./, '.*');
-  const re = new RegExp(`^${f}$`);
-  const args = path.match(re);
+  var re = new RegExp(("^" + f + "$"));
+  var args = path.match(re);
 
-  if (args) return args.slice(1)
+  if (args) { return args.slice(1) }
 }
 
 /**
@@ -69,7 +69,7 @@ function DEFAULT_SECOND_PARSER(path, filter) {
  * @returns {function} debounced function
  */
 function debounce(fn, delay) {
-  let t;
+  var t;
   return function () {
     clearTimeout(t);
     t = setTimeout(fn, delay);
@@ -85,7 +85,7 @@ function start(autoExec) {
   win[ADD_EVENT_LISTENER](POPSTATE, debouncedEmit);
   win[ADD_EVENT_LISTENER](HASHCHANGE, debouncedEmit);
   doc[ADD_EVENT_LISTENER](clickEvent, click);
-  if (autoExec) emit(true);
+  if (autoExec) { emit(true); }
 }
 
 /**
@@ -128,20 +128,20 @@ function getPathFromBase(href) {
 
 function emit(force) {
   // the stack is needed for redirections
-  const isRoot = emitStackLevel === 0;
-  if (MAX_EMIT_STACK_LEVEL <= emitStackLevel) return
+  var isRoot = emitStackLevel === 0;
+  if (MAX_EMIT_STACK_LEVEL <= emitStackLevel) { return }
 
   emitStackLevel++;
   emitStack.push(function() {
-    const path = getPathFromBase();
+    var path = getPathFromBase();
     if (force || path !== current) {
       central[TRIGGER]('emit', path);
       current = path;
     }
   });
   if (isRoot) {
-    let first;
-    while (first = emitStack.shift()) first(); // stack increses within this call
+    var first;
+    while (first = emitStack.shift()) { first(); } // stack increses within this call
     emitStackLevel = 0;
   }
 }
@@ -151,10 +151,10 @@ function click(e) {
     e.which !== 1 // not left click
     || e.metaKey || e.ctrlKey || e.shiftKey // or meta keys
     || e.defaultPrevented // or default prevented
-  ) return
+  ) { return }
 
-  let el = e.target;
-  while (el && el.nodeName !== 'A') el = el.parentNode;
+  var el = e.target;
+  while (el && el.nodeName !== 'A') { el = el.parentNode; }
 
   if (
     !el || el.nodeName !== 'A' // not A tag
@@ -162,7 +162,7 @@ function click(e) {
     || !el[HAS_ATTRIBUTE]('href') // has no href attr
     || el.target && el.target !== '_self' // another window or frame
     || el.href.indexOf(loc.href.match(RE_ORIGIN)[0]) === -1 // cross origin
-  ) return
+  ) { return }
 
   if (el.href !== loc.href
     && (
@@ -170,7 +170,7 @@ function click(e) {
       || base[0] !== '#' && getPathFromRoot(el.href).indexOf(base) !== 0 // outside of base
       || base[0] === '#' && el.href.split(base)[0] !== loc.href.split(base)[0] // outside of #base
       || !go(getPathFromBase(el.href), el.title || doc.title) // route not found
-    )) return
+    )) { return }
 
   e.preventDefault();
 }
@@ -184,7 +184,7 @@ function click(e) {
  */
 function go(path, title, shouldReplace) {
   // Server-side usage: directly execute handlers for the path
-  if (!hist) return central[TRIGGER]('emit', getPathFromBase(path))
+  if (!hist) { return central[TRIGGER]('emit', getPathFromBase(path)) }
 
   path = base + normalize(path);
   title = title || doc.title;
@@ -211,9 +211,9 @@ function go(path, title, shouldReplace) {
  * @param {boolean} third - replace flag
  */
 prot.m = function(first, second, third) {
-  if (isString(first) && (!second || isString(second))) go(first, second, third || false);
-  else if (second) this.r(first, second);
-  else this.r('@', first);
+  if (isString(first) && (!second || isString(second))) { go(first, second, third || false); }
+  else if (second) { this.r(first, second); }
+  else { this.r('@', first); }
 };
 
 /**
@@ -230,7 +230,7 @@ prot.s = function() {
  */
 prot.e = function(path) {
   this.$.concat('@').some(function(filter) {
-    const args = (filter === '@' ? parser : secondParser)(normalize(path), normalize(filter));
+    var args = (filter === '@' ? parser : secondParser)(normalize(path), normalize(filter));
     if (typeof args != 'undefined') {
       this[TRIGGER].apply(null, [filter].concat(args));
       return routeFound = true // exit from loop
@@ -251,17 +251,17 @@ prot.r = function(filter, action) {
   this.on(filter, action);
 };
 
-const mainRouter = new Router();
-const route = mainRouter.m.bind(mainRouter);
+var mainRouter = new Router();
+var route = mainRouter.m.bind(mainRouter);
 
 /**
  * Create a sub router
  * @returns {function} the method of a new Router object
  */
 route.create = function() {
-  const newSubRouter = new Router();
+  var newSubRouter = new Router();
   // assign sub-router's main method
-  const router = newSubRouter.m.bind(newSubRouter);
+  var router = newSubRouter.m.bind(newSubRouter);
   // stop only this sub-router
   router.stop = newSubRouter.s.bind(newSubRouter);
   return router
@@ -292,8 +292,8 @@ route.parser = function(fn, fn2) {
     parser = DEFAULT_PARSER;
     secondParser = DEFAULT_SECOND_PARSER;
   }
-  if (fn) parser = fn;
-  if (fn2) secondParser = fn2;
+  if (fn) { parser = fn; }
+  if (fn2) { secondParser = fn2; }
 };
 
 /**
@@ -301,8 +301,8 @@ route.parser = function(fn, fn2) {
  * @returns {object} parsed query
  */
 route.query = function() {
-  const q = {};
-  const href = loc.href || current;
+  var q = {};
+  var href = loc.href || current;
   href.replace(/[?&](.+?)=([^&]*)/g, function(_, k, v) { q[k] = v; });
   return q
 };
@@ -327,12 +327,12 @@ route.stop = function () {
 route.start = function (autoExec) {
   if (!started) {
     if (win) {
-      if (document.readyState === 'complete') start(autoExec);
+      if (document.readyState === 'complete') { start(autoExec); }
       // the timeout is needed to solve
       // a weird safari bug https://github.com/riot/route/issues/33
-      else win[ADD_EVENT_LISTENER]('load', function() {
+      else { win[ADD_EVENT_LISTENER]('load', function() {
         setTimeout(function() { start(autoExec); }, 1);
-      });
+      }); }
     }
     started = true;
   }

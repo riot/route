@@ -19,7 +19,8 @@ rollup
 rollup
   .rollup({
     entry: 'lib/index.js',
-    external: ['riot-observable']
+    external: ['riot-observable'],
+    plugins: [buble()]
   })
   .then(bundle => {
     bundle.write({ format: 'cjs', dest: 'dist/cjs.route.js' })
