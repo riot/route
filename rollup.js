@@ -6,7 +6,7 @@ const
 
 rollup
   .rollup({
-    entry: 'lib/index.js',
+    entry: 'src/index.js',
     plugins: [
       alias({ 'riot-observable': 'node_modules/riot-observable/dist/es6.observable.js' }),
       buble()
@@ -22,11 +22,12 @@ rollup
 
 rollup
   .rollup({
-    entry: 'lib/index.js',
+    entry: 'src/index.js',
     external: ['riot-observable'],
     plugins: [buble()]
   })
   .then(bundle => {
+    bundle.write({ format: 'es', dest: 'lib/index.js' })
     bundle.write({ format: 'cjs', dest: 'dist/cjs.route.js' })
   })
   .catch(error => {
@@ -35,13 +36,13 @@ rollup
 
 rollup
   .rollup({
-    entry: 'lib/tag.js',
+    entry: 'src/tag.js',
     external: ['riot'],
     plugins: [
       riot(),
       alias({
         'riot-observable': 'node_modules/riot-observable/dist/es6.observable.js',
-        'riot-route': 'lib/index.js'
+        'riot-route': 'src/index.js'
       }),
       buble()
     ]
@@ -61,12 +62,12 @@ rollup
 
 rollup
   .rollup({
-    entry: 'lib/tag.js',
+    entry: 'src/tag.js',
     external: ['riot', 'riot-observable', 'riot-route'],
     plugins: [riot(), buble()]
   })
   .then(bundle => {
-    bundle.write({ format: 'es', dest: 'es.tag.js' })
+    bundle.write({ format: 'es', dest: 'lib/tag.js' })
     bundle.write({ format: 'cjs', dest: 'tag.js' })
   })
   .catch(error => {

@@ -4,6 +4,8 @@
   "description": "Simple isomorphic router",
   "main": "dist/cjs.route.js",
   "jsnext:main": "lib/index.js",
+  "module": "lib/index.js",
+  "modules.root": "lib",
   "directories": {
     "lib": "lib",
     "doc": "doc"
@@ -19,7 +21,7 @@
     "uglify-tag": "uglifyjs dist/route+tag.js --comments --mangle -o dist/route+tag.min.js",
     "uglify-tag-amd": "uglifyjs dist/amd.route+tag.js --comments --mangle -o dist/amd.route+tag.min.js",
     "watch": "chokidar lib/* lib/**/* -c 'npm run build'",
-    "eslint": "eslint lib test/specs",
+    "eslint": "eslint src test/specs",
     "karma": "karma start test/karma.conf.js",
     "karma-bs": "BROWSERSTACK=1 karma start test/karma.conf.js",
     "mocha": "mocha test/specs/server.specs.js",
