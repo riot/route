@@ -29,7 +29,7 @@ edition | target | file | via
 :-- | :-- | :-- | :--
 **Standalone** | `<script>` tag | `dist/route.min.js` | [jsdelivr](https://www.jsdelivr.com/?query=riot-route) ⋅ Bower ⋅ [download](https://raw.githubusercontent.com/riot/route/master/dist/route.min.js)
 **AMD** | [RequireJS](http://requirejs.org/) | `dist/amd.route.min.js` | [jsdelivr](https://www.jsdelivr.com/?query=riot-route) ⋅ Bower ⋅ [download](https://raw.githubusercontent.com/riot/route/master/dist/amd.route.min.js)
-**CommonJS** | [Browserify](http://browserify.org/), [webpack](https://webpack.github.io/) | `dist/cjs.route.js` | [npm](https://www.npmjs.com/package/riot-route)
+**CommonJS** | [Browserify](http://browserify.org/), [webpack](https://webpack.github.io/) | `index.js` | [npm](https://www.npmjs.com/package/riot-route)
 **ES module** | [Rollup](http://rollupjs.org/) | `lib/index.js` | [npm](https://www.npmjs.com/package/riot-route)
 
 ### jsdelivr
