@@ -28,7 +28,7 @@ rollup
   })
   .then(bundle => {
     bundle.write({ format: 'es', dest: 'lib/index.js' })
-    bundle.write({ format: 'cjs', dest: 'dist/cjs.route.js' })
+    bundle.write({ format: 'cjs', dest: 'index.js' })
   })
   .catch(error => {
     console.error(error)
