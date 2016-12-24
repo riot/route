@@ -393,3 +393,100 @@ route(function() { /* */ }) // routing-X (3)
 route('/fruit/*', function() { /* */ }) // routing-Y (1)
 route('/sweet/*', function() { /* */ }) // routing-Z (2)
 ```
+
+## Tag-based routing
+
+<span class="tag red">&gt;= v3.1</span>
+
+This feature allows you to **write your routes as declarative tags**:
+
+```html
+<app>
+  <router>
+    <route path="apple"><p>Apple</p></route>
+    <route path="banana"><p>Banana</p></route>
+    <route path="coffee"><p>Coffee</p></route>
+  </router>
+</app>
+```
+
+To use this feature, you need to load `route+tag.js` instead of `route.js`
+
+```html
+<script src="path/to/dist/route+tag.js"></script>
+```
+
+Or for ES6:
+
+```javascript
+import route from 'riot-route/lib/tag' // note that the path is bit different to cjs one
+```
+
+Or for CommonJS:
+
+```javascript
+const route = require('riot-route/tag')
+```
+
+### Available tags
+
+- `<router>`
+  - it can contains multiple routes
+  - equivalent to `const r = route.create()` so it creates a sub router
+- `<route>`
+  - it has `path` attribute
+  - `<route path="fruit/apple">` is equivalent to `r('fruit/apple', () => { ... })`
+  - when the route has selected, it triggers **route** event on its children and passes some arguments to them (see details below)
+
+### Capturing wildcard arguments
+
+Remember that we could use wildcards `*` in routing. Of cause we can also do the same in *tag-based routing*:
+
+```html
+<app>
+  <router>
+    <route path="fruit/apple"><p>Apple</p></route>
+    <route path="fruit/*"><inner-tag /></route>
+  </router>
+</app>
+
+<inner-tag>
+  <p>{ name } is not found</p>
+  <script>
+    this.on('route', name => this.name = name)
+  </script>
+</inner-tag>
+```
+
+See the example above. If it gets `fruit/pineapple`, the `route` event will fire in `<inner-tag>` and pass one argument `'pineapple'`.
+
+### Real world example
+
+Usually we would call external API to get some data during routing process. It's handy to hook `route` event for such a purpose. For example:
+
+```html
+<app>
+  <router>
+    <route path="user/*"><app-user /></route>
+  </router>
+</app>
+
+<app-user>
+  <p>{ message }!</p>
+  <script>
+    this.on('route', id => {
+      this.message = 'now loading...'
+      getUserById(id).then(user => {
+        this.update({
+          message: `Hello ${ user.name }!`
+        })
+      })
+    })
+  </script>
+</app-user>
+```
+
+### Some notes
+
+- The router automatically starts after first `<router>` tag has been mounted. You don't have to call `router.start(true)` by yourself.
+- to change `base` for routing, use `route.base('/path/to/base/')`
