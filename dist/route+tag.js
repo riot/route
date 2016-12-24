@@ -471,7 +471,6 @@ riot.tag2('router', '<yield></yield>', '', '', function(opts) {
     var this$1 = this;
 
 
-    if (opts.base) { route$1.base(opts.base); }
     this.route = route$1.create();
     this.select = function (target) {
       [].concat(this$1.tags.route)

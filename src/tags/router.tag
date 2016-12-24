@@ -4,8 +4,7 @@
 
   <script>
     import route from 'riot-route'
-
-    if (opts.base) route.base(opts.base)
+    
     this.route = route.create()
     this.select = target => {
       [].concat(this.tags.route)
