@@ -1,4 +1,133 @@
-import observable from 'riot-observable';
+var route = (function (riot) {
+'use strict';
+
+riot = 'default' in riot ? riot['default'] : riot;
+
+var observable = function(el) {
+
+  /**
+   * Extend the original object or create a new empty one
+   * @type { Object }
+   */
+
+  el = el || {};
+
+  /**
+   * Private variables
+   */
+  var callbacks = {},
+    slice = Array.prototype.slice;
+
+  /**
+   * Public Api
+   */
+
+  // extend the el object adding the observable methods
+  Object.defineProperties(el, {
+    /**
+     * Listen to the given `event` ands
+     * execute the `callback` each time an event is triggered.
+     * @param  { String } event - event id
+     * @param  { Function } fn - callback function
+     * @returns { Object } el
+     */
+    on: {
+      value: function(event, fn) {
+        if (typeof fn == 'function')
+          { (callbacks[event] = callbacks[event] || []).push(fn); }
+        return el
+      },
+      enumerable: false,
+      writable: false,
+      configurable: false
+    },
+
+    /**
+     * Removes the given `event` listeners
+     * @param   { String } event - event id
+     * @param   { Function } fn - callback function
+     * @returns { Object } el
+     */
+    off: {
+      value: function(event, fn) {
+        if (event == '*' && !fn) { callbacks = {}; }
+        else {
+          if (fn) {
+            var arr = callbacks[event];
+            for (var i = 0, cb; cb = arr && arr[i]; ++i) {
+              if (cb == fn) { arr.splice(i--, 1); }
+            }
+          } else { delete callbacks[event]; }
+        }
+        return el
+      },
+      enumerable: false,
+      writable: false,
+      configurable: false
+    },
+
+    /**
+     * Listen to the given `event` and
+     * execute the `callback` at most once
+     * @param   { String } event - event id
+     * @param   { Function } fn - callback function
+     * @returns { Object } el
+     */
+    one: {
+      value: function(event, fn) {
+        function on() {
+          el.off(event, on);
+          fn.apply(el, arguments);
+        }
+        return el.on(event, on)
+      },
+      enumerable: false,
+      writable: false,
+      configurable: false
+    },
+
+    /**
+     * Execute all callback functions that listen to
+     * the given `event`
+     * @param   { String } event - event id
+     * @returns { Object } el
+     */
+    trigger: {
+      value: function(event) {
+        var arguments$1 = arguments;
+
+
+        // getting the arguments
+        var arglen = arguments.length - 1,
+          args = new Array(arglen),
+          fns,
+          fn,
+          i;
+
+        for (i = 0; i < arglen; i++) {
+          args[i] = arguments$1[i + 1]; // skip first argument
+        }
+
+        fns = slice.call(callbacks[event] || [], 0);
+
+        for (i = 0; fn = fns[i]; ++i) {
+          fn.apply(el, args);
+        }
+
+        if (callbacks['*'] && event != '*')
+          { el.trigger.apply(el, ['*', event].concat(args)); }
+
+        return el
+      },
+      enumerable: false,
+      writable: false,
+      configurable: false
+    }
+  });
+
+  return el
+
+};
 
 /**
  * Simple client-side router
@@ -248,13 +377,13 @@ prot.r = function(filter, action) {
 };
 
 var mainRouter = new Router();
-var route = mainRouter.m.bind(mainRouter);
+var route$1 = mainRouter.m.bind(mainRouter);
 
 /**
  * Create a sub router
  * @returns {function} the method of a new Router object
  */
-route.create = function() {
+route$1.create = function() {
   var newSubRouter = new Router();
   // assign sub-router's main method
   var router = newSubRouter.m.bind(newSubRouter);
@@ -267,13 +396,13 @@ route.create = function() {
  * Set the base of url
  * @param {(str|RegExp)} arg - a new base or '#' or '#!'
  */
-route.base = function(arg) {
+route$1.base = function(arg) {
   base = arg || '#';
   current = getPathFromBase(); // recalculate current path
 };
 
 /** Exec routing right now **/
-route.exec = function() {
+route$1.exec = function() {
   emit(true);
 };
 
@@ -282,7 +411,7 @@ route.exec = function() {
  * @param {function} fn - your parser function
  * @param {function} fn2 - your secondParser function
  */
-route.parser = function(fn, fn2) {
+route$1.parser = function(fn, fn2) {
   if (!fn && !fn2) {
     // reset parser for testing...
     parser = DEFAULT_PARSER;
@@ -296,7 +425,7 @@ route.parser = function(fn, fn2) {
  * Helper function to get url query as an object
  * @returns {object} parsed query
  */
-route.query = function() {
+route$1.query = function() {
   var q = {};
   var href = loc.href || current;
   href.replace(/[?&](.+?)=([^&]*)/g, function(_, k, v) { q[k] = v; });
@@ -304,7 +433,7 @@ route.query = function() {
 };
 
 /** Stop routing **/
-route.stop = function () {
+route$1.stop = function () {
   if (started) {
     if (win) {
       win[REMOVE_EVENT_LISTENER](POPSTATE, debouncedEmit);
@@ -320,7 +449,7 @@ route.stop = function () {
  * Start routing
  * @param {boolean} autoExec - automatically exec after starting if true
  */
-route.start = function (autoExec) {
+route$1.start = function (autoExec) {
   if (!started) {
     if (win) {
       if (document.readyState === 'complete') { start(autoExec); }
@@ -335,7 +464,51 @@ route.start = function (autoExec) {
 };
 
 /** Prepare the router **/
-route.base();
-route.parser();
+route$1.base();
+route$1.parser();
 
-export default route;
+riot.tag2('router', '<yield></yield>', '', '', function(opts) {
+    var this$1 = this;
+
+
+    this.route = route$1.create();
+    this.select = function (target) {
+      [].concat(this$1.tags.route)
+        .forEach(function (r) { return r.show = (r === target); });
+    };
+
+    this.on('mount', function () {
+
+      window.setTimeout(function () { return route$1.start(true); }, 0);
+    });
+});
+
+riot.tag2('route', '<virtual if="{show}"><yield></yield></virtual>', '', '', function(opts) {
+    var this$1 = this;
+
+    this.show = false;
+    this.parent.route(opts.path, function () {
+      var args = [], len = arguments.length;
+      while ( len-- ) args[ len ] = arguments[ len ];
+
+
+      this$1.one('updated', function () {
+        flatten(this$1.tags).forEach(function (tag) {
+          tag.trigger.apply(tag, [ 'route' ].concat( args ));
+          tag.update();
+        });
+      });
+      this$1.parent.select(this$1);
+      this$1.parent.update();
+    });
+
+    function flatten(tags) {
+      return Object.keys(tags)
+        .map(function (key) { return tags[key]; })
+        .reduce(function (acc, tag) { return acc.concat(tag); }, [])
+    }
+});
+
+return route$1;
+
+}(riot));

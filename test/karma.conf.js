@@ -12,24 +12,29 @@ module.exports = function(config) {
 
   config.set({
     basePath: '',
-    frameworks: ['mocha'],
+    frameworks: ['mocha', 'riot'],
     plugins: [
       'karma-mocha',
       'karma-mocha-reporter',
       'karma-coverage',
       'karma-browserstack-launcher',
-      'karma-electron'
+      'karma-electron',
+      'karma-riot'
     ],
     files: [
       '../node_modules/expect.js/index.js',
-      '../dist/route.js',
-      'specs/core.specs.js'
+      '../node_modules/riot/riot.js',
+      '../dist/route+tag.js',
+      'tags/*.tag',
+      'specs/core.specs.js',
+      'specs/tag.specs.js'
     ],
     browsers: browsers,
     customLaunchers: customLaunchers,
     reporters: ['mocha', 'coverage'],
     preprocessors: {
-      '../dist/route.js': ['coverage']
+      'tags/*.tag': ['riot'],
+      '../dist/route-tag.js': ['coverage']
     },
     coverageReporter: {
       dir: '../coverage/',
