@@ -452,12 +452,18 @@ route$1.stop = function () {
 route$1.start = function (autoExec) {
   if (!started) {
     if (win) {
-      if (document.readyState === 'complete') { start(autoExec); }
-      // the timeout is needed to solve
-      // a weird safari bug https://github.com/riot/route/issues/33
-      else { win[ADD_EVENT_LISTENER]('load', function() {
-        setTimeout(function() { start(autoExec); }, 1);
-      }); }
+      if (document.readyState !== 'loading') {
+        start(autoExec);
+      }
+      else {
+        document.onreadystatechange = function () {
+          if (document.readyState === 'interactive') {
+            // the timeout is needed to solve
+            // a weird safari bug https://github.com/riot/route/issues/33
+            setTimeout(function() { start(autoExec); }, 1);
+          }
+        };
+      }
     }
     started = true;
   }
