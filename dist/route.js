@@ -450,13 +450,12 @@ route.stop = function () {
 route.start = function (autoExec) {
   if (!started) {
     if (win) {
-      var targetState = 'interactive';
-      if (document.readyState === targetState) {
-          start(autoExec);
+      if (document.readyState !== 'loading') {
+        start(autoExec);
       }
       else {
         document.onreadystatechange = function () {
-          if (document.readyState === targetState) {
+          if (document.readyState === 'interactive') {
             // the timeout is needed to solve
             // a weird safari bug https://github.com/riot/route/issues/33
             setTimeout(function() { start(autoExec); }, 1);
