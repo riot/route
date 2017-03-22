@@ -4,7 +4,9 @@
 
   <script>
     this.show = false
-    this.parent.route(opts.path, (...args) => {
+    this.router = opts.router ? opts.router : this.parent
+    this.router.routes.push(this)
+    this.router.route(opts.path, (...args) => {
       // There's no way to intercept the child tags while mounting.
       // We need to wait the `updated` event to access them via `this.tags`.
       this.one('updated', () => {
@@ -13,9 +15,9 @@
           tag.update()
         })
       })
-      this.parent.select(this)
-      this.parent.update()
-    })
+      this.router.select(this)
+      this.router.update()
+    });
 
     function flatten(tags) {
       return Object.keys(tags)

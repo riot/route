@@ -478,9 +478,10 @@ riot.tag2('router', '<yield></yield>', '', '', function(opts) {
 
 
     this.route = route$1.create();
+    this.routes = [];
+
     this.select = function (target) {
-      [].concat(this$1.tags.route)
-        .forEach(function (r) { return r.show = (r === target); });
+      this$1.routes.forEach(function (r) { return r.show = (r === target); });
     };
 
     this.on('mount', function () {
@@ -493,7 +494,9 @@ riot.tag2('route', '<virtual if="{show}"><yield></yield></virtual>', '', '', fun
     var this$1 = this;
 
     this.show = false;
-    this.parent.route(opts.path, function () {
+    this.router = opts.router ? opts.router : this.parent;
+    this.router.routes.push(this);
+    this.router.route(opts.path, function () {
       var args = [], len = arguments.length;
       while ( len-- ) args[ len ] = arguments[ len ];
 
@@ -504,8 +507,8 @@ riot.tag2('route', '<virtual if="{show}"><yield></yield></virtual>', '', '', fun
           tag.update();
         });
       });
-      this$1.parent.select(this$1);
-      this$1.parent.update();
+      this$1.router.select(this$1);
+      this$1.router.update();
     });
 
     function flatten(tags) {

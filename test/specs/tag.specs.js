@@ -34,4 +34,11 @@ describe('Tag specs', function() {
     expect(document.querySelector('router p').textContent)
       .to.be('abc')
   })
+
+  it('mounts route-param tag', function() {
+    riot.mount('app', 'route-param')
+    route('test')
+    expect(document.querySelector('router inner-route-param route p').textContent)
+      .to.be('test')
+  })
 })

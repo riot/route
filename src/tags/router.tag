@@ -6,9 +6,10 @@
     import route from 'riot-route'
     
     this.route = route.create()
+    this.routes = []
+
     this.select = target => {
-      [].concat(this.tags.route)
-        .forEach(r => r.show = (r === target))
+      this.routes.forEach(r => r.show = (r === target))
     }
 
     this.on('mount', () => {
