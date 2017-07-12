@@ -4,6 +4,11 @@ engines:
 
 ratings:
   paths:
-  - "lib/index.js"
+  - "src/**"
+
 exclude_paths:
   - "dist/**"
+  - "lib/**"
+  - "index.js"
+  - "tag.js"
+  - "rollup.js"
