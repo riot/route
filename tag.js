@@ -19,6 +19,10 @@ riot.tag2('router', '<yield></yield>', '', '', function(opts) {
 
       window.setTimeout(function () { return route.start(true); }, 0);
     });
+
+    this.on('unmount', function () {
+      this$1.route.stop();
+    });
 });
 
 riot.tag2('route', '<virtual if="{show}"><yield></yield></virtual>', '', '', function(opts) {

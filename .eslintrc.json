@@ -1,26 +1,6 @@
 {
-  "env": {
-    "browser": true,
-    "es6": true,
-    "mocha": true,
-    "node": true
-  },
-  "extends": "eslint:recommended",
-  "parserOptions": {
-    "sourceType": "module"
-  },
-  "rules": {
-    "eqeqeq": ["error", "smart"],
-    "indent": ["error", 2],
-    "linebreak-style": ["error", "unix"],
-    "no-cond-assign": "off",
-    "no-console": "off",
-    "no-unexpected-multiline": "error",
-    "quotes": ["error", "single", "avoid-escape"],
-    "semi": ["error", "never"]
-  },
+  "extends": "eslint-config-riot",
   "globals": {
-    "expect": true,
     "route": true
   }
 }

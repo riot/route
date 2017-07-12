@@ -7,7 +7,7 @@
 
 import observable from 'riot-observable'
 
-const RE_ORIGIN = /^.+?\/\/+[^\/]+/,
+const RE_ORIGIN = /^.+?\/\/+[^/]+/,
   EVENT_LISTENER = 'EventListener',
   REMOVE_EVENT_LISTENER = 'remove' + EVENT_LISTENER,
   ADD_EVENT_LISTENER = 'add' + EVENT_LISTENER,

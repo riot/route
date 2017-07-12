@@ -132,7 +132,7 @@ var observable = function(el) {
  * @module riot-route
  */
 
-var RE_ORIGIN = /^.+?\/\/+[^\/]+/;
+var RE_ORIGIN = /^.+?\/\/+[^/]+/;
 var EVENT_LISTENER = 'EventListener';
 var REMOVE_EVENT_LISTENER = 'remove' + EVENT_LISTENER;
 var ADD_EVENT_LISTENER = 'add' + EVENT_LISTENER;

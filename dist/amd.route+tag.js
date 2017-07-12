@@ -1,6 +1,6 @@
 define(['riot'], function (riot) { 'use strict';
 
-riot = 'default' in riot ? riot['default'] : riot;
+riot = riot && 'default' in riot ? riot['default'] : riot;
 
 var observable = function(el) {
 
@@ -133,7 +133,7 @@ var observable = function(el) {
  * @module riot-route
  */
 
-var RE_ORIGIN = /^.+?\/\/+[^\/]+/;
+var RE_ORIGIN = /^.+?\/\/+[^/]+/;
 var EVENT_LISTENER = 'EventListener';
 var REMOVE_EVENT_LISTENER = 'remove' + EVENT_LISTENER;
 var ADD_EVENT_LISTENER = 'add' + EVENT_LISTENER;
@@ -485,6 +485,10 @@ riot.tag2('router', '<yield></yield>', '', '', function(opts) {
     this.on('mount', function () {
 
       window.setTimeout(function () { return route$1.start(true); }, 0);
+    });
+
+    this.on('unmount', function () {
+      this$1.route.stop();
     });
 });
 
