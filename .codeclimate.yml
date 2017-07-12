@@ -4,6 +4,8 @@ engines:
 
 ratings:
   paths:
-  - "lib/index.js"
+  - "src/**"
+
 exclude_paths:
   - "dist/**"
+  - "lib/**"
