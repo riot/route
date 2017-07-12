@@ -15,6 +15,10 @@
       // To avoid updating route tag before mount, we use setTimeout here
       window.setTimeout(() => route.start(true), 0)
     })
+
+    this.on('unmount', () => {
+      this.route.stop()
+    })
   </script>
 
 </router>
