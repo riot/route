@@ -159,27 +159,34 @@ Start listening the url changes.
 route.start()
 ```
 
-<span class="tag red">&gt;= v2.3</span>
+<span class="tag red">&gt;= v3.2</span>
 
 Riot doesn't `start` its router automatically. DON'T FORGET TO START IT BY YOURSELF. This also means that you can choose your favorite router.
 (Note: before v2.3 Riot started the router automatically. The behavior was changed)
 
-### route.start(autoExec)
+### route.start(options)
 
-Start listening the url changes and also exec routing on the current url.
+Start listening the url changes and also specify some options of behavior.
+
+ - `autoExec`: Exec routing on the current url
+ - `autoForce`: Force routing of even "same page" routes
+
+For backwards compatibility support, you may set `options` to `true` which is setting `autoExec` as `true`.
 
 ```js
 route.start(true)
+// OR
+route.start({autoExec: true})
 ```
 
-This is a shorthand for:
+Are both shorthand for:
 
 ```js
 route.start()
 route.exec()
 ```
 
-<span class="tag red">&gt;= v2.3</span>
+<span class="tag red">&gt;= v3.2</span>
 
 Riot doesn't `start` its router automatically. DON'T FORGET TO START IT BY YOURSELF. This also means that you can choose your favorite router.
 (Note: before v2.3 Riot started the router automatically. The behavior was changed)

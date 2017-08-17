@@ -27,6 +27,7 @@ let
   routeFound = false,
   debouncedEmit,
   current,
+  options = {},
   parser,
   secondParser,
   emitStack = [],
@@ -74,15 +75,20 @@ function debounce(fn, delay) {
 
 /**
  * Set the window listeners to trigger the routes
- * @param {boolean} autoExec - see route.start
+ * @param {object} opts
  */
-function start(autoExec) {
+function start(opts) {
+  options = opts || {};
+  if (options === true) {
+    // Backwards Compatability
+    options = { autoExec: true }
+  }
   debouncedEmit = debounce(emit, 1)
   win[ADD_EVENT_LISTENER](POPSTATE, debouncedEmit)
   win[ADD_EVENT_LISTENER](HASHCHANGE, debouncedEmit)
   doc[ADD_EVENT_LISTENER](clickEvent, click)
 
-  if (autoExec) emit(true)
+  if (options.autoExec) emit(true)
 }
 
 /**
@@ -125,6 +131,7 @@ function getPathFromBase(href) {
 }
 
 function emit(force) {
+  force = force || options.autoForce;
   // the stack is needed for redirections
   const isRoot = emitStackLevel === 0
   if (MAX_EMIT_STACK_LEVEL <= emitStackLevel) return
@@ -170,8 +177,12 @@ function click(e) {
       el.href.split('#')[0] === loc.href.split('#')[0] // internal jump
       || base[0] !== '#' && getPathFromRoot(el.href).indexOf(base) !== 0 // outside of base
       || base[0] === '#' && el.href.split(base)[0] !== loc.href.split(base)[0] // outside of #base
-      || !go(getPathFromBase(el.href), el.title || doc.title) // route not found
     )) return
+
+  if (!go(getPathFromBase(el.href), el.title || doc.title)) {
+    // route not found
+    return;
+  }
 
   e.preventDefault()
 }
@@ -328,19 +339,19 @@ route.stop = function () {
 
 /**
  * Start routing
- * @param {boolean} autoExec - automatically exec after starting if true
+ * @param {object} opts
  */
-route.start = function (autoExec) {
+route.start = function (opts) {
   if (!started) {
     if (win) {
       if (document.readyState === 'interactive' || document.readyState === 'complete') {
-        start(autoExec)
+        start(opts)
       } else {
         document.onreadystatechange = function () {
           if (document.readyState === 'interactive') {
             // the timeout is needed to solve
             // a weird safari bug https://github.com/riot/route/issues/33
-            setTimeout(function() { start(autoExec) }, 1)
+            setTimeout(function() { start(opts) }, 1)
           }
         }
       }
