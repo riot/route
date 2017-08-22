@@ -78,7 +78,7 @@ function debounce(fn, delay) {
  * @param {object} opts
  */
 function start(opts) {
-  options = opts || {};
+  options = opts || {}
   if (options === true) {
     // Backwards Compatability
     options = { autoExec: true }
@@ -131,7 +131,7 @@ function getPathFromBase(href) {
 }
 
 function emit(force) {
-  force = force || options.autoForce;
+  force = force || options.autoForce
   // the stack is needed for redirections
   const isRoot = emitStackLevel === 0
   if (MAX_EMIT_STACK_LEVEL <= emitStackLevel) return
@@ -181,7 +181,7 @@ function click(e) {
 
   if (!go(getPathFromBase(el.href), el.title || doc.title)) {
     // route not found
-    return;
+    return
   }
 
   e.preventDefault()
