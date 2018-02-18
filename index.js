@@ -50,7 +50,7 @@ function DEFAULT_PARSER(path) {
 function DEFAULT_SECOND_PARSER(path, filter) {
   var f = filter
     .replace(/\?/g, '\\?')
-    .replace(/\*/g, '([^/?#]+)')
+    .replace(/\*/g, '([^/?#]+?)')
     .replace(/\.\./, '.*');
   var re = new RegExp(("^" + f + "$"));
   var args = path.match(re);
