@@ -2,8 +2,8 @@
 
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
-var route = _interopDefault(require('riot-route'));
 var riot = _interopDefault(require('riot'));
+var route = _interopDefault(require('riot-route'));
 
 riot.tag2('router', '<yield></yield>', '', '', function(opts) {
     var this$1 = this;

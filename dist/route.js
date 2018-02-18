@@ -14,7 +14,7 @@ var observable = function(el) {
    * Private variables
    */
   var callbacks = {},
-    slice = Array.prototype.slice;
+    slice = Array.prototype.slice;;
 
   /**
    * Public Api
@@ -100,7 +100,7 @@ var observable = function(el) {
           args = new Array(arglen),
           fns,
           fn,
-          i;
+          i;;;;;
 
         for (i = 0; i < arglen; i++) {
           args[i] = arguments$1[i + 1]; // skip first argument
@@ -127,37 +127,33 @@ var observable = function(el) {
 
 };
 
-/**
- * Simple client-side router
- * @module riot-route
- */
+var RE_ORIGIN = /^.+?\/\/+[^/]+/,
+  EVENT_LISTENER = 'EventListener',
+  REMOVE_EVENT_LISTENER = 'remove' + EVENT_LISTENER,
+  ADD_EVENT_LISTENER = 'add' + EVENT_LISTENER,
+  HAS_ATTRIBUTE = 'hasAttribute',
+  POPSTATE = 'popstate',
+  HASHCHANGE = 'hashchange',
+  TRIGGER = 'trigger',
+  MAX_EMIT_STACK_LEVEL = 3,
+  win = typeof window != 'undefined' && window,
+  doc = typeof document != 'undefined' && document,
+  hist = win && history,
+  loc = win && (hist.location || win.location), // see html5-history-api
+  prot = Router.prototype, // to minify more
+  clickEvent = doc && doc.ontouchstart ? 'touchstart' : 'click',
+  central = observable();;;;;;;;;;;;;;;;
 
-var RE_ORIGIN = /^.+?\/\/+[^/]+/;
-var EVENT_LISTENER = 'EventListener';
-var REMOVE_EVENT_LISTENER = 'remove' + EVENT_LISTENER;
-var ADD_EVENT_LISTENER = 'add' + EVENT_LISTENER;
-var HAS_ATTRIBUTE = 'hasAttribute';
-var POPSTATE = 'popstate';
-var HASHCHANGE = 'hashchange';
-var TRIGGER = 'trigger';
-var MAX_EMIT_STACK_LEVEL = 3;
-var win = typeof window != 'undefined' && window;
-var doc = typeof document != 'undefined' && document;
-var hist = win && history;
-var loc = win && (hist.location || win.location);
-var prot = Router.prototype;
-var clickEvent = doc && doc.ontouchstart ? 'touchstart' : 'click';
-var central = observable();
-
-var started = false;
-var routeFound = false;
-var debouncedEmit;
-var base;
-var current;
-var parser;
-var secondParser;
-var emitStack = [];
-var emitStackLevel = 0;
+var
+  started = false,
+  routeFound = false,
+  debouncedEmit,
+  base,
+  current,
+  parser,
+  secondParser,
+  emitStack = [],
+  emitStackLevel = 0;;;;;;;;;
 
 /**
  * Default parser. You can replace it via router.parser method.

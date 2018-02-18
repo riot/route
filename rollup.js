@@ -6,15 +6,15 @@ const
 
 rollup
   .rollup({
-    entry: 'src/index.js',
+    input: 'src/index.js',
     plugins: [
       alias({ 'riot-observable': 'node_modules/riot-observable/dist/es6.observable.js' }),
       buble()
     ]
   })
   .then(bundle => {
-    bundle.write({ format: 'iife', moduleName: 'route', dest: 'dist/route.js' })
-    bundle.write({ format: 'amd', dest: 'dist/amd.route.js' })
+    bundle.write({ format: 'iife', name: 'route', file: 'dist/route.js' })
+    bundle.write({ format: 'amd', file: 'dist/amd.route.js' })
   })
   .catch(error => {
     console.error(error)
@@ -22,13 +22,13 @@ rollup
 
 rollup
   .rollup({
-    entry: 'src/index.js',
+    input: 'src/index.js',
     external: ['riot-observable'],
     plugins: [buble()]
   })
   .then(bundle => {
-    bundle.write({ format: 'es', dest: 'lib/index.js' })
-    bundle.write({ format: 'cjs', dest: 'index.js' })
+    bundle.write({ format: 'es', file: 'lib/index.js' })
+    bundle.write({ format: 'cjs', file: 'index.js' })
   })
   .catch(error => {
     console.error(error)
@@ -36,7 +36,7 @@ rollup
 
 rollup
   .rollup({
-    entry: 'src/tag.js',
+    input: 'src/tag.js',
     external: ['riot'],
     plugins: [
       riot(),
@@ -50,11 +50,11 @@ rollup
   .then(bundle => {
     bundle.write({
       format: 'iife',
-      moduleName: 'route',
+      name: 'route',
       globals: { riot: 'riot' },
-      dest: 'dist/route+tag.js'
+      file: 'dist/route+tag.js'
     })
-    bundle.write({ format: 'amd', dest: 'dist/amd.route+tag.js' })
+    bundle.write({ format: 'amd', file: 'dist/amd.route+tag.js' })
   })
   .catch(error => {
     console.error(error)
@@ -62,13 +62,13 @@ rollup
 
 rollup
   .rollup({
-    entry: 'src/tag.js',
+    input: 'src/tag.js',
     external: ['riot', 'riot-observable', 'riot-route'],
     plugins: [riot(), buble()]
   })
   .then(bundle => {
-    bundle.write({ format: 'es', dest: 'lib/tag.js' })
-    bundle.write({ format: 'cjs', dest: 'tag.js' })
+    bundle.write({ format: 'es', file: 'lib/tag.js' })
+    bundle.write({ format: 'cjs', file: 'tag.js' })
   })
   .catch(error => {
     console.error(error)

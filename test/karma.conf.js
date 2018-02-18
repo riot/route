@@ -1,26 +1,24 @@
 module.exports = function(config) {
 
-  var browsers,
-    customLaunchers = []
+  let browsers
+  let customLaunchers = {
+    ChromeHeadlessNoSandbox: {
+      base: 'ChromeHeadless',
+      flags: ['--no-sandbox'],
+    }
+  }
+
 
   if (process.env.BROWSERSTACK) {
     customLaunchers = require('./browsers')
     browsers = Object.keys(customLaunchers)
     browsers.forEach(function(browser) { customLaunchers[browser].base = 'BrowserStack' })
   } else
-    browsers = ['Electron']
+    browsers = ['ChromeHeadlessNoSandbox']
 
   config.set({
     basePath: '',
     frameworks: ['mocha', 'riot'],
-    plugins: [
-      'karma-mocha',
-      'karma-mocha-reporter',
-      'karma-coverage',
-      'karma-browserstack-launcher',
-      'karma-electron',
-      'karma-riot'
-    ],
     files: [
       '../node_modules/expect.js/index.js',
       '../node_modules/riot/riot.js',
