@@ -6,7 +6,7 @@ ratings:
   paths:
   - "src/**"
 
-exclude_paths:
+exclude_patterns:
   - "dist/**"
   - "lib/**"
   - "index.js"
