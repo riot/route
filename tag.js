@@ -29,7 +29,7 @@ riot.tag2('route', '<virtual if="{show}"><yield></yield></virtual>', '', '', fun
     var this$1 = this;
 
     this.show = false;
-    this.parent.route(opts.path, function () {
+    var showRoute = function () {
       var args = [], len = arguments.length;
       while ( len-- ) args[ len ] = arguments[ len ];
 
@@ -42,7 +42,18 @@ riot.tag2('route', '<virtual if="{show}"><yield></yield></virtual>', '', '', fun
       });
       this$1.parent.select(this$1);
       this$1.parent.update();
-    });
+    };
+
+    var getPathFromBase = !!window && !!window.route && !!window.route._
+                               ? window.route._.getPathFromBase
+                               : function () { return ''; };
+
+    if(opts.path === getPathFromBase()){
+
+      setTimeout(showRoute, 0);
+    }
+
+    this.parent.route(opts.path, showRoute);
 
     function flatten(tags) {
       return Object.keys(tags)

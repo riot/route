@@ -34,4 +34,23 @@ describe('Tag specs', function() {
     expect(document.querySelector('router p').textContent)
       .to.be('abc')
   })
+
+  it('mounts nested-routes tag and tests nested routes by loading them one by one', function() {
+    riot.mount('app', 'nested-routes')
+
+    route('child/child-route1')
+    // using setTimeout because active route do not get mounted immediately in this fix
+    setTimeout(()=> {
+      expect(document.querySelector('route[path=\'child/child-route1\'] p').textContent)
+        .to.be('Child route 1')
+    }, 0)
+
+    route('child/child-route2')
+    // using setTimeout because active route do not get mounted immediately in this fix
+    setTimeout(()=> {
+      expect(document.querySelector('route[path=\'child/child-route2\'] p').textContent)
+        .to.be('Child route 2')
+    }, 0)
+  })
+
 })

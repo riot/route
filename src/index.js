@@ -28,7 +28,6 @@ let
   started = false,
   routeFound = false,
   debouncedEmit,
-  base,
   current,
   parser,
   secondParser,
@@ -120,6 +119,7 @@ function getPathFromRoot(href) {
  * @returns {string} path from base
  */
 function getPathFromBase(href) {
+  const base = route._.base
   return base[0] === '#'
     ? (href || loc.href || '').split(base)[1] || ''
     : (loc ? getPathFromRoot(href) : href || '').replace(base, '')
@@ -163,6 +163,8 @@ function click(e) {
     || el.href.indexOf(loc.href.match(RE_ORIGIN)[0]) === -1 // cross origin
   ) return
 
+  const base = route._.base
+
   if (el.href !== loc.href
     && (
       el.href.split('#')[0] === loc.href.split('#')[0] // internal jump
@@ -185,7 +187,7 @@ function go(path, title, shouldReplace) {
   // Server-side usage: directly execute handlers for the path
   if (!hist) return central[TRIGGER]('emit', getPathFromBase(path))
 
-  path = base + normalize(path)
+  path = route._.base + normalize(path)
   title = title || doc.title
   // browsers ignores the second parameter `title`
   shouldReplace
@@ -253,6 +255,9 @@ prot.r = function(filter, action) {
 const mainRouter = new Router()
 const route = mainRouter.m.bind(mainRouter)
 
+// adding base and getPathFromBase to route so we can access them in route.tag's script
+route._ = { base: void 0, getPathFromBase: getPathFromBase}
+
 /**
  * Create a sub router
  * @returns {function} the method of a new Router object
@@ -271,7 +276,7 @@ route.create = function() {
  * @param {(str|RegExp)} arg - a new base or '#' or '#!'
  */
 route.base = function(arg) {
-  base = arg || '#'
+  route._.base = arg || '#'
   current = getPathFromBase() // recalculate current path
 }
 

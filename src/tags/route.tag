@@ -16,11 +16,24 @@
       this.parent.select(this)
       this.parent.update()
     }
+<<<<<<< HEAD
+=======
+    
+    // make sure there is window object and it has route, 
+    // and also check route has _ (to make sure window.route is not overridden by someone else)
+    const getPathFromBase = !!window && !!window.route && !!window.route._ 
+                               ? window.route._.getPathFromBase 
+                               : () => '';
+>>>>>>> 1888da93d9c90ce1f783271b722eb4d1fd2dc985
 
     if(opts.path === getPathFromBase()){
       // if this route's path is same as current route and it is a sub route then, 
       // because the route has already changed it's callback(showRoute) will not get executed,
+<<<<<<< HEAD
       // which will get added to the callbacks just after this if condition.
+=======
+      // which will get added to the callbacks just after this
+>>>>>>> 1888da93d9c90ce1f783271b722eb4d1fd2dc985
       // so to show the route we call the callback(showRoute) manually.
   
       // we can also call showRoute on mount, but in that case, it will trigger in every mount
