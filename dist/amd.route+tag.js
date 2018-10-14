@@ -128,6 +128,11 @@ define(['riot'], function (riot) { 'use strict';
 
   };
 
+  /**
+   * Simple client-side router
+   * @module riot-route
+   */
+
   var RE_ORIGIN = /^.+?\/\/+[^/]+/,
     EVENT_LISTENER = 'EventListener',
     REMOVE_EVENT_LISTENER = 'remove' + EVENT_LISTENER,
@@ -149,7 +154,6 @@ define(['riot'], function (riot) { 'use strict';
     started = false,
     routeFound = false,
     debouncedEmit,
-    base,
     current,
     parser,
     secondParser,
@@ -205,6 +209,7 @@ define(['riot'], function (riot) { 'use strict';
     win[ADD_EVENT_LISTENER](POPSTATE, debouncedEmit);
     win[ADD_EVENT_LISTENER](HASHCHANGE, debouncedEmit);
     doc[ADD_EVENT_LISTENER](clickEvent, click);
+
     if (autoExec) { emit(true); }
   }
 
@@ -241,6 +246,7 @@ define(['riot'], function (riot) { 'use strict';
    * @returns {string} path from base
    */
   function getPathFromBase(href) {
+    var base = route._.base;
     return base[0] === '#'
       ? (href || loc.href || '').split(base)[1] || ''
       : (loc ? getPathFromRoot(href) : href || '').replace(base, '')
@@ -259,6 +265,7 @@ define(['riot'], function (riot) { 'use strict';
         current = path;
       }
     });
+
     if (isRoot) {
       var first;
       while (first = emitStack.shift()) { first(); } // stack increses within this call
@@ -284,6 +291,8 @@ define(['riot'], function (riot) { 'use strict';
       || el.href.indexOf(loc.href.match(RE_ORIGIN)[0]) === -1 // cross origin
     ) { return }
 
+    var base = route._.base;
+
     if (el.href !== loc.href
       && (
         el.href.split('#')[0] === loc.href.split('#')[0] // internal jump
@@ -306,7 +315,7 @@ define(['riot'], function (riot) { 'use strict';
     // Server-side usage: directly execute handlers for the path
     if (!hist) { return central[TRIGGER]('emit', getPathFromBase(path)) }
 
-    path = base + normalize(path);
+    path = route._.base + normalize(path);
     title = title || doc.title;
     // browsers ignores the second parameter `title`
     shouldReplace
@@ -368,11 +377,15 @@ define(['riot'], function (riot) { 'use strict';
       filter = '/' + normalize(filter);
       this.$.push(filter);
     }
+
     this.on(filter, action);
   };
 
   var mainRouter = new Router();
   var route = mainRouter.m.bind(mainRouter);
+
+  // adding base and getPathFromBase to route so we can access them in route.tag's script
+  route._ = { base: null, getPathFromBase: getPathFromBase };
 
   /**
    * Create a sub router
@@ -392,7 +405,7 @@ define(['riot'], function (riot) { 'use strict';
    * @param {(str|RegExp)} arg - a new base or '#' or '#!'
    */
   route.base = function(arg) {
-    base = arg || '#';
+    route._.base = arg || '#';
     current = getPathFromBase(); // recalculate current path
   };
 
@@ -435,6 +448,7 @@ define(['riot'], function (riot) { 'use strict';
         win[REMOVE_EVENT_LISTENER](HASHCHANGE, debouncedEmit);
         doc[REMOVE_EVENT_LISTENER](clickEvent, click);
       }
+
       central[TRIGGER]('stop');
       started = false;
     }
@@ -449,8 +463,7 @@ define(['riot'], function (riot) { 'use strict';
       if (win) {
         if (document.readyState === 'interactive' || document.readyState === 'complete') {
           start(autoExec);
-        }
-        else {
+        } else {
           document.onreadystatechange = function () {
             if (document.readyState === 'interactive') {
               // the timeout is needed to solve
@@ -460,6 +473,7 @@ define(['riot'], function (riot) { 'use strict';
           };
         }
       }
+
       started = true;
     }
   };
@@ -492,7 +506,7 @@ define(['riot'], function (riot) { 'use strict';
       var this$1 = this;
 
       this.show = false;
-      this.parent.route(opts.path, function () {
+      var showRoute = function () {
         var args = [], len = arguments.length;
         while ( len-- ) args[ len ] = arguments[ len ];
 
@@ -505,7 +519,18 @@ define(['riot'], function (riot) { 'use strict';
         });
         this$1.parent.select(this$1);
         this$1.parent.update();
-      });
+      };
+
+      var getPathFromBase = !!window && !!window.route && !!window.route._
+                                 ? window.route._.getPathFromBase
+                                 : function () { return ''; };
+
+      if(opts.path === getPathFromBase()){
+
+        setTimeout(showRoute, 0);
+      }
+
+      this.parent.route(opts.path, showRoute);
 
       function flatten(tags) {
         return Object.keys(tags)

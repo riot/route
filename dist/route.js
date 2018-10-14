@@ -127,6 +127,11 @@ var route = (function () {
 
   };
 
+  /**
+   * Simple client-side router
+   * @module riot-route
+   */
+
   var RE_ORIGIN = /^.+?\/\/+[^/]+/,
     EVENT_LISTENER = 'EventListener',
     REMOVE_EVENT_LISTENER = 'remove' + EVENT_LISTENER,
@@ -148,7 +153,6 @@ var route = (function () {
     started = false,
     routeFound = false,
     debouncedEmit,
-    base,
     current,
     parser,
     secondParser,
@@ -204,6 +208,7 @@ var route = (function () {
     win[ADD_EVENT_LISTENER](POPSTATE, debouncedEmit);
     win[ADD_EVENT_LISTENER](HASHCHANGE, debouncedEmit);
     doc[ADD_EVENT_LISTENER](clickEvent, click);
+
     if (autoExec) { emit(true); }
   }
 
@@ -240,6 +245,7 @@ var route = (function () {
    * @returns {string} path from base
    */
   function getPathFromBase(href) {
+    var base = route._.base;
     return base[0] === '#'
       ? (href || loc.href || '').split(base)[1] || ''
       : (loc ? getPathFromRoot(href) : href || '').replace(base, '')
@@ -258,6 +264,7 @@ var route = (function () {
         current = path;
       }
     });
+
     if (isRoot) {
       var first;
       while (first = emitStack.shift()) { first(); } // stack increses within this call
@@ -283,6 +290,8 @@ var route = (function () {
       || el.href.indexOf(loc.href.match(RE_ORIGIN)[0]) === -1 // cross origin
     ) { return }
 
+    var base = route._.base;
+
     if (el.href !== loc.href
       && (
         el.href.split('#')[0] === loc.href.split('#')[0] // internal jump
@@ -305,7 +314,7 @@ var route = (function () {
     // Server-side usage: directly execute handlers for the path
     if (!hist) { return central[TRIGGER]('emit', getPathFromBase(path)) }
 
-    path = base + normalize(path);
+    path = route._.base + normalize(path);
     title = title || doc.title;
     // browsers ignores the second parameter `title`
     shouldReplace
@@ -367,11 +376,15 @@ var route = (function () {
       filter = '/' + normalize(filter);
       this.$.push(filter);
     }
+
     this.on(filter, action);
   };
 
   var mainRouter = new Router();
   var route = mainRouter.m.bind(mainRouter);
+
+  // adding base and getPathFromBase to route so we can access them in route.tag's script
+  route._ = { base: null, getPathFromBase: getPathFromBase };
 
   /**
    * Create a sub router
@@ -391,7 +404,7 @@ var route = (function () {
    * @param {(str|RegExp)} arg - a new base or '#' or '#!'
    */
   route.base = function(arg) {
-    base = arg || '#';
+    route._.base = arg || '#';
     current = getPathFromBase(); // recalculate current path
   };
 
@@ -434,6 +447,7 @@ var route = (function () {
         win[REMOVE_EVENT_LISTENER](HASHCHANGE, debouncedEmit);
         doc[REMOVE_EVENT_LISTENER](clickEvent, click);
       }
+
       central[TRIGGER]('stop');
       started = false;
     }
@@ -448,8 +462,7 @@ var route = (function () {
       if (win) {
         if (document.readyState === 'interactive' || document.readyState === 'complete') {
           start(autoExec);
-        }
-        else {
+        } else {
           document.onreadystatechange = function () {
             if (document.readyState === 'interactive') {
               // the timeout is needed to solve
@@ -459,6 +472,7 @@ var route = (function () {
           };
         }
       }
+
       started = true;
     }
   };

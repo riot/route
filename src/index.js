@@ -1,5 +1,3 @@
-'use strict'
-
 /**
  * Simple client-side router
  * @module riot-route
@@ -28,7 +26,6 @@ let
   started = false,
   routeFound = false,
   debouncedEmit,
-  base,
   current,
   parser,
   secondParser,
@@ -84,6 +81,7 @@ function start(autoExec) {
   win[ADD_EVENT_LISTENER](POPSTATE, debouncedEmit)
   win[ADD_EVENT_LISTENER](HASHCHANGE, debouncedEmit)
   doc[ADD_EVENT_LISTENER](clickEvent, click)
+
   if (autoExec) emit(true)
 }
 
@@ -120,6 +118,7 @@ function getPathFromRoot(href) {
  * @returns {string} path from base
  */
 function getPathFromBase(href) {
+  const base = route._.base
   return base[0] === '#'
     ? (href || loc.href || '').split(base)[1] || ''
     : (loc ? getPathFromRoot(href) : href || '').replace(base, '')
@@ -138,6 +137,7 @@ function emit(force) {
       current = path
     }
   })
+
   if (isRoot) {
     let first
     while (first = emitStack.shift()) first() // stack increses within this call
@@ -163,6 +163,8 @@ function click(e) {
     || el.href.indexOf(loc.href.match(RE_ORIGIN)[0]) === -1 // cross origin
   ) return
 
+  const base = route._.base
+
   if (el.href !== loc.href
     && (
       el.href.split('#')[0] === loc.href.split('#')[0] // internal jump
@@ -185,7 +187,7 @@ function go(path, title, shouldReplace) {
   // Server-side usage: directly execute handlers for the path
   if (!hist) return central[TRIGGER]('emit', getPathFromBase(path))
 
-  path = base + normalize(path)
+  path = route._.base + normalize(path)
   title = title || doc.title
   // browsers ignores the second parameter `title`
   shouldReplace
@@ -247,11 +249,15 @@ prot.r = function(filter, action) {
     filter = '/' + normalize(filter)
     this.$.push(filter)
   }
+
   this.on(filter, action)
 }
 
 const mainRouter = new Router()
 const route = mainRouter.m.bind(mainRouter)
+
+// adding base and getPathFromBase to route so we can access them in route.tag's script
+route._ = { base: null, getPathFromBase }
 
 /**
  * Create a sub router
@@ -271,7 +277,7 @@ route.create = function() {
  * @param {(str|RegExp)} arg - a new base or '#' or '#!'
  */
 route.base = function(arg) {
-  base = arg || '#'
+  route._.base = arg || '#'
   current = getPathFromBase() // recalculate current path
 }
 
@@ -314,6 +320,7 @@ route.stop = function () {
       win[REMOVE_EVENT_LISTENER](HASHCHANGE, debouncedEmit)
       doc[REMOVE_EVENT_LISTENER](clickEvent, click)
     }
+
     central[TRIGGER]('stop')
     started = false
   }
@@ -328,8 +335,7 @@ route.start = function (autoExec) {
     if (win) {
       if (document.readyState === 'interactive' || document.readyState === 'complete') {
         start(autoExec)
-      }
-      else {
+      } else {
         document.onreadystatechange = function () {
           if (document.readyState === 'interactive') {
             // the timeout is needed to solve
@@ -339,6 +345,7 @@ route.start = function (autoExec) {
         }
       }
     }
+
     started = true
   }
 }
