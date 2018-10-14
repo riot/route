@@ -35,7 +35,7 @@ edition | target | file | via
 ### jsdelivr
 
 ```html
-<script src="https://cdn.jsdelivr.net/riot-route/x.x.x/route.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/riot-route@x.x.x/dist/route.min.js"></script>
 ```
 
 *Note*: change the part `x.x.x` to the version numbers what you want to use: ex. `2.5.0` or `3.0.0`.
@@ -61,12 +61,12 @@ $ bower install --save riot-route
 
 - [API Documentation (latest)](doc/)
 
-See also [riotjs.com](http://riotjs.com/api/route/).
+See also [riot.js.org](http://riot.js.org/api/route/).
 
 ## Demos
 
-- [Page switching](http://riotjs.com/examples/plunker/?app=router-page-switcher)
-- [Complex routings](http://riotjs.com/examples/plunker/?app=router-complex)
+- [Page switching](http://riot.js.org/examples/plunker/?app=router-page-switcher)
+- [Complex routings](http://riot.js.org/examples/plunker/?app=router-complex)
 
 ## Contribute
 

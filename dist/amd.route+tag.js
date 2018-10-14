@@ -1,6 +1,6 @@
 define(['riot'], function (riot) { 'use strict';
 
-riot = riot && 'default' in riot ? riot['default'] : riot;
+riot = riot && riot.hasOwnProperty('default') ? riot['default'] : riot;
 
 var observable = function(el) {
 
@@ -15,7 +15,7 @@ var observable = function(el) {
    * Private variables
    */
   var callbacks = {},
-    slice = Array.prototype.slice;
+    slice = Array.prototype.slice;;
 
   /**
    * Public Api
@@ -101,7 +101,7 @@ var observable = function(el) {
           args = new Array(arglen),
           fns,
           fn,
-          i;
+          i;;;;;
 
         for (i = 0; i < arglen; i++) {
           args[i] = arguments$1[i + 1]; // skip first argument
@@ -128,37 +128,33 @@ var observable = function(el) {
 
 };
 
-/**
- * Simple client-side router
- * @module riot-route
- */
+var RE_ORIGIN = /^.+?\/\/+[^/]+/,
+  EVENT_LISTENER = 'EventListener',
+  REMOVE_EVENT_LISTENER = 'remove' + EVENT_LISTENER,
+  ADD_EVENT_LISTENER = 'add' + EVENT_LISTENER,
+  HAS_ATTRIBUTE = 'hasAttribute',
+  POPSTATE = 'popstate',
+  HASHCHANGE = 'hashchange',
+  TRIGGER = 'trigger',
+  MAX_EMIT_STACK_LEVEL = 3,
+  win = typeof window != 'undefined' && window,
+  doc = typeof document != 'undefined' && document,
+  hist = win && history,
+  loc = win && (hist.location || win.location), // see html5-history-api
+  prot = Router.prototype, // to minify more
+  clickEvent = doc && doc.ontouchstart ? 'touchstart' : 'click',
+  central = observable();;;;;;;;;;;;;;;;
 
-var RE_ORIGIN = /^.+?\/\/+[^/]+/;
-var EVENT_LISTENER = 'EventListener';
-var REMOVE_EVENT_LISTENER = 'remove' + EVENT_LISTENER;
-var ADD_EVENT_LISTENER = 'add' + EVENT_LISTENER;
-var HAS_ATTRIBUTE = 'hasAttribute';
-var POPSTATE = 'popstate';
-var HASHCHANGE = 'hashchange';
-var TRIGGER = 'trigger';
-var MAX_EMIT_STACK_LEVEL = 3;
-var win = typeof window != 'undefined' && window;
-var doc = typeof document != 'undefined' && document;
-var hist = win && history;
-var loc = win && (hist.location || win.location);
-var prot = Router.prototype;
-var clickEvent = doc && doc.ontouchstart ? 'touchstart' : 'click';
-var central = observable();
-
-var started = false;
-var routeFound = false;
-var debouncedEmit;
-var base;
-var current;
-var parser;
-var secondParser;
-var emitStack = [];
-var emitStackLevel = 0;
+var
+  started = false,
+  routeFound = false,
+  debouncedEmit,
+  base,
+  current,
+  parser,
+  secondParser,
+  emitStack = [],
+  emitStackLevel = 0;;;;;;;;;
 
 /**
  * Default parser. You can replace it via router.parser method.
@@ -376,13 +372,13 @@ prot.r = function(filter, action) {
 };
 
 var mainRouter = new Router();
-var route$1 = mainRouter.m.bind(mainRouter);
+var route = mainRouter.m.bind(mainRouter);
 
 /**
  * Create a sub router
  * @returns {function} the method of a new Router object
  */
-route$1.create = function() {
+route.create = function() {
   var newSubRouter = new Router();
   // assign sub-router's main method
   var router = newSubRouter.m.bind(newSubRouter);
@@ -395,13 +391,13 @@ route$1.create = function() {
  * Set the base of url
  * @param {(str|RegExp)} arg - a new base or '#' or '#!'
  */
-route$1.base = function(arg) {
+route.base = function(arg) {
   base = arg || '#';
   current = getPathFromBase(); // recalculate current path
 };
 
 /** Exec routing right now **/
-route$1.exec = function() {
+route.exec = function() {
   emit(true);
 };
 
@@ -410,7 +406,7 @@ route$1.exec = function() {
  * @param {function} fn - your parser function
  * @param {function} fn2 - your secondParser function
  */
-route$1.parser = function(fn, fn2) {
+route.parser = function(fn, fn2) {
   if (!fn && !fn2) {
     // reset parser for testing...
     parser = DEFAULT_PARSER;
@@ -424,7 +420,7 @@ route$1.parser = function(fn, fn2) {
  * Helper function to get url query as an object
  * @returns {object} parsed query
  */
-route$1.query = function() {
+route.query = function() {
   var q = {};
   var href = loc.href || current;
   href.replace(/[?&](.+?)=([^&]*)/g, function(_, k, v) { q[k] = v; });
@@ -432,7 +428,7 @@ route$1.query = function() {
 };
 
 /** Stop routing **/
-route$1.stop = function () {
+route.stop = function () {
   if (started) {
     if (win) {
       win[REMOVE_EVENT_LISTENER](POPSTATE, debouncedEmit);
@@ -448,7 +444,7 @@ route$1.stop = function () {
  * Start routing
  * @param {boolean} autoExec - automatically exec after starting if true
  */
-route$1.start = function (autoExec) {
+route.start = function (autoExec) {
   if (!started) {
     if (win) {
       if (document.readyState === 'interactive' || document.readyState === 'complete') {
@@ -469,14 +465,14 @@ route$1.start = function (autoExec) {
 };
 
 /** Prepare the router **/
-route$1.base();
-route$1.parser();
+route.base();
+route.parser();
 
 riot.tag2('router', '<yield></yield>', '', '', function(opts) {
     var this$1 = this;
 
 
-    this.route = route$1.create();
+    this.route = route.create();
     this.select = function (target) {
       [].concat(this$1.tags.route)
         .forEach(function (r) { return r.show = (r === target); });
@@ -484,7 +480,7 @@ riot.tag2('router', '<yield></yield>', '', '', function(opts) {
 
     this.on('mount', function () {
 
-      window.setTimeout(function () { return route$1.start(true); }, 0);
+      window.setTimeout(function () { return route.start(true); }, 0);
     });
 
     this.on('unmount', function () {
@@ -518,6 +514,6 @@ riot.tag2('route', '<virtual if="{show}"><yield></yield></virtual>', '', '', fun
     }
 });
 
-return route$1;
+return route;
 
 });
