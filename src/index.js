@@ -24,6 +24,7 @@ const RE_ORIGIN = /^.+?\/\/+[^/]+/,
 
 let
   started = false,
+  suspended = false,
   routeFound = false,
   debouncedEmit,
   current,
@@ -310,6 +311,20 @@ route.query = function() {
   const href = loc.href || current
   href.replace(/[?&](.+?)=([^&]*)/g, function(_, k, v) { q[k] = v })
   return q
+}
+
+route.suspend = function () {
+  if (started & !suspended) {
+    started = false;
+    suspended = true;
+  }
+};
+
+route.resume = function () {
+  if(suspended) {
+    suspended = false;
+    started = true;
+  }
 }
 
 /** Stop routing **/
