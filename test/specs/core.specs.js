@@ -2,10 +2,21 @@ function fireEvent(node, eventName) {
   var event = document.createEvent('MouseEvents')
   // https://developer.mozilla.org/en-US/docs/Web/API/event.initMouseEvent
   event.initEvent(
-    eventName, true, true, this, 0,
-    event.screenX, event.screenY, event.clientX, event.clientY,
-    false, false, false, false,
-    0, null
+    eventName,
+    true,
+    true,
+    this,
+    0,
+    event.screenX,
+    event.screenY,
+    event.clientX,
+    event.clientY,
+    false,
+    false,
+    false,
+    false,
+    0,
+    null
   )
   event.button = 1
   event.which = null
@@ -20,15 +31,17 @@ function fireEvent(node, eventName) {
 function serial(tasks, interval) {
   function runner() {
     var task
-    if (task = tasks.shift()) task()
+    if ((task = tasks.shift())) task()
     if (tasks.length) setTimeout(runner, interval)
   }
   runner()
 }
 
 describe('Core specs', function() {
-
-  var counter = 0, $, $$, html
+  var counter = 0,
+    $,
+    $$,
+    html
 
   before(function() {
     $ = document.querySelector.bind(document)
@@ -105,12 +118,21 @@ describe('Core specs', function() {
       expect(first).to.be('fruit')
       expect(['apple', 'orange']).to.contain(second)
     })
-    serial([
-      function() { fireEvent($('.tag-c'), 'click') },
-      function() { fireEvent($('.tag-d'), 'click') },
-      function() { expect(counter).to.be(2) },
-      done
-    ], 20)
+    serial(
+      [
+        function() {
+          fireEvent($('.tag-c'), 'click')
+        },
+        function() {
+          fireEvent($('.tag-d'), 'click')
+        },
+        function() {
+          expect(counter).to.be(2)
+        },
+        done
+      ],
+      20
+    )
   })
 
   it('ignore link clicked in some cases', function(done) {
@@ -119,19 +141,39 @@ describe('Core specs', function() {
       counter++
     })
 
-    serial([
-      function() { fireEvent($('.tag-z'), 'click') },
-      function() { expect(counter).to.be(0) },
-      function() { fireEvent($('.tag-n'), 'click') },
-      function() { expect(counter).to.be(1) },
-      function() { fireEvent($('.tag-k'), 'click') },
-      function() { fireEvent($('.tag-l'), 'click') },
-      function() { fireEvent($('.tag-m'), 'click') },
-      function() { fireEvent($('.tag-o'), 'click') },
-      function() { expect(counter).to.be(1) },
-      done
-    ], 10)
-
+    serial(
+      [
+        function() {
+          fireEvent($('.tag-z'), 'click')
+        },
+        function() {
+          expect(counter).to.be(0)
+        },
+        function() {
+          fireEvent($('.tag-n'), 'click')
+        },
+        function() {
+          expect(counter).to.be(1)
+        },
+        function() {
+          fireEvent($('.tag-k'), 'click')
+        },
+        function() {
+          fireEvent($('.tag-l'), 'click')
+        },
+        function() {
+          fireEvent($('.tag-m'), 'click')
+        },
+        function() {
+          fireEvent($('.tag-o'), 'click')
+        },
+        function() {
+          expect(counter).to.be(1)
+        },
+        done
+      ],
+      10
+    )
   })
 
   it('sets hashbang to base', function() {
@@ -375,15 +417,13 @@ describe('Core specs', function() {
   })
 
   it('metakeys events get skipped', function() {
-
     route(function() {
       counter++
     })
 
     // Emulate the metaKey event
     // initMouseEvent is deprecated but it's useful for our test
-    var
-      evt = document.createEvent('MouseEvents'),
+    var evt = document.createEvent('MouseEvents'),
       e = {
         bubbles: true,
         cancelable: true,
@@ -402,11 +442,23 @@ describe('Core specs', function() {
       },
       el = $('.tag-p')
 
-    evt.initMouseEvent('click',
-      e.bubbles, e.cancelable, e.view, e.detail,
-      e.screenX, e.screenY, e.clientX, e.clientY,
-      e.ctrlKey, e.altKey, e.shiftKey, e.metaKey,
-      e.button, document.body.parentNode)
+    evt.initMouseEvent(
+      'click',
+      e.bubbles,
+      e.cancelable,
+      e.view,
+      e.detail,
+      e.screenX,
+      e.screenY,
+      e.clientX,
+      e.clientY,
+      e.ctrlKey,
+      e.altKey,
+      e.shiftKey,
+      e.metaKey,
+      e.button,
+      document.body.parentNode
+    )
 
     el.addEventListener('click', function(e) {
       e.preventDefault()
@@ -414,7 +466,6 @@ describe('Core specs', function() {
 
     el.dispatchEvent(evt)
     expect(counter).to.be(0)
-
   })
 
   it('go to the root (/)', function() {
@@ -468,21 +519,55 @@ describe('Core specs', function() {
     route(function() {
       counter++
     })
-    serial([
-      function() { route('one', 'One') },
-      function() { route('two', 'Two') },
-      function() { history.back() },
-      function() { expect(window.location.pathname).to.be('/one') },
-      function() { route('three', 'Three') },
-      function() { route('four', 'Four') },
-      function() { route('five', 'Five', true) },
-      function() { history.back() },
-      function() {
-        expect(window.location.pathname).to.be('/three')
-        expect(counter).to.be(7)
-      },
-      done
-    ], 30)
+    serial(
+      [
+        function() {
+          route('one', 'One')
+        },
+        function() {
+          route('two', 'Two')
+        },
+        function() {
+          history.back()
+        },
+        function() {
+          expect(window.location.pathname).to.be('/one')
+        },
+        function() {
+          route('three', 'Three')
+        },
+        function() {
+          route('four', 'Four')
+        },
+        function() {
+          route('five', 'Five', true)
+        },
+        function() {
+          history.back()
+        },
+        function() {
+          expect(window.location.pathname).to.be('/three')
+          expect(counter).to.be(7)
+        },
+        done
+      ],
+      30
+    )
   })
 
+  it('dispatches events even if suspended', function() {
+    route.base('/')
+    route.suspend()
+    let triggerCount = 0
+    const listener = function() {
+      triggerCount++
+    }
+    window.addEventListener('route.trigger', listener)
+    const currentCount = counter
+    route('one', 'One')
+    route('two', 'Two')
+    expect(triggerCount).to.be(2)
+    expect(counter).to.be(currentCount)
+    window.removeEventListener('route.trigger', listener)
+  })
 })

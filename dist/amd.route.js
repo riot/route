@@ -148,8 +148,8 @@ define(function () { 'use strict';
     clickEvent = doc && doc.ontouchstart ? 'touchstart' : 'click',
     central = observable();
 
-  var
-    started = false,
+  var started = false,
+    suspended = false,
     routeFound = false,
     debouncedEmit,
     current,
@@ -192,7 +192,7 @@ define(function () { 'use strict';
    */
   function debounce(fn, delay) {
     var t;
-    return function () {
+    return function() {
       clearTimeout(t);
       t = setTimeout(fn, delay);
     }
@@ -255,6 +255,11 @@ define(function () { 'use strict';
     var isRoot = emitStackLevel === 0;
     if (MAX_EMIT_STACK_LEVEL <= emitStackLevel) { return }
 
+    riotEvent();
+    if (suspended) {
+      return
+    }
+
     emitStackLevel++;
     emitStack.push(function() {
       var path = getPathFromBase();
@@ -266,38 +271,44 @@ define(function () { 'use strict';
 
     if (isRoot) {
       var first;
-      while (first = emitStack.shift()) { first(); } // stack increses within this call
+      while ((first = emitStack.shift())) { first(); } // stack increses within this call
       emitStackLevel = 0;
     }
   }
 
   function click(e) {
     if (
-      e.which !== 1 // not left click
-      || e.metaKey || e.ctrlKey || e.shiftKey // or meta keys
-      || e.defaultPrevented // or default prevented
-    ) { return }
+      e.which !== 1 || // not left click
+      e.metaKey ||
+      e.ctrlKey ||
+      e.shiftKey || // or meta keys
+      e.defaultPrevented // or default prevented
+    )
+      { return }
 
     var el = e.target;
     while (el && el.nodeName !== 'A') { el = el.parentNode; }
 
     if (
-      !el || el.nodeName !== 'A' // not A tag
-      || el[HAS_ATTRIBUTE]('download') // has download attr
-      || !el[HAS_ATTRIBUTE]('href') // has no href attr
-      || el.target && el.target !== '_self' // another window or frame
-      || el.href.indexOf(loc.href.match(RE_ORIGIN)[0]) === -1 // cross origin
-    ) { return }
+      !el ||
+      el.nodeName !== 'A' || // not A tag
+      el[HAS_ATTRIBUTE]('download') || // has download attr
+      !el[HAS_ATTRIBUTE]('href') || // has no href attr
+      (el.target && el.target !== '_self') || // another window or frame
+      el.href.indexOf(loc.href.match(RE_ORIGIN)[0]) === -1 // cross origin
+    )
+      { return }
 
     var base = route._.base;
 
-    if (el.href !== loc.href
-      && (
-        el.href.split('#')[0] === loc.href.split('#')[0] // internal jump
-        || base[0] !== '#' && getPathFromRoot(el.href).indexOf(base) !== 0 // outside of base
-        || base[0] === '#' && el.href.split(base)[0] !== loc.href.split(base)[0] // outside of #base
-        || !go(getPathFromBase(el.href), el.title || doc.title) // route not found
-      )) { return }
+    if (
+      el.href !== loc.href &&
+      (el.href.split('#')[0] === loc.href.split('#')[0] || // internal jump
+      (base[0] !== '#' && getPathFromRoot(el.href).indexOf(base) !== 0) || // outside of base
+      (base[0] === '#' && el.href.split(base)[0] !== loc.href.split(base)[0]) || // outside of #base
+        !go(getPathFromBase(el.href), el.title || doc.title)) // route not found
+    )
+      { return }
 
     e.preventDefault();
   }
@@ -326,6 +337,13 @@ define(function () { 'use strict';
     return routeFound
   }
 
+  var riotEvent = (function () {
+    var evt = doc && doc.createEvent && doc.createEvent('Event');
+    if (!evt) { return function () {} }
+    evt.initEvent('route.trigger', true, true);
+    return function () { return win.dispatchEvent(evt); }
+  })();
+
   /**
    * Go to path or set action
    * a single string:                go there
@@ -338,7 +356,8 @@ define(function () { 'use strict';
    * @param {boolean} third - replace flag
    */
   prot.m = function(first, second, third) {
-    if (isString(first) && (!second || isString(second))) { go(first, second, third || false); }
+    if (isString(first) && (!second || isString(second)))
+      { go(first, second, third || false); }
     else if (second) { this.r(first, second); }
     else { this.r('@', first); }
   };
@@ -357,10 +376,13 @@ define(function () { 'use strict';
    */
   prot.e = function(path) {
     this.$.concat('@').some(function(filter) {
-      var args = (filter === '@' ? parser : secondParser)(normalize(path), normalize(filter));
+      var args = (filter === '@' ? parser : secondParser)(
+        normalize(path),
+        normalize(filter)
+      );
       if (typeof args != 'undefined') {
         this[TRIGGER].apply(null, [filter].concat(args));
-        return routeFound = true // exit from loop
+        return (routeFound = true) // exit from loop
       }
     }, this);
   };
@@ -434,12 +456,28 @@ define(function () { 'use strict';
   route.query = function() {
     var q = {};
     var href = loc.href || current;
-    href.replace(/[?&](.+?)=([^&]*)/g, function(_, k, v) { q[k] = v; });
+    href.replace(/[?&](.+?)=([^&]*)/g, function(_, k, v) {
+      q[k] = v;
+    });
     return q
   };
 
+  route.suspend = function() {
+    if (started && !suspended) {
+      started = false;
+      suspended = true;
+    }
+  };
+
+  route.resume = function() {
+    if (suspended) {
+      suspended = false;
+      started = true;
+    }
+  };
+
   /** Stop routing **/
-  route.stop = function () {
+  route.stop = function() {
     if (started) {
       if (win) {
         win[REMOVE_EVENT_LISTENER](POPSTATE, debouncedEmit);
@@ -449,6 +487,7 @@ define(function () { 'use strict';
 
       central[TRIGGER]('stop');
       started = false;
+      suspended = false;
     }
   };
 
@@ -456,17 +495,22 @@ define(function () { 'use strict';
    * Start routing
    * @param {boolean} autoExec - automatically exec after starting if true
    */
-  route.start = function (autoExec) {
+  route.start = function(autoExec) {
     if (!started) {
       if (win) {
-        if (document.readyState === 'interactive' || document.readyState === 'complete') {
+        if (
+          document.readyState === 'interactive' ||
+          document.readyState === 'complete'
+        ) {
           start(autoExec);
         } else {
-          document.onreadystatechange = function () {
+          document.onreadystatechange = function() {
             if (document.readyState === 'interactive') {
               // the timeout is needed to solve
               // a weird safari bug https://github.com/riot/route/issues/33
-              setTimeout(function() { start(autoExec); }, 1);
+              setTimeout(function() {
+                start(autoExec);
+              }, 1);
             }
           };
         }
