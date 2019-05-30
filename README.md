@@ -6,6 +6,8 @@
 
 The Riot Router is the minimal router implementation with such technologies:
 
+**Note:** This package doesn't work with Riot.js 4 yet. It will be updated asap.
+
 - pushState and history API
 - multiple routing groups
 - replaceable parser
