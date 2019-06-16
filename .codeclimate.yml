@@ -1,7 +1,3 @@
-engines:
-  eslint:
-    enabled: true
-
 ratings:
   paths:
   - "src/**"
@@ -9,6 +5,7 @@ ratings:
 exclude_patterns:
   - "dist/**"
   - "lib/**"
+  - "test/**"
   - "index.js"
   - "tag.js"
   - "rollup.js""
