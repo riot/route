@@ -1,15 +1,12 @@
 const
   rollup = require('rollup'),
-  buble = require('rollup-plugin-buble'),
-  alias = require('rollup-plugin-alias'),
-  riot = require('rollup-plugin-riot')
+  alias = require('rollup-plugin-alias')
 
 rollup
   .rollup({
     input: 'src/index.js',
     plugins: [
-      alias({ 'riot-observable': 'node_modules/riot-observable/dist/es6.observable.js' }),
-      buble()
+      alias({ '@riotjs/observable': 'node_modules/@riotjs/observable/dist/es6.observable.js' }),
     ]
   })
   .then(bundle => {
@@ -23,8 +20,7 @@ rollup
 rollup
   .rollup({
     input: 'src/index.js',
-    external: ['riot-observable'],
-    plugins: [buble()]
+    external: ['@riotjs/observable']
   })
   .then(bundle => {
     bundle.write({ format: 'es', file: 'lib/index.js' })
@@ -34,17 +30,15 @@ rollup
     console.error(error)
   })
 
-rollup
+/*rollup
   .rollup({
     input: 'src/tag.js',
     external: ['riot'],
     plugins: [
-      riot(),
       alias({
-        'riot-observable': 'node_modules/riot-observable/dist/es6.observable.js',
-        'riot-route': 'src/index.js'
-      }),
-      buble()
+        '@riotjs/observable': 'node_modules/@riotjs/observable/dist/es6.observable.js',
+        '@riotjs/route': 'src/index.js'
+      })
     ]
   })
   .then(bundle => {
@@ -63,8 +57,7 @@ rollup
 rollup
   .rollup({
     input: 'src/tag.js',
-    external: ['riot', 'riot-observable', 'riot-route'],
-    plugins: [riot(), buble()]
+    external: ['riot', '@riotjs/observable', '@riotjs/route']
   })
   .then(bundle => {
     bundle.write({ format: 'es', file: 'lib/tag.js' })
@@ -72,4 +65,4 @@ rollup
   })
   .catch(error => {
     console.error(error)
-  })
+  })*/

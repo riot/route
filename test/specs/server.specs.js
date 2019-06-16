@@ -1,5 +1,5 @@
-var route  = require('../../')
-var expect = require('expect.js')
+const route  = require('../../')
+const expect = require('expect.js')
 
 describe('Server-side specs', function() {
 
@@ -8,7 +8,7 @@ describe('Server-side specs', function() {
   })
 
   it('can go to routes on server', function() {
-    var counter = 0
+    let counter = 0 // eslint-disable-line
 
     route.base('/')
     route('/fruit', function() {
@@ -41,7 +41,7 @@ describe('Server-side specs', function() {
 
 
     it('can terminate sub route context', function() {
-      var subRoute = route.create()
+      const subRoute = route.create()
       expect(subRoute.stop).to.not.throwException()
     })
 

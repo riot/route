@@ -1,7 +1,9 @@
-'use strict'
+export { default as route } from '@riotjs/route'
+export { default as Router } from './components/router.js'
+export { default as Route } from './components/route.js'
 
-import route from 'riot-route'
-import './tags/router.tag'
-import './tags/route.tag'
-
-export default route
+export default {
+  route,
+  Router,
+  Route
+}

@@ -1,6 +1,0 @@
-{
-  "extends": "eslint-config-riot",
-  "globals": {
-    "route": true
-  }
-}

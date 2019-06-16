@@ -1,0 +1,8 @@
+extends: "eslint-config-riot"
+globals:
+  route: true
+  expect: true
+
+
+rules:
+  fp/no-mutating-methods: false

@@ -3,8 +3,8 @@
   <yield />
 
   <script>
-    import route from 'riot-route'
-    
+    import route from '@riotjs/route'
+
     this.route = route.create()
     this.select = target => {
       [].concat(this.tags.route)

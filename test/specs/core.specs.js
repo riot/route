@@ -1,5 +1,5 @@
 function fireEvent(node, eventName) {
-  var event = document.createEvent('MouseEvents')
+  const event = document.createEvent('MouseEvents')
   // https://developer.mozilla.org/en-US/docs/Web/API/event.initMouseEvent
   event.initEvent(
     eventName, true, true, this, 0,
@@ -14,21 +14,24 @@ function fireEvent(node, eventName) {
 
 /**
  * Simple serial runner with intervals
- * @param { array } tasks - functions
+ * @param { Array } tasks - functions
  * @param { number } interval - msec
+ * @returns {undefined}
  */
 function serial(tasks, interval) {
+  /* eslint-disable */
   function runner() {
-    var task
+    let task
     if (task = tasks.shift()) task()
     if (tasks.length) setTimeout(runner, interval)
   }
+  /* eslint-enable */
   runner()
 }
 
 describe('Core specs', function() {
 
-  var counter = 0, $, $$, html
+  let counter = 0, $, $$, html // eslint-disable-line
 
   before(function() {
     $ = document.querySelector.bind(document)
@@ -242,7 +245,7 @@ describe('Core specs', function() {
   it('gets query from url', function() {
     route.base('/')
     route('search?keyword=test&limit=30')
-    var q = route.query()
+    const q = route.query()
     expect(q.keyword).to.be('test')
     expect(q.limit).to.be('30')
   })
@@ -277,7 +280,7 @@ describe('Core specs', function() {
     route(function() {
       counter++
     })
-    var autoExec = true
+    const autoExec = true
     route.start(autoExec)
     expect(counter).to.be(1)
   })
@@ -306,11 +309,11 @@ describe('Core specs', function() {
     route(function() {
       counter++
     })
-    var route1 = route.create()
+    const route1 = route.create()
     route1('fruit/*', function() {
       counter += 10
     })
-    var route2 = route.create()
+    const route2 = route.create()
     route2('fruit/apple', function() {
       counter += 100
     })
@@ -324,13 +327,13 @@ describe('Core specs', function() {
 
   it('custom parser', function() {
     route.parser(function(path) {
-      var raw = path.slice(2).split('?'),
+      const raw = path.slice(2).split('?'),
         uri = raw[0].split('/'),
         qs = raw[1],
         params = {}
       if (qs)
         qs.split('&').forEach(function(v) {
-          var c = v.split('=')
+          const c = v.split('=')
           params[c[0]] = c[1]
         })
       uri.push(params)
@@ -382,7 +385,7 @@ describe('Core specs', function() {
 
     // Emulate the metaKey event
     // initMouseEvent is deprecated but it's useful for our test
-    var
+    const
       evt = document.createEvent('MouseEvents'),
       e = {
         bubbles: true,

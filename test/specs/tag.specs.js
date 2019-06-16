@@ -5,7 +5,7 @@ describe('Tag specs', function() {
   before(function() {
     route.stop()
     // create mounting points
-    var html = document.createElement('app')
+    const html = document.createElement('app')
     document.body.appendChild(html)
   })
 
@@ -41,7 +41,7 @@ describe('Tag specs', function() {
     const deferredTest = (pathString, expectationString) => {
       return new Promise(resolve => {
         // using setTimeout because active route do not get mounted immediately in this fix
-        setTimeout(()=> {
+        setTimeout(() => {
           expect(document.querySelector(`route[path='${pathString}'] p`).textContent)
             .to.be(expectationString)
           resolve()
