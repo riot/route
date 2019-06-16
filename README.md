@@ -65,11 +65,11 @@ $ bower install --save riot-route
 
 See also [riot.js.org](http://riot.js.org/api/route/).
 
-## Demos
+<!-- ## Demos
 
 - [Page switching](http://riot.js.org/examples/plunker/?app=router-page-switcher)
 - [Complex routings](http://riot.js.org/examples/plunker/?app=router-complex)
-- [Tag-based routing](https://plnkr.co/edit/vp7mgXh89ERC9NIJ4yGK?p=preview)
+- [Tag-based routing](https://plnkr.co/edit/vp7mgXh89ERC9NIJ4yGK?p=preview) -->
 
 ## Contribute
 
