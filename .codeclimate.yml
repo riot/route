@@ -8,4 +8,4 @@ exclude_patterns:
   - "test/**"
   - "index.js"
   - "tag.js"
-  - "rollup.js""
+  - "rollup.js"

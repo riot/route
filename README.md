@@ -97,5 +97,5 @@ MIT (c) Muut, Inc. and other contributors
 [coverage-image]:https://img.shields.io/coveralls/riot/route/master.svg?style=flat-square
 [coverage-url]:https://coveralls.io/github/riot/route/?branch=master
 
-[codeclimate-image]:https://img.shields.io/codeclimate/github/riot/route.svg?style=flat-square
+[codeclimate-image]:https://api.codeclimate.com/v1/badges/1487b171ba4409b5c302/maintainability
 [codeclimate-url]:https://codeclimate.com/github/riot/route
