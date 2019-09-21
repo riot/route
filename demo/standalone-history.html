@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Standalone Demo</title>
+</head>
+<body>
+  <nav>
+    <a href="/hello">Hello</a>
+    <a href="/user">User</a>
+    <a href="/user/gianluca">Username</a>
+    <a href="/goodbye">goodbye</a>
+  </nav>
+  <script type="module">
+    import { initDomListeners, route, setBase } from '../route.esm.js'
+
+    const loc = window.location
+
+    setBase(`${loc.protocol}//${loc.host}`)
+
+    route('/hello').on.value(console.log).on.error(console.error)
+    route('/user').on.value(console.log).on.error(console.error)
+    route('/user/:username').on.value(console.log).on.error(console.error)
+    route('/goodbye').on.value(console.log).on.error(console.error)
+
+    initDomListeners()
+  </script>
+</body>
+</html>

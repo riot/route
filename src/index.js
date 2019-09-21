@@ -1,6 +1,8 @@
-import rawth, { router as rawthRouter } from 'rawth'
+import route, { defaults, router } from 'rawth'
 import initDomListeners from './dom'
 
-export const route = rawth
-export const router = rawthRouter
-export const listenDOMEvents = initDomListeners
+export const setBase = base => {
+  defaults.base = base
+}
+
+export { router, route, initDomListeners }

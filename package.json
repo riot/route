@@ -9,6 +9,7 @@
     "prepublishOnly": "npm run build && npm test",
     "lint": "eslint src test rollup.config.js",
     "build": "rollup -c",
+    "demo": "npm run build && serve",
     "pretest": "npm run build",
     "test": "npm run lint && mocha test"
   },
@@ -36,7 +37,8 @@
     "mocha": "^6.2.0",
     "rollup": "^1.21.4",
     "rollup-plugin-commonjs": "^10.1.0",
-    "rollup-plugin-node-resolve": "^5.2.0"
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "serve": "^11.1.0"
   },
   "dependencies": {
     "bianco.attr": "^1.0.0",

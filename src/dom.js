@@ -1,8 +1,8 @@
 import { add, remove } from 'bianco.events'
+import { defaults, router } from 'rawth'
 import { has } from 'bianco.attr'
-import { router } from 'rawth'
 
-const WINDOW_EVENTS = 'popstate hashchange'
+const WINDOW_EVENTS = 'popstate'
 const CLICK_EVENT = 'click'
 const DOWNLOAD_LINK_ATTRIBUTE = 'download'
 const HREF_LINK_ATTRIBUTE = 'href'
@@ -17,7 +17,7 @@ const doc = typeof document !== UNDEFINED && document
 const hist = win && history
 const loc = win && (hist.location || win.location)
 
-const onWindowEvent = () => router.push(loc.href)
+const onWindowEvent = () => router.push(normalizePath(String(loc.href)))
 const getLinkElement = node => node && !isLinkNode(node) ? getLinkElement(node.parentNode) : node
 const isLinkNode = node => node.nodeName === LINK_TAG_NAME
 const isCrossOriginLink = path => path.indexOf(loc.href.match(RE_ORIGIN)[0]) === -1
@@ -30,7 +30,8 @@ const isForbiddenLink = el => !el || !isLinkNode(el) // not A tag
     || !has(el, HREF_LINK_ATTRIBUTE) // has no href attr
     || isTargetSelfLink(el.target)
     || isCrossOriginLink(el.href)
-const isHashLink = path => Boolean(path.split(HASH).length)
+const isHashLink = path => path.split(HASH).length > 1
+const normalizePath = path => path.replace(defaults.base, '')
 
 /**
  * Callback called anytime something will be clicked on the page
@@ -39,29 +40,30 @@ const isHashLink = path => Boolean(path.split(HASH).length)
  */
 const onClick = event => {
   if (isEventForbidden(event)) return
-
   const el = getLinkElement(event.target)
 
-  if (isForbiddenLink(el)) return
+  if (isForbiddenLink(el) || isHashLink(el.href)) return
 
-  router.push(el.href)
+  const path = normalizePath(el.href)
 
-  if (!isHashLink(el.href)) {
-    hist.pushState(null, el.title || doc.title, el.href)
-    event.preventDefault()
-  }
+  router.push(path)
+  hist.pushState(null, el.title || doc.title, path)
+  event.preventDefault()
 }
 
 /**
  * Link the rawth router to the DOM events
+ * @param { HTMLElement } container - DOM node where the links are located
  * @returns {Function} teardown function
  */
-export default function initDomListeners() {
+export default function initDomListeners(container) {
+  const root = container || doc
+
   add(win, WINDOW_EVENTS, onWindowEvent)
-  add(doc, CLICK_EVENT, onClick)
+  add(root, CLICK_EVENT, onClick)
 
   return () => {
     remove(win, WINDOW_EVENTS, onWindowEvent)
-    remove(doc, CLICK_EVENT, onClick)
+    remove(root, CLICK_EVENT, onClick)
   }
 }
