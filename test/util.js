@@ -6,4 +6,4 @@ export function fireEvent(el, name) {
 
 export const sleep = timeout => new Promise(r => setTimeout(r, timeout))
 
-export const base = 'http://fake-url.com'
+export const base = 'http://riot.rocks'

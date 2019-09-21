@@ -1,10 +1,10 @@
 import {base, fireEvent, sleep} from './util'
-import {initDomListeners, route, setBase} from '../route.esm'
+import {initDomListeners, route, setBase} from '../'
 import $ from 'bianco.query'
 import {expect} from 'chai'
 import {spy} from 'sinon'
 
-describe('@riotjs/route - standalone', function() {
+describe('standalone history', function() {
   let teardown // eslint-disable-line
 
   beforeEach(() => {
@@ -18,10 +18,11 @@ describe('@riotjs/route - standalone', function() {
       <a href="/user/gianluca">Username</a>
     </nav>
   `
-    teardown = initDomListeners()
+    teardown = initDomListeners($('nav')[0])
   })
 
   afterEach(() => {
+    document.body.innerHTML = ''
     window.history.replaceState(null, '', '/')
     teardown()
   })
