@@ -1,69 +1,46 @@
 {
   "name": "@riotjs/route",
-  "version": "3.1.4",
-  "description": "Simple isomorphic router",
-  "main": "index.js",
-  "jsnext:main": "lib/index.js",
-  "module": "lib/index.js",
-  "modules.root": "lib",
-  "directories": {
-    "lib": "lib",
-    "doc": "doc"
-  },
+  "version": "4.0.0",
+  "description": "Riot.js isomorphic router",
+  "main": "route.js",
+  "jsnext:main": "route.esm.js",
+  "module": "route.esm.js",
   "scripts": {
+    "prepublishOnly": "npm run build && npm test",
+    "lint": "eslint src test rollup.config.js",
+    "build": "rollup -c",
     "pretest": "npm run build",
-    "test": "npm run eslint && npm run karma && npm run mocha",
-    "prepublish": "npm run build",
-    "build": "npm run rollup && npm run terser && npm run terser-amd && npm run terser-tag && npm run terser-tag-amd",
-    "rollup": "node rollup.js",
-    "terser": "terser dist/route.js --comments --mangle -o dist/route.min.js",
-    "terser-amd": "terser dist/amd.route.js --comments --mangle -o dist/amd.route.min.js",
-    "terser-tag": "terser dist/route+tag.js --comments --mangle -o dist/route+tag.min.js",
-    "terser-tag-amd": "terser dist/amd.route+tag.js --comments --mangle -o dist/amd.route+tag.min.js",
-    "watch": "chokidar lib/* lib/**/* -c 'npm run build'",
-    "eslint": "eslint src/index.js test/specs",
-    "karma": "karma start test/karma.conf.js",
-    "karma-bs": "BROWSERSTACK=1 karma start test/karma.conf.js",
-    "mocha": "mocha test/specs/server.specs.js",
-    "coveralls": "RIOT_COV=1 cat ./coverage/lcov.info ./coverage/report-lcov/lcov.info | coveralls"
+    "test": "npm run lint && mocha test"
   },
+  "files": [
+    "route.js",
+    "route.esm.js"
+  ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/riot/route.git"
+    "url": "git+https://github.com/GianlucaGuarini/@riotjs/route.git"
   },
   "keywords": [
-    "riot",
-    "router"
+    "es6",
+    "es2015"
   ],
-  "dependencies": {
-    "@riotjs/observable": "^4.0.0"
-  },
-  "peerDependencies": {
-    "riot": "^4.1.1"
-  },
-  "devDependencies": {
-    "chokidar-cli": "^1.2.2",
-    "coveralls": "^3.0.4",
-    "eslint": "^5.16.0",
-    "eslint-config-riot": "^2.0.0",
-    "expect.js": "^0.3.1",
-    "karma": "^4.1.0",
-    "karma-browserstack-launcher": "^1.5.1",
-    "karma-chrome-launcher": "^2.2.0",
-    "karma-coverage": "^1.1.2",
-    "karma-mocha": "^1.3.0",
-    "karma-mocha-reporter": "^2.2.5",
-    "mocha": "^6.1.4",
-    "riot": "^4.1.1",
-    "rollup": "^1.15.5",
-    "rollup-plugin-alias": "^1.5.2",
-    "rollup-plugin-riot": "^4.0.0",
-    "terser": "^4.0.0"
-  },
   "author": "Gianluca Guarini <gianluca.guarini@gmail.com> (http://gianlucaguarini.com)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/riot/route/issues"
+    "url": "https://github.com/GianlucaGuarini/@riotjs/route/issues"
   },
-  "homepage": "https://github.com/riot/route#readme"
+  "homepage": "https://github.com/GianlucaGuarini/@riotjs/route#readme",
+  "devDependencies": {
+    "eslint": "^6.4.0",
+    "eslint-config-riot": "^3.0.0",
+    "mocha": "^6.2.0",
+    "rollup": "^1.21.4",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0"
+  },
+  "dependencies": {
+    "bianco.attr": "^1.0.0",
+    "bianco.events": "^1.0.0",
+    "rawth": "^0.2.0"
+  }
 }
