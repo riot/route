@@ -1,0 +1,34 @@
+<route-hoc>
+  <template if={state.wasMatched}>
+    <slot/>
+  </template>
+
+  <script>
+    import route, {toRegexp, match, router} from 'rawth'
+
+    export default {
+      onBeforeMount(props) {
+        this.state = {
+          wasMatched: false,
+          pathToRegexp: toRegexp(props.path),
+          route: null
+        }
+
+        router.on.value(this.onBeforeRoute)
+        this.stream = route(props.path).on.value(this.onRoute)
+      },
+      onBeforeRoute(path) {
+        this.update({
+          wasMatched: match(path, this.state.pathToRegexp)
+        })
+      },
+      onRoute(route) {
+        this.update({route})
+      },
+      onUnmounted() {
+        router.off.value(this.onBeforeRoute)
+        this.stream.end()
+      }
+    }
+  </script>
+</route-hoc>

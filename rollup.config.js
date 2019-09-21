@@ -1,5 +1,6 @@
 import commonjs from 'rollup-plugin-commonjs'
 import resolve from 'rollup-plugin-node-resolve'
+import riot  from 'rollup-plugin-riot'
 
 export default {
   input: 'src/index.js',
@@ -7,8 +8,10 @@ export default {
     resolve({
       jsnext: true
     }),
-    commonjs()
+    commonjs(),
+    riot()
   ],
+  external: ['riot'],
   output: [
     {
       name: 'route',

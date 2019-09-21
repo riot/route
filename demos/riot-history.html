@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Standalone History Demo</title>
+  <script src="../node_modules/riot/riot+compiler.js"></script>
+  <script src="../route.js"></script>
+  <script data-src="./components/app.riot" type="riot"></script>
+  <script data-src="./components/user.riot" type="riot"></script>
+</head>
+<body>
+  <app></app>
+  <script>
+    riot.compile().then(() => {
+      route.registerRiotComponents()
+      riot.mount('app')
+    })
+  </script>
+</body>
+</html>

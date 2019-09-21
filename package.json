@@ -1,6 +1,6 @@
 {
   "name": "@riotjs/route",
-  "version": "4.0.0-beta.0",
+  "version": "4.0.0-alpha.0",
   "description": "Riot.js isomorphic router",
   "main": "route.js",
   "jsnext:main": "route.esm.js",
@@ -35,6 +35,7 @@
   },
   "homepage": "https://github.com/GianlucaGuarini/@riotjs/route#readme",
   "devDependencies": {
+    "@riotjs/compiler": "^4.3.12",
     "bianco.query": "^1.0.0",
     "chai": "^4.2.0",
     "eslint": "^6.4.0",
@@ -44,9 +45,11 @@
     "jsdom-global": "3.0.2",
     "mocha": "^6.2.0",
     "nyc": "^14.1.1",
+    "riot": "^4.5.1",
     "rollup": "^1.21.4",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-riot": "^4.0.0",
     "serve": "^11.1.0",
     "sinon": "^7.4.2",
     "sinon-chai": "^3.3.0"

@@ -1,0 +1,27 @@
+<router-hoc>
+  <slot/>
+  <script>
+    import {router, setBase} from '..'
+    import initDomListeners from '../dom'
+
+    export default {
+      onBeforeMount() {
+        this.teardown = initDomListeners(this.root)
+      },
+      onMounted(props) {
+        this.setBase()
+        router.push(window.location.href)
+      },
+      onBeforeUpdate() {
+        this.setBase()
+      },
+      setBase() {
+        const loc = window.location
+        setBase(this.props.base || `${loc.protocol}//${loc.host}`)
+      },
+      onUnmounted() {
+        this.teardown()
+      }
+    }
+  </script>
+</router-hoc>
