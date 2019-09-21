@@ -22,7 +22,7 @@ const getLinkElement = node => node && !isLinkNode(node) ? getLinkElement(node.p
 const isLinkNode = node => node.nodeName === LINK_TAG_NAME
 const isCrossOriginLink = path => path.indexOf(loc.href.match(RE_ORIGIN)[0]) === -1
 const isTargetSelfLink = el => el.target && el.target !== TARGET_SELF_LINK_ATTRIBUTE
-const isEventForbidden = event => event.which !== 1 // not left click
+const isEventForbidden = event => (event.which && event.which !== 1) // not left click
     || event.metaKey || event.ctrlKey || event.shiftKey // or meta keys
     || event.defaultPrevented // or default prevented
 const isForbiddenLink = el => !el || !isLinkNode(el) // not A tag
@@ -40,6 +40,7 @@ const normalizePath = path => path.replace(defaults.base, '')
  */
 const onClick = event => {
   if (isEventForbidden(event)) return
+
   const el = getLinkElement(event.target)
 
   if (isForbiddenLink(el) || isHashLink(el.href)) return

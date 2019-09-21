@@ -11,7 +11,7 @@
     "build": "rollup -c",
     "demo": "npm run build && serve",
     "pretest": "npm run build",
-    "test": "npm run lint && mocha test"
+    "test": "npm run lint && nyc mocha -r esm -r test/setup.js test/*.spec.js"
   },
   "files": [
     "route.js",
@@ -22,8 +22,11 @@
     "url": "git+https://github.com/GianlucaGuarini/@riotjs/route.git"
   },
   "keywords": [
-    "es6",
-    "es2015"
+    "riot",
+    "Riot.js",
+    "router",
+    "riot-route",
+    "route"
   ],
   "author": "Gianluca Guarini <gianluca.guarini@gmail.com> (http://gianlucaguarini.com)",
   "license": "MIT",
@@ -32,13 +35,21 @@
   },
   "homepage": "https://github.com/GianlucaGuarini/@riotjs/route#readme",
   "devDependencies": {
+    "bianco.query": "^1.0.0",
+    "chai": "^4.2.0",
     "eslint": "^6.4.0",
     "eslint-config-riot": "^3.0.0",
+    "esm": "^3.2.25",
+    "jsdom": "15.1.1",
+    "jsdom-global": "3.0.2",
     "mocha": "^6.2.0",
+    "nyc": "^14.1.1",
     "rollup": "^1.21.4",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
-    "serve": "^11.1.0"
+    "serve": "^11.1.0",
+    "sinon": "^7.4.2",
+    "sinon-chai": "^3.3.0"
   },
   "dependencies": {
     "bianco.attr": "^1.0.0",
