@@ -4,85 +4,139 @@
 
 > Simple client-side router
 
-The Riot Router is the minimal router implementation with such technologies:
+The Riot.js Router is the minimal router implementation with such technologies:
 
-**Note:** This package doesn't work with Riot.js 4 yet. It will be updated asap.
+- compatible with the DOM pushState and history API
+- isomorphic functional API
+- [erre.js streams](https://github.com/GianlucaGuarini/erre) and javascript async generators
+- [rawth.js](https://github.com/GianlucaGuarini/rawth) urls parsing
 
-- pushState and history API
-- multiple routing groups
-- replaceable parser
-- compatible with IE9 and higher
-
-It started as a part of Riot.js, but now it becomes an independent library. It works with or without Riot.js.
+It doesn't need Riot.js to work and can be used as standalone module.
 
 ## Table of Contents
 
 - [Install](#install)
 - [Usage](#usage)
+- [Documentation](#documentation)
 - [Demos](#demos)
-- [Contribute](#contribute)
-- [License](#license)
 
 ## Install
 
-We have 4 editions:
+We have 2 editions:
 
-edition | target | file | via
-:-- | :-- | :-- | :--
-**Standalone** | `<script>` tag | `dist/route.min.js` | [jsdelivr](https://www.jsdelivr.com/?query=riot-route) ⋅ Bower ⋅ [download](https://raw.githubusercontent.com/riot/route/master/dist/route.min.js)
-**AMD** | [RequireJS](http://requirejs.org/) | `dist/amd.route.min.js` | [jsdelivr](https://www.jsdelivr.com/?query=riot-route) ⋅ Bower ⋅ [download](https://raw.githubusercontent.com/riot/route/master/dist/amd.route.min.js)
-**CommonJS** | [Browserify](http://browserify.org/), [webpack](https://webpack.github.io/) | `index.js` | [npm](https://www.npmjs.com/package/riot-route)
-**ES module** | [Rollup](http://rollupjs.org/) | `lib/index.js` | [npm](https://www.npmjs.com/package/riot-route)
+edition | file
+:-- | :--
+**Standalone UMD** | `route.js`
+**Standalone ESM Module** | `route.esm.js`
 
-### jsdelivr
+### Script injection
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/riot-route@x.x.x/dist/route.min.js"></script>
+<script src="https://unpkg.com/@riotjs/route@x.x.x/route.js"></script>
 ```
 
-*Note*: change the part `x.x.x` to the version numbers what you want to use: ex. `2.5.0` or `3.0.0`.
+*Note*: change the part `x.x.x` to the version numbers what you want to use: ex. `4.5.0` or `4.7.0`.
+
+### ESM module
+
+```js
+import { route } from 'https://unpkg.com/@riotjs/route/route.esm.js'
+```
 
 ### npm
 
 ```bash
-$ npm install --save riot-route
-```
-
-### Bower
-
-```bash
-$ bower install --save riot-route
+$ npm i -S @riotjs/route
 ```
 
 ### Download by yourself
 
-- [Standalone](https://raw.githubusercontent.com/riot/route/master/dist/route.min.js)
-- [AMD](https://raw.githubusercontent.com/riot/route/master/dist/amd.route.min.js)
+- [Standalone](https://unpkg.com/@riotjs/route/route.js)
+- [ESM](https://unpkg.com/@riotjs/route/route.esm.js)
 
-## Usage
+## Documentation
 
-- [API Documentation (latest)](doc/)
+### Standalone
 
-See also [riot.js.org](http://riot.js.org/api/route/).
+This module was not only designed to be used with Riot.js but also as standalone module.
+Without importing the Riot.js components in your application you can use the core methods exported to build and customize your own router compatible with any kind of frontend setup.
 
-<!-- ## Demos
+#### Basics
 
-- [Page switching](http://riot.js.org/examples/plunker/?app=router-page-switcher)
-- [Complex routings](http://riot.js.org/examples/plunker/?app=router-complex)
-- [Tag-based routing](https://plnkr.co/edit/vp7mgXh89ERC9NIJ4yGK?p=preview) -->
+This module works on node and on any modern browser, it exports the `router` and `router` property exposed by [rawth](https://github.com/GianlucaGuarini/rawth)
 
-## Contribute
+```js
+import { route, router } from '@riotjs/route'
 
-Feel free to dive in! [Open an issue](https://github.com/riot/route/issues) or submit PRs.
+// create a route stream
+const aboutStream = route('/about')
 
-- `$ npm install` to setup
-- `$ npm run build` to build it once
-- `$ npm run watch` to watch and build it continuously
-- `$ npm test` to test
+aboutStream.on.value(url => {
+  console.log(url) // URL object
+})
 
-## License
+aboutStream.on.value(() => {
+  console.log('just log that the about route was triggered')
+})
 
-MIT (c) Muut, Inc. and other contributors
+// triggered on each route event
+router.on.value(path => {
+  // path is always a string in this function
+  console.log(path)
+})
+
+// trigger a route change manually
+router.push('/about')
+
+// end the stream
+aboutStream.end()
+```
+
+#### Base path
+
+Before using the router in your browser you will need to set your application base path.
+This setting can be configured simply via `setBase` method:
+
+```js
+import { setBase } from '@riotjs/route'
+
+const loc = window.location
+
+// in case you want to use the HTML5 history navigation
+setBase(`${loc.protocol}//${loc.host}`)
+
+// in case you use the hash navigation
+setBase(`${loc.protocol}//${loc.host}#`)
+```
+
+Setting the base path of your application route is mandatory and is the first you probably are going to do before creating your route listeners.
+
+#### DOM binding
+The example above is not really practical in case you are working in a browser environment. In that case you might want to bind your router to the DOM listening all the click events that might trigger a route change event.
+Window history `popstate` events should be also connected to the router.
+With the `initDomListeners` method you can automatically achieve all the features above:
+
+```js
+
+import { initDomListeners } from '@riotjs/route'
+
+const unsubscribe = initDomListeners()
+// the router is connected to the page DOM
+
+// ...tear down and disconnect the router from the DOM
+unsubscribe()
+```
+
+The `initDomListeners` will intercept any link click on your application. However it can also receive a HTMLElement or a list of HTMLElements as argument to scope the click listener only to a specific DOM region of your application
+
+```js
+import { initDomListeners } from '@riotjs/route'
+
+initDomListeners(document.querySelector('.main-navigation'))
+```
+
+## Demos
+
 
 [travis-image]:https://img.shields.io/travis/riot/observable.svg?style=flat-square
 [travis-url]:https://travis-ci.org/riot/route
@@ -90,9 +144,9 @@ MIT (c) Muut, Inc. and other contributors
 [license-image]:http://img.shields.io/badge/license-MIT-000000.svg?style=flat-square
 [license-url]:LICENSE.txt
 
-[npm-version-image]:http://img.shields.io/npm/v/riot-route.svg?style=flat-square
-[npm-downloads-image]:http://img.shields.io/npm/dm/riot-route.svg?style=flat-square
-[npm-url]:https://npmjs.org/package/riot-route
+[npm-version-image]:http://img.shields.io/npm/v/@riotjs/route.svg?style=flat-square
+[npm-downloads-image]:http://img.shields.io/npm/dm/@riotjs/route.svg?style=flat-square
+[npm-url]:https://npmjs.org/package/@riotjs/route
 
 [coverage-image]:https://img.shields.io/coveralls/riot/route/master.svg?style=flat-square
 [coverage-url]:https://coveralls.io/github/riot/route/?branch=master
