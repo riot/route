@@ -49,7 +49,7 @@ const onClick = event => {
   const path = normalizePath(el.href)
 
   router.push(path)
-  hist.pushState(null, el.title || doc.title, path)
+  hist.pushState(null, el.title || doc.title, el.href)
   event.preventDefault()
 }
 

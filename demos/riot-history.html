@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Standalone History Demo</title>
+  <title>Riot.js history</title>
   <script src="../node_modules/riot/riot+compiler.js"></script>
   <script src="../route.js"></script>
   <script data-src="./components/app.riot" type="riot"></script>
@@ -13,7 +13,8 @@
   <app></app>
   <script>
     riot.compile().then(() => {
-      route.register()
+      riot.register('route', route.Route)
+      riot.register('router', route.Router)
       riot.mount('app')
     })
   </script>

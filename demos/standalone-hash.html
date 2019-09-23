@@ -17,7 +17,8 @@
 
     const loc = window.location
 
-    setBase(`${loc.protocol}//${loc.host}/demo/standalone-hash#`)
+    setBase(`${loc.protocol}//${loc.host}/demos/standalone-hash#`)
+
 
     route('/hello').on.value(console.log).on.error(console.error)
     route('/user').on.value(console.log).on.error(console.error)

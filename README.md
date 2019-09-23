@@ -94,13 +94,15 @@ You can import the `<router>` and `<route>` components in your application and u
 </app>
 ```
 
-You can also use the `register` method to register them globally
+You can also use the `riot.register` method to register them globally
 
 ```js
-import { register } from '@riotjs/route'
+import { Route, Router } from '@riotjs/route'
+import { register } from 'riot'
 
 // now the Router and Route components are globally available
-register()
+register('router', Router)
+register('route', Route)
 ```
 
 #### Router
