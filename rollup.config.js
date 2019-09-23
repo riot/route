@@ -16,7 +16,10 @@ export default {
     {
       name: 'route',
       file: 'route.js',
-      format: 'umd'
+      format: 'umd',
+      globals: {
+        'riot': 'riot'
+      }
     },
     {
       file: 'route.esm.js',

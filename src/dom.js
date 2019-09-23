@@ -1,6 +1,7 @@
 import { add, remove } from 'bianco.events'
 import { defaults, router } from 'rawth'
 import { has } from 'bianco.attr'
+import { isNil } from '@riotjs/util/checks'
 
 const WINDOW_EVENTS = 'popstate'
 const CLICK_EVENT = 'click'
@@ -10,10 +11,9 @@ const TARGET_SELF_LINK_ATTRIBUTE = '_self'
 const LINK_TAG_NAME = 'A'
 const HASH = '#'
 const RE_ORIGIN = /^.+?\/\/+[^/]+/
-const UNDEFINED = 'undefined'
 
-const win = typeof window !== UNDEFINED && window
-const doc = typeof document !== UNDEFINED && document
+const win = isNil(window) ? null : window
+const doc = isNil(document) ? null : document
 const hist = win && history
 const loc = win && (hist.location || win.location)
 
@@ -32,6 +32,7 @@ const isForbiddenLink = el => !el || !isLinkNode(el) // not A tag
     || isCrossOriginLink(el.href)
 const isHashLink = path => path.split(HASH).length > 1
 const normalizePath = path => path.replace(defaults.base, '')
+const isInBase = path => !defaults.base || path.includes(defaults.base)
 
 /**
  * Callback called anytime something will be clicked on the page
@@ -43,7 +44,7 @@ const onClick = event => {
 
   const el = getLinkElement(event.target)
 
-  if (isForbiddenLink(el) || isHashLink(el.href)) return
+  if (isForbiddenLink(el) || isHashLink(el.href) || !isInBase(el.href)) return
 
   const path = normalizePath(el.href)
 

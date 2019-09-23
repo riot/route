@@ -35,7 +35,7 @@
   },
   "homepage": "https://github.com/GianlucaGuarini/@riotjs/route#readme",
   "devDependencies": {
-    "@riotjs/compiler": "^4.3.12",
+    "@riotjs/compiler": "^4.4.2",
     "bianco.query": "^1.0.0",
     "chai": "^4.2.0",
     "eslint": "^6.4.0",
@@ -45,16 +45,17 @@
     "jsdom-global": "3.0.2",
     "mocha": "^6.2.0",
     "nyc": "^14.1.1",
-    "riot": "^4.5.1",
+    "riot": "^4.6.1",
     "rollup": "^1.21.4",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-riot": "^4.0.0",
     "serve": "^11.1.0",
-    "sinon": "^7.4.2",
+    "sinon": "^7.5.0",
     "sinon-chai": "^3.3.0"
   },
   "dependencies": {
+    "@riotjs/util": "^1.1.0",
     "bianco.attr": "^1.0.0",
     "bianco.events": "^1.0.0",
     "rawth": "^0.2.0"

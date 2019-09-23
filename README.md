@@ -56,12 +56,97 @@ $ npm i -S @riotjs/route
 
 ## Documentation
 
+### With Riot.js
+
+You can import the `<router>` and `<route>` components in your application and use them as it follows:
+
+```html
+<app>
+  <router>
+
+    <!-- These links will trigger automatically HTML5 history events -->
+    <nav>
+      <a href="/home">Home</a>
+      <a href="/about">About</a>
+      <a href="/team/gianluca">Gianluca</a>
+    </nav>
+
+    <!-- Your application routes will be rendered here -->
+    <route path="/home">
+      Home page
+    </route>
+    <route path="/about">
+      About
+    </route>
+    <route path="/team/:person">
+      Hello dear { route.params[0] }
+    </route>
+
+  </router>
+
+  <script>
+    import { Router, Route } from '@riotjs/route'
+
+    export default {
+      components { Router, Route }
+    }
+  </script>
+</app>
+```
+
+You can also use the `register` method to register them globally
+
+```js
+import { register } from '@riotjs/route'
+
+// now the Router and Route components are globally available
+register()
+```
+
+#### Router
+
+The `<router>` component should wrap your application markup and will detect automatically all the clicks on links that should trigger a route event.
+
+```html
+<router>
+  <!-- this link will trigger a riot router event -->
+  <a href="/path/somewhere">Link</a>
+</router>
+<!-- this link will work as normal link without triggering router events -->
+<a href="/path/to/a/page">Link</a>
+```
+
+You can also specify the base of your application via component attributes:
+
+```html
+<router base="http://localhost:8000/internal/path">
+  <!-- this link is outside the base so it will work as a normal link -->
+  <a href="/somewhere">Link<a>
+</router>
+```
+
+#### Route
+
+The `<route>` component provides the `route` property to its children (it's simply a [URL](https://developer.mozilla.org/en-US/docs/Web/API/URL) object) allowing you to detect the url params and queries.
+
+```html
+<route path="/:some/:route/:params">
+  {JSON.stringify(route.params)}
+</route>
+
+<route path="/search*">
+  <!-- Assuming the URL is "/search?q=awesome" -->
+
+  {route.searchParams.get('q')}
+</route>
+```
+
 ### Standalone
 
 This module was not only designed to be used with Riot.js but also as standalone module.
 Without importing the Riot.js components in your application you can use the core methods exported to build and customize your own router compatible with any kind of frontend setup.
 
-#### Basics
+#### Fundamentals
 
 This module works on node and on any modern browser, it exports the `router` and `router` property exposed by [rawth](https://github.com/GianlucaGuarini/rawth)
 

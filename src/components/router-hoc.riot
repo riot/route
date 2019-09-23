@@ -1,11 +1,18 @@
 <router-hoc>
   <slot/>
+
   <script>
     import {router, setBase} from '..'
+    import {panic} from '@riotjs/util/misc'
     import initDomListeners from '../dom'
+
+    let wasInitialized = false
 
     export default {
       onBeforeMount() {
+        if (wasInitialized) panic('Multiple <router> components are not supported')
+
+        wasInitialized = true
         this.teardown = initDomListeners(this.root)
       },
       onMounted(props) {
@@ -20,6 +27,7 @@
         setBase(this.props.base || `${loc.protocol}//${loc.host}`)
       },
       onUnmounted() {
+        wasInitialized = false
         this.teardown()
       }
     }

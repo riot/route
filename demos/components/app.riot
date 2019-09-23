@@ -6,17 +6,11 @@
       <a href="/user/gianluca">Username</a>
       <a href="/goodbye">goodbye</a>
     </nav>
-    <route path="/hello">
-      hello
-    </route>
-    <route path="/user">
-      user
-    </route>
+    <route path="/hello">hello</route>
+    <route path="/user">user</route>
     <route path="/user/:username">
-      <user></user>
+      <user username={route.params[0]}></user>
     </route>
-    <route path="/goodbye">
-      goodbye
-    </route>
+    <route path="/goodbye">goodbye</route>
   </router>
 </app>

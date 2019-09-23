@@ -1,6 +1,6 @@
 <route-hoc>
-  <template if={state.wasMatched}>
-    <slot/>
+  <template if={state.route}>
+    <slot route={state.route}/>
   </template>
 
   <script>
@@ -9,18 +9,19 @@
     export default {
       onBeforeMount(props) {
         this.state = {
-          wasMatched: false,
           pathToRegexp: toRegexp(props.path),
           route: null
         }
 
         router.on.value(this.onBeforeRoute)
-        this.stream = route(props.path).on.value(this.onRoute)
+        this.stream = route(props.path, this.props).on.value(this.onRoute)
       },
       onBeforeRoute(path) {
-        this.update({
-          wasMatched: match(path, this.state.pathToRegexp)
-        })
+        if (!match(path, this.state.pathToRegexp)) {
+          this.update({
+            route: null
+          })
+        }
       },
       onRoute(route) {
         this.update({route})
