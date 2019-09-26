@@ -1,3 +1,4 @@
+import babel from 'rollup-plugin-babel'
 import commonjs from 'rollup-plugin-commonjs'
 import resolve from 'rollup-plugin-node-resolve'
 import riot  from 'rollup-plugin-riot'
@@ -9,7 +10,23 @@ export default {
       jsnext: true
     }),
     commonjs(),
-    riot()
+    riot(),
+    babel({
+      presets: [
+        [
+          '@babel/env',
+          {
+            useBuiltIns: 'entry',
+            corejs: 3,
+            modules: false,
+            loose: true,
+            targets: {
+              'edge': 15
+            }
+          }
+        ]
+      ]
+    })
   ],
   external: ['riot'],
   output: [

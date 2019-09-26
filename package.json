@@ -35,6 +35,8 @@
   },
   "homepage": "https://github.com/GianlucaGuarini/@riotjs/route#readme",
   "devDependencies": {
+    "@babel/core": "^7.6.2",
+    "@babel/preset-env": "^7.6.2",
     "@riotjs/compiler": "^4.4.3",
     "bianco.query": "^1.0.0",
     "chai": "^4.2.0",
@@ -47,6 +49,7 @@
     "nyc": "^14.1.1",
     "riot": "^4.6.2",
     "rollup": "^1.21.4",
+    "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-riot": "^4.0.0",
