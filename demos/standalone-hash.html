@@ -12,6 +12,8 @@
     <a href="#/user/gianluca">Username</a>
     <a href="#/goodbye">goodbye</a>
   </nav>
+  <div id="root">
+  </div>
   <script type="module">
     import { initDomListeners, route, setBase } from '../route.esm.js'
 
@@ -19,11 +21,13 @@
 
     setBase(`${loc.protocol}//${loc.host}/demos/standalone-hash#`)
 
+    const onRoute = (url) => root.innerHTML = `${url} and params=${JSON.stringify(url.params)}`
 
-    route('/hello').on.value(console.log).on.error(console.error)
-    route('/user').on.value(console.log).on.error(console.error)
-    route('/user/:username').on.value(console.log).on.error(console.error)
-    route('/goodbye').on.value(console.log).on.error(console.error)
+
+    route('/hello').on.value(onRoute)
+    route('/user').on.value(onRoute)
+    route('/user/:username').on.value(onRoute)
+    route('/goodbye').on.value(onRoute)
 
     initDomListeners()
   </script>
