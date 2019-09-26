@@ -47,7 +47,6 @@
     "jsdom-global": "3.0.2",
     "mocha": "^6.2.0",
     "nyc": "^14.1.1",
-    "riot": "^4.6.2",
     "rollup": "^1.21.4",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-commonjs": "^10.1.0",

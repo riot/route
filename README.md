@@ -222,9 +222,6 @@ import { initDomListeners } from '@riotjs/route'
 initDomListeners(document.querySelector('.main-navigation'))
 ```
 
-## Demos
-
-
 [travis-image]:https://img.shields.io/travis/riot/observable.svg?style=flat-square
 [travis-url]:https://travis-ci.org/riot/route
 

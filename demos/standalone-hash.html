@@ -21,7 +21,7 @@
 
     setBase(`${loc.protocol}//${loc.host}/demos/standalone-hash#`)
 
-    const onRoute = (url) => root.innerHTML = `${url} and params=${JSON.stringify(url.params)}`
+    const onRoute = (url) => root.innerHTML = `${url} and params=${JSON.stringify()}`
 
 
     route('/hello').on.value(onRoute)
