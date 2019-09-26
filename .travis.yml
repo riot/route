@@ -5,9 +5,12 @@ node_js:
 branches:
   only:
     - master
+    - dev
 
 before_script:
   - npm run build
+
+after_success: npm run cov
 
 notifications:
     email: false
