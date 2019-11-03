@@ -37,7 +37,9 @@ describe('standalone history', function() {
 
     await sleep()
 
+    expect(window.location.pathname).to.be.equal('/hello')
     expect(onRoute).to.have.been.called
+
     hello.end()
   })
 

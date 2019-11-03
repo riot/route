@@ -18,6 +18,14 @@ const hist = win && history
 const loc = win && (hist.location || win.location)
 
 const onWindowEvent = () => router.push(normalizePath(String(loc.href)))
+const onRouterPush = path => {
+  const url = defaults.base + path
+
+  // update the browser history only if it's necessary
+  if (url !== loc.href) {
+    hist.pushState(null, doc.title, url)
+  }
+}
 const getLinkElement = node => node && !isLinkNode(node) ? getLinkElement(node.parentNode) : node
 const isLinkNode = node => node.nodeName === LINK_TAG_NAME
 const isCrossOriginLink = path => path.indexOf(loc.href.match(RE_ORIGIN)[0]) === -1
@@ -49,7 +57,7 @@ const onClick = event => {
   const path = normalizePath(el.href)
 
   router.push(path)
-  hist.pushState(null, el.title || doc.title, el.href)
+
   event.preventDefault()
 }
 
@@ -63,9 +71,11 @@ export default function initDomListeners(container) {
 
   add(win, WINDOW_EVENTS, onWindowEvent)
   add(root, CLICK_EVENT, onClick)
+  router.on.value(onRouterPush)
 
   return () => {
     remove(win, WINDOW_EVENTS, onWindowEvent)
     remove(root, CLICK_EVENT, onClick)
+    router.off.value(onRouterPush)
   }
 }
