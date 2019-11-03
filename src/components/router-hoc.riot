@@ -16,22 +16,15 @@
         this.teardown = initDomListeners(this.root)
       },
       onMounted(props) {
-        router.push(
-          String(window.location.href).replace(this.getBase(), '')
-        )
+        this.setBase()
+        router.push(window.location.href)
       },
       onBeforeUpdate() {
         this.setBase()
       },
-      getBase() {
-        const loc = window.location
-
-        return this.props.base || `${loc.protocol}//${loc.host}`
-      },
       setBase() {
-        setBase(this.getBase())
-
-        return base
+        const loc = window.location
+        setBase(this.props.base || `${loc.protocol}//${loc.host}`)
       },
       onUnmounted() {
         wasInitialized = false

@@ -19,7 +19,7 @@ const loc = win && (hist.location || win.location)
 
 const onWindowEvent = () => router.push(normalizePath(String(loc.href)))
 const onRouterPush = path => {
-  const url = defaults.base + path
+  const url = path.includes(defaults.base) ? path : defaults.base + path
 
   // update the browser history only if it's necessary
   if (url !== loc.href) {
