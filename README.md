@@ -11,7 +11,10 @@ The Riot.js Router is the minimal router implementation with such technologies:
 - [erre.js streams](https://github.com/GianlucaGuarini/erre) and javascript async generators
 - [rawth.js](https://github.com/GianlucaGuarini/rawth) urls parsing
 
+
 It doesn't need Riot.js to work and can be used as standalone module.
+
+**For Riot.js 3 and the older route version please check the [v3 branch](https://github.com/riot/route/tree/v3)**
 
 ## Table of Contents
 
