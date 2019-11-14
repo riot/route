@@ -138,7 +138,7 @@ The `<route>` component provides the `route` property to its children (it's simp
   {JSON.stringify(route.params)}
 </route>
 
-<route path="/search*">
+<route path="/search(.*)">
   <!-- Assuming the URL is "/search?q=awesome" -->
 
   {route.searchParams.get('q')}
