@@ -19,9 +19,8 @@ It doesn't need Riot.js to work and can be used as standalone module.
 ## Table of Contents
 
 - [Install](#install)
-- [Usage](#usage)
 - [Documentation](#documentation)
-- [Demos](#demos)
+- [Demos](https://github.com/riot/examples)
 
 ## Install
 
