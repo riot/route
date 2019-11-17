@@ -21,7 +21,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/GianlucaGuarini/@riotjs/route.git"
+    "url": "git+https://github.com/riot/route.git"
   },
   "keywords": [
     "riot",
@@ -33,9 +33,9 @@
   "author": "Gianluca Guarini <gianluca.guarini@gmail.com> (http://gianlucaguarini.com)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/GianlucaGuarini/@riotjs/route/issues"
+    "url": "https://github.com/riot/route/issues"
   },
-  "homepage": "https://github.com/GianlucaGuarini/@riotjs/route#readme",
+  "homepage": "https://github.com/riot/route#readme",
   "devDependencies": {
     "@babel/core": "^7.7.2",
     "@babel/preset-env": "^7.7.1",
