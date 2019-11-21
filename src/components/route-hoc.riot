@@ -4,17 +4,32 @@
   </template>
 
   <script>
-    import route, {toRegexp, match, router} from 'rawth'
+    import route, {toRegexp, match, router, createURLStreamPipe} from 'rawth'
+    import getCurrentRoute from '../get-current-route'
+    import compose from 'cumpa'
+
+    const getInitialRouteValue = (pathToRegexp, path, options) => {
+      const route = compose(
+        ...createURLStreamPipe(pathToRegexp, options).reverse()
+      )(path)
+
+      return route.params ? route : null
+    }
 
     export default {
       onBeforeMount(props) {
+        const currentRoute = getCurrentRoute()
+        const pathToRegexp = toRegexp(props.path, [], props)
+
         this.state = {
-          pathToRegexp: toRegexp(props.path),
-          route: null
+          pathToRegexp,
+          route: currentRoute ?
+            getInitialRouteValue(pathToRegexp, currentRoute, props) :
+            null
         }
 
         router.on.value(this.onBeforeRoute)
-        this.stream = route(props.path, this.props).on.value(this.onRoute)
+        this.stream = route(props.path, props).on.value(this.onRoute)
       },
       onBeforeRoute(path) {
         if (!match(path, this.state.pathToRegexp)) {

@@ -42,7 +42,7 @@
     "@riotjs/compiler": "^4.5.2",
     "bianco.query": "^1.0.0",
     "chai": "^4.2.0",
-    "coveralls": "^3.0.7",
+    "coveralls": "^3.0.8",
     "eslint": "^6.6.0",
     "eslint-config-riot": "^3.0.0",
     "esm": "^3.2.25",
@@ -50,7 +50,7 @@
     "jsdom-global": "3.0.2",
     "mocha": "^6.2.2",
     "nyc": "^14.1.1",
-    "rollup": "^1.27.0",
+    "rollup": "^1.27.3",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
@@ -63,6 +63,7 @@
     "@riotjs/util": "^1.1.0",
     "bianco.attr": "^1.0.0",
     "bianco.events": "^1.0.0",
-    "rawth": "^0.3.0"
+    "cumpa": "^1.0.1",
+    "rawth": "^1.0.0"
   }
 }

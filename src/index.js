@@ -1,15 +1,16 @@
-import route, { defaults, router } from 'rawth'
+import route, { router } from 'rawth'
 import Route from './components/route-hoc.riot'
 import Router from './components/router-hoc.riot'
+import getCurrentRoute from './get-current-route'
 import initDomListeners from './dom'
-export const setBase = base => {
-  defaults.base = base
-}
+import setBase from './set-base'
 
 export {
+  getCurrentRoute,
+  initDomListeners,
+  setBase,
   router,
   route,
   Router,
-  Route,
-  initDomListeners
+  Route
 }
