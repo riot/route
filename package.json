@@ -10,7 +10,6 @@
     "lint": "eslint src test rollup.config.js",
     "build": "rollup -c",
     "demo": "npm run build && serve",
-    "pretest": "npm run build",
     "cov": "nyc report --reporter=text-lcov | coveralls",
     "cov-html": "nyc report --reporter=html",
     "test": "npm run lint && nyc mocha -r esm -r test/setup.js test/*.spec.js"
@@ -40,6 +39,7 @@
     "@babel/core": "^7.7.2",
     "@babel/preset-env": "^7.7.1",
     "@riotjs/compiler": "^4.5.2",
+    "@riotjs/ssr": "^4.1.1",
     "bianco.query": "^1.0.0",
     "chai": "^4.2.0",
     "coveralls": "^3.0.8",
@@ -50,6 +50,7 @@
     "jsdom-global": "3.0.2",
     "mocha": "^6.2.2",
     "nyc": "^14.1.1",
+    "riot": "^4.6.6",
     "rollup": "^1.27.3",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-commonjs": "^10.1.0",

@@ -1,0 +1,20 @@
+<history-router-app>
+  <router base={props.base}>
+    <route path="/">
+      <p>Hello</p>
+    </route>
+    <route path="/goodbye/:user">
+      <p>Goodbye {route.params[0]}</p>
+    </route>
+  </router>
+
+  <script>
+    import { Router, Route } from '../../src'
+    export default {
+      components: {
+        Router,
+        Route
+      }
+    }
+  </script>
+</history-router-app>
