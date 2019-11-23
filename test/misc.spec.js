@@ -1,5 +1,5 @@
 import {base, sleep} from './util'
-import {getCurrentRoute, router, setBase} from '../'
+import {getCurrentRoute, router, setBase} from '../src'
 import {expect} from 'chai'
 
 describe('misc methods', function() {

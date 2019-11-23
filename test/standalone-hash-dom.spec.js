@@ -1,5 +1,5 @@
 import {base, sleep} from './util'
-import {route, router, setBase} from '../'
+import {route, router, setBase} from '../src'
 import {expect} from 'chai'
 import {spy} from 'sinon'
 

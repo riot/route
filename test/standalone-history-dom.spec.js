@@ -1,5 +1,5 @@
 import {base, fireEvent, sleep} from './util'
-import {initDomListeners, route, setBase} from '../'
+import {initDomListeners, route, setBase} from '../src'
 import $ from 'bianco.query'
 import {expect} from 'chai'
 import {spy} from 'sinon'
