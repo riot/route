@@ -155,7 +155,10 @@ Without importing the Riot.js components in your application you can use the cor
 This module works on node and on any modern browser, it exports the `router` and `router` property exposed by [rawth](https://github.com/GianlucaGuarini/rawth)
 
 ```js
-import { route, router } from '@riotjs/route'
+import { route, router, setBase } from '@riotjs/route'
+
+// required to set base first
+setBase(window.location.origin);
 
 // create a route stream
 const aboutStream = route('/about')
