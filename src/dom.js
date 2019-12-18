@@ -1,7 +1,6 @@
 import { add, remove } from 'bianco.events'
 import { defaults, router } from 'rawth'
 import { has } from 'bianco.attr'
-import { isNil } from '@riotjs/util/checks'
 
 const WINDOW_EVENTS = 'popstate'
 const CLICK_EVENT = 'click'
@@ -12,8 +11,8 @@ const LINK_TAG_NAME = 'A'
 const HASH = '#'
 const RE_ORIGIN = /^.+?\/\/+[^/]+/
 
-const win = isNil(window) ? null : window
-const doc = isNil(document) ? null : document
+const win = typeof window === 'undefined' ? null : window
+const doc = typeof document === 'undefined' ? null : document
 const hist = win && history
 const loc = win && (hist.location || win.location)
 
