@@ -68,13 +68,19 @@ const onClick = event => {
 export default function initDomListeners(container) {
   const root = container || doc
 
-  add(win, WINDOW_EVENTS, onWindowEvent)
-  add(root, CLICK_EVENT, onClick)
+  if (win) {
+    add(win, WINDOW_EVENTS, onWindowEvent)
+    add(root, CLICK_EVENT, onClick)
+  }
+
   router.on.value(onRouterPush)
 
   return () => {
-    remove(win, WINDOW_EVENTS, onWindowEvent)
-    remove(root, CLICK_EVENT, onClick)
+    if (win) {
+      remove(win, WINDOW_EVENTS, onWindowEvent)
+      remove(root, CLICK_EVENT, onClick)
+    }
+
     router.off.value(onRouterPush)
   }
 }
