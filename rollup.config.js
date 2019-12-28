@@ -28,14 +28,15 @@ export default {
       ]
     })
   ],
-  external: ['riot'],
+  external: ['riot', '@riotjs/dom-bindings'],
   output: [
     {
       name: 'route',
       file: 'route.js',
       format: 'umd',
       globals: {
-        'riot': 'riot'
+        'riot': 'riot',
+        '@riotjs/dom-bindings': 'riotDOMBindings'
       }
     },
     {

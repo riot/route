@@ -4,16 +4,18 @@
       <p>Hello</p>
     </route>
     <route path="/goodbye/:user">
-      <p>Goodbye {route.params[0]}</p>
+      <user name={route.params[0]}>
     </route>
   </router>
 
   <script>
     import { Router, Route } from '../../src'
+    import User from './user.riot'
     export default {
       components: {
         Router,
-        Route
+        Route,
+        User
       }
     }
   </script>

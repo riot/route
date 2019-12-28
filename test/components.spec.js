@@ -19,7 +19,7 @@ describe('components', function() {
 
     await sleep()
 
-    expect(comp.$('p').innerHTML).to.be.equal('Goodbye gianluca')
+    expect(comp.$('user p').innerHTML).to.be.equal('gianluca')
 
     comp.unmount()
   })
