@@ -39,7 +39,6 @@
     "@babel/core": "^7.7.7",
     "@babel/preset-env": "^7.7.7",
     "@riotjs/compiler": "^4.5.4",
-    "@riotjs/dom-bindings": "^4.6.0",
     "@riotjs/ssr": "^4.1.1",
     "bianco.query": "^1.0.0",
     "chai": "^4.2.0",
@@ -51,7 +50,6 @@
     "jsdom-global": "3.0.2",
     "mocha": "^6.2.2",
     "nyc": "^15.0.0",
-    "riot": "^4.8.0",
     "rollup": "^1.27.14",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-commonjs": "^10.1.0",
@@ -62,10 +60,12 @@
     "sinon-chai": "^3.4.0"
   },
   "dependencies": {
+    "@riotjs/dom-bindings": "^4.6.0",
     "@riotjs/util": "^1.1.0",
     "bianco.attr": "^1.0.0",
     "bianco.events": "^1.0.0",
     "cumpa": "^1.0.1",
-    "rawth": "^1.0.1"
+    "rawth": "^1.0.1",
+    "riot": "^4.8.0"
   }
 }
