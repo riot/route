@@ -1,36 +1,77 @@
 <router-hoc>
-  <slot/>
-
   <script>
-    import {router} from 'rawth'
+    import { pure, component } from 'riot'
+    import erre from 'erre'
+    import getCurrentRoute from '../get-current-route'
+    import { template, bindingTypes } from '@riotjs/dom-bindings'
+    import { router } from 'rawth'
     import setBase from '../set-base'
     import {panic} from '@riotjs/util/misc'
     import initDomListeners from '../dom'
 
+    const BASE_ATTRIBUTE_NAME = 'base'
     let wasInitialized = false
 
-    export default {
-      onBeforeMount() {
-        if (wasInitialized) panic('Multiple <router> components are not supported')
+    export default pure(({ slots, attributes, props }) => {
+      if (wasInitialized) panic('Multiple <router> components are not supported')
 
-        wasInitialized = true
-        this.teardown = initDomListeners(this.root)
-      },
-      onMounted(props) {
-        this.setBase()
-        router.push(window.location.href)
-      },
-      onBeforeUpdate() {
-        this.setBase()
-      },
-      setBase() {
-        const loc = window.location
-        setBase(this.props.base || `${loc.protocol}//${loc.host}`)
-      },
-      onUnmounted() {
-        wasInitialized = false
-        this.teardown()
+      return {
+        slot: null,
+        el: null,
+        teardown: null,
+        mount(el, context) {
+          const currentRoute = getCurrentRoute()
+          const start = () => {
+            this.createSlot()
+            router.off.value(start)
+          }
+          wasInitialized = true
+
+          this.el = el
+          this.teardown = initDomListeners(this.root)
+
+          this.setBase(context)
+
+          // mount the slots only if the current route was defined
+          if (currentRoute) start()
+          else router.on.value(start)
+
+          router.push(window.location.href)
+        },
+        createSlot() {
+          if (!slots || !slots.length) return
+
+          this.slot = template('<slot/>', [{
+            type: bindingTypes.SLOT,
+            name: 'default'
+          }]).mount(this.el, {
+            slots
+          }, context)
+        },
+        update(context) {
+          this.setBase(context)
+          if (this.slot) {
+            this.slot.update({}, context)
+          }
+        },
+        unmount(...args) {
+          this.teardown()
+          wasInitialized = false
+
+          if (this.slot) {
+            this.slot.unmount(...args)
+          }
+        },
+        getBase(context) {
+          const loc = window.location
+          const baseAttr = attributes && attributes.find(a => a.name === BASE_ATTRIBUTE_NAME)
+
+          return baseAttr ? baseAttr.evaluate(context) : `${loc.protocol}//${loc.host}`
+        },
+        setBase(context) {
+          setBase(props ? props.base : this.getBase(context))
+        }
       }
-    }
+    })
   </script>
 </router-hoc>

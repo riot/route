@@ -39,6 +39,7 @@
     "@babel/core": "^7.7.7",
     "@babel/preset-env": "^7.7.7",
     "@riotjs/compiler": "^4.5.4",
+    "@riotjs/dom-bindings": "^4.6.0",
     "@riotjs/ssr": "^4.1.1",
     "bianco.query": "^1.0.0",
     "chai": "^4.2.0",
@@ -65,6 +66,6 @@
     "bianco.attr": "^1.0.0",
     "bianco.events": "^1.0.0",
     "cumpa": "^1.0.1",
-    "rawth": "^1.0.0"
+    "rawth": "^1.0.1"
   }
 }

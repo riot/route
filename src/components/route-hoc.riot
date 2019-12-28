@@ -23,7 +23,7 @@
 
         this.state = {
           pathToRegexp,
-          route: currentRoute ?
+          route: currentRoute && match(currentRoute, pathToRegexp) ?
             getInitialRouteValue(pathToRegexp, currentRoute, props) :
             null
         }
@@ -31,7 +31,8 @@
         router.on.value(this.onBeforeRoute)
         this.stream = route(props.path, props).on.value(this.onRoute)
       },
-      onBeforeRoute(path) {
+
+      onBeforeRoute(path, pathToRegexp) {
         if (!match(path, this.state.pathToRegexp)) {
           this.update({
             route: null
