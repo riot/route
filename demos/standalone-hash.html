@@ -4,6 +4,9 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Standalone Hash Demo</title>
+  <script src="https://unpkg.com/@riotjs/dom-bindings/dist/umd.dom-bindings.js"></script>
+  <script src="https://unpkg.com/riot/riot+compiler.min.js"></script>
+  <script src="../route.js"></script>
 </head>
 <body>
   <nav>
@@ -15,7 +18,7 @@
   <div id="root">
   </div>
   <script type="module">
-    import { initDomListeners, route, setBase } from '../route.esm.js'
+    const { initDomListeners, setBase } = route
 
     const loc = window.location
 
@@ -24,10 +27,10 @@
     const onRoute = (url) => root.innerHTML = `${url} and params=${JSON.stringify()}`
 
 
-    route('/hello').on.value(onRoute)
-    route('/user').on.value(onRoute)
-    route('/user/:username').on.value(onRoute)
-    route('/goodbye').on.value(onRoute)
+    route.route('/hello').on.value(onRoute)
+    route.route('/user').on.value(onRoute)
+    route.route('/user/:username').on.value(onRoute)
+    route.route('/goodbye').on.value(onRoute)
 
     initDomListeners()
   </script>
