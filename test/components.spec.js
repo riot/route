@@ -14,6 +14,8 @@ describe('components', function() {
     await sleep()
 
     expect(comp.$('p')).to.be.ok
+    expect(comp.isRouterStarted).to.be.ok
+    expect(comp.currentRoute).to.be.ok
 
     router.push('/goodbye/gianluca')
 

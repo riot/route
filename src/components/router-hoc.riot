@@ -10,10 +10,14 @@
     import initDomListeners from '../dom'
 
     const BASE_ATTRIBUTE_NAME = 'base'
+    const ON_STARTED_ATTRIBUTE_NAME = 'onStarted'
+    const noop = () => {}
     let wasInitialized = false
 
     export default pure(({ slots, attributes, props }) => {
       if (wasInitialized) panic('Multiple <router> components are not supported')
+
+      const getAttribute = name => attributes && attributes.find(a => a.name === name)
 
       return {
         slot: null,
@@ -41,12 +45,17 @@
         createSlot(context) {
           if (!slots || !slots.length) return
 
-          this.slot = template('<slot/>', [{
+          const onStartedAttr = getAttribute(ON_STARTED_ATTRIBUTE_NAME)
+          const onStarted = onStartedAttr ? onStartedAttr.evaluate : noop
+
+          this.slot = template(null, [{
             type: bindingTypes.SLOT,
             name: 'default'
           }]).mount(this.el, {
             slots
           }, context)
+
+          onStarted(context)(getCurrentRoute())
         },
         update(context) {
           this.setBase(context)
@@ -64,7 +73,7 @@
         },
         getBase(context) {
           const loc = window.location
-          const baseAttr = attributes && attributes.find(a => a.name === BASE_ATTRIBUTE_NAME)
+          const baseAttr = getAttribute(BASE_ATTRIBUTE_NAME)
 
           return baseAttr ? baseAttr.evaluate(context) : `${loc.protocol}//${loc.host}`
         },

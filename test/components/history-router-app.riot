@@ -1,5 +1,5 @@
 <history-router-app>
-  <router base={props.base}>
+  <router base={props.base} onStarted={onStarted}>
     <route path="/">
       <p>Hello</p>
     </route>
@@ -11,11 +11,16 @@
   <script>
     import { Router, Route } from '../../src'
     import User from './user.riot'
+
     export default {
       components: {
         Router,
         Route,
         User
+      },
+      onStarted(currentRoute) {
+        this.isRouterStarted = true
+        this.currentRoute = currentRoute
       }
     }
   </script>
