@@ -129,6 +129,12 @@ You can also specify the base of your application via component attributes:
 </router>
 ```
 
+The router component has also an `onStarted` callback that will be called asynchronously after the first route event will be called
+
+```html
+<router onStarted={onRouterStarted}></router>
+```
+
 #### Route
 
 The `<route>` component provides the `route` property to its children (it's simply a [URL](https://developer.mozilla.org/en-US/docs/Web/API/URL) object) allowing you to detect the url params and queries.
