@@ -1,6 +1,6 @@
 {
   "name": "@riotjs/route",
-  "version": "5.0.2",
+  "version": "5.0.3",
   "description": "Riot.js isomorphic router",
   "main": "route.js",
   "jsnext:main": "route.esm.js",
