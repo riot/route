@@ -11,14 +11,22 @@ const LINK_TAG_NAME = 'A'
 const HASH = '#'
 const RE_ORIGIN = /^.+?\/\/+[^/]+/
 
-const win = typeof window === 'undefined' ? null : window
-const doc = typeof document === 'undefined' ? null : document
-const hist = win && history
-const loc = win && (hist.location || win.location)
+const getWindow = () => typeof window === 'undefined' ? null : window
+const getDocument = () => typeof document === 'undefined' ? null : document
+const getHistorty = () => getWindow() && history
+const getLocation = () => {
+  const win = getWindow()
+  const hist = getHistorty()
 
-const onWindowEvent = () => router.push(normalizePath(String(loc.href)))
+  return win && (hist.location || win.location)
+}
+
+const onWindowEvent = () => router.push(normalizePath(String(getLocation().href)))
 const onRouterPush = path => {
   const url = path.includes(defaults.base) ? path : defaults.base + path
+  const loc = getLocation()
+  const hist = getHistorty()
+  const doc = getDocument()
 
   // update the browser history only if it's necessary
   if (url !== loc.href) {
@@ -27,7 +35,7 @@ const onRouterPush = path => {
 }
 const getLinkElement = node => node && !isLinkNode(node) ? getLinkElement(node.parentNode) : node
 const isLinkNode = node => node.nodeName === LINK_TAG_NAME
-const isCrossOriginLink = path => path.indexOf(loc.href.match(RE_ORIGIN)[0]) === -1
+const isCrossOriginLink = path => path.indexOf(getLocation().href.match(RE_ORIGIN)[0]) === -1
 const isTargetSelfLink = el => el.target && el.target !== TARGET_SELF_LINK_ATTRIBUTE
 const isEventForbidden = event => (event.which && event.which !== 1) // not left click
     || event.metaKey || event.ctrlKey || event.shiftKey // or meta keys
@@ -66,7 +74,8 @@ const onClick = event => {
  * @returns {Function} teardown function
  */
 export default function initDomListeners(container) {
-  const root = container || doc
+  const win = getWindow()
+  const root = container || getDocument()
 
   if (win) {
     add(win, WINDOW_EVENTS, onWindowEvent)
