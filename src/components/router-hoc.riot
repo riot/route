@@ -11,7 +11,6 @@
 
     const BASE_ATTRIBUTE_NAME = 'base'
     const ON_STARTED_ATTRIBUTE_NAME = 'onStarted'
-    const noop = () => {}
     let wasInitialized = false
 
     export default pure(({ slots, attributes, props }) => {
@@ -44,9 +43,7 @@
         },
         createSlot(context) {
           if (!slots || !slots.length) return
-
           const onStartedAttr = getAttribute(ON_STARTED_ATTRIBUTE_NAME)
-          const onStarted = onStartedAttr ? onStartedAttr.evaluate : noop
 
           this.slot = template(null, [{
             type: bindingTypes.SLOT,
@@ -55,7 +52,9 @@
             slots
           }, context)
 
-          onStarted(context)(getCurrentRoute())
+          if (onStartedAttr) {
+            onStartedAttr.evaluate(context)(getCurrentRoute())
+          }
         },
         update(context) {
           this.setBase(context)
