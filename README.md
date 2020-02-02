@@ -233,7 +233,7 @@ import { initDomListeners } from '@riotjs/route'
 initDomListeners(document.querySelector('.main-navigation'))
 ```
 
-[travis-image]:https://img.shields.io/travis/riot/observable.svg?style=flat-square
+[travis-image]:https://img.shields.io/travis/riot/route.svg?style=flat-square
 [travis-url]:https://travis-ci.org/riot/route
 
 [license-image]:http://img.shields.io/badge/license-MIT-000000.svg?style=flat-square
