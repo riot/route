@@ -8,7 +8,9 @@
   "scripts": {
     "prepublishOnly": "npm run build && npm test",
     "lint": "eslint src test rollup.config.js",
-    "build": "rollup -c",
+    "build": "npm run build-umd && npm run build-esm",
+    "build-umd": "rollup -c -f umd -n route -e riot -o route.js",
+    "build-esm": "rollup -c -e riot,@riotjs/dom-bindings -f esm -o route.esm.js",
     "demo": "npm run build && serve",
     "cov": "nyc report --reporter=text-lcov | coveralls",
     "cov-html": "nyc report --reporter=html",
@@ -36,9 +38,9 @@
   },
   "homepage": "https://github.com/riot/route#readme",
   "devDependencies": {
-    "@babel/core": "^7.7.7",
-    "@babel/preset-env": "^7.7.7",
-    "@riotjs/compiler": "^4.5.4",
+    "@babel/core": "^7.8.4",
+    "@babel/preset-env": "^7.8.4",
+    "@riotjs/compiler": "^4.5.5",
     "@riotjs/ssr": "^4.2.0",
     "bianco.query": "^1.0.0",
     "chai": "^4.2.0",
@@ -46,26 +48,26 @@
     "eslint": "^6.8.0",
     "eslint-config-riot": "^3.0.0",
     "esm": "^3.2.25",
-    "jsdom": "15.2.1",
+    "jsdom": "16.1.0",
     "jsdom-global": "3.0.2",
-    "mocha": "^6.2.2",
+    "mocha": "^7.0.1",
     "nyc": "^15.0.0",
-    "rollup": "^1.27.14",
+    "rollup": "^1.31.0",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-riot": "^4.0.0",
     "serve": "^11.3.0",
-    "sinon": "^8.0.2",
+    "sinon": "^8.1.1",
     "sinon-chai": "^3.4.0"
   },
   "dependencies": {
-    "@riotjs/dom-bindings": "^4.6.0",
-    "@riotjs/util": "^1.1.0",
+    "@riotjs/dom-bindings": "^4.6.8",
+    "@riotjs/util": "^1.2.0",
     "bianco.attr": "^1.0.0",
     "bianco.events": "^1.0.0",
     "cumpa": "^1.0.1",
     "rawth": "^1.0.1",
-    "riot": "^4.8.0"
+    "riot": "^4.8.9"
   }
 }

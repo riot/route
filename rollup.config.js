@@ -27,21 +27,5 @@ export default {
         ]
       ]
     })
-  ],
-  external: ['riot', '@riotjs/dom-bindings'],
-  output: [
-    {
-      name: 'route',
-      file: 'route.js',
-      format: 'umd',
-      globals: {
-        'riot': 'riot',
-        '@riotjs/dom-bindings': 'riotDOMBindings'
-      }
-    },
-    {
-      file: 'route.esm.js',
-      format: 'esm'
-    }
   ]
 }
