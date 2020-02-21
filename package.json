@@ -40,7 +40,7 @@
   "devDependencies": {
     "@babel/core": "^7.8.4",
     "@babel/preset-env": "^7.8.4",
-    "@riotjs/compiler": "^4.5.5",
+    "@riotjs/compiler": "^4.6.2",
     "@riotjs/ssr": "^4.2.0",
     "bianco.query": "^1.0.0",
     "chai": "^4.2.0",
@@ -48,18 +48,18 @@
     "eslint": "^6.8.0",
     "eslint-config-riot": "^3.0.0",
     "esm": "^3.2.25",
-    "jsdom": "16.1.0",
+    "jsdom": "16.2.0",
     "jsdom-global": "3.0.2",
     "mocha": "^7.0.1",
     "nyc": "^15.0.0",
-    "rollup": "^1.31.0",
+    "rollup": "^1.31.1",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-riot": "^4.0.0",
     "serve": "^11.3.0",
-    "sinon": "^8.1.1",
-    "sinon-chai": "^3.4.0"
+    "sinon": "^9.0.0",
+    "sinon-chai": "^3.5.0"
   },
   "dependencies": {
     "@riotjs/dom-bindings": "^4.6.8",
@@ -68,6 +68,6 @@
     "bianco.events": "^1.0.0",
     "cumpa": "^1.0.1",
     "rawth": "^1.0.1",
-    "riot": "^4.8.9"
+    "riot": "^4.9.0"
   }
 }
