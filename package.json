@@ -8,9 +8,10 @@
   "scripts": {
     "prepublishOnly": "npm run build && npm test",
     "lint": "eslint src test rollup.config.js",
-    "build": "npm run build-umd && npm run build-esm",
+    "build": "npm run build-umd && npm run build-esm && npm run build-demo",
     "build-umd": "rollup -c -f umd -n route -e riot -o route.js",
-    "build-esm": "rollup -c -e riot,@riotjs/dom-bindings -f esm -o route.esm.js",
+    "build-esm": "rollup -c -e riot -f esm -o route.esm.js",
+    "build-demo": "riot demos/components -o demos/components",
     "demo": "npm run build && serve",
     "cov": "nyc report --reporter=text-lcov | coveralls",
     "cov-html": "nyc report --reporter=html",
@@ -40,6 +41,7 @@
   "devDependencies": {
     "@babel/core": "^7.8.4",
     "@babel/preset-env": "^7.8.4",
+    "@riotjs/cli": "^4.0.3",
     "@riotjs/compiler": "^4.6.2",
     "@riotjs/ssr": "^4.2.0",
     "bianco.query": "^1.0.0",
@@ -52,6 +54,7 @@
     "jsdom-global": "3.0.2",
     "mocha": "^7.0.1",
     "nyc": "^15.0.0",
+    "riot": "^4.9.3",
     "rollup": "^1.31.1",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-commonjs": "^10.1.0",
@@ -61,13 +64,14 @@
     "sinon": "^9.0.0",
     "sinon-chai": "^3.5.0"
   },
+  "peerDependency": {
+    "riot": "^4.9.3"
+  },
   "dependencies": {
-    "@riotjs/dom-bindings": "^4.6.8",
     "@riotjs/util": "^1.2.0",
     "bianco.attr": "^1.0.0",
     "bianco.events": "^1.0.0",
     "cumpa": "^1.0.1",
-    "rawth": "^1.0.1",
-    "riot": "^4.9.0"
+    "rawth": "^1.0.1"
   }
 }

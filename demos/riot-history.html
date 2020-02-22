@@ -4,20 +4,19 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Riot.js history</title>
-  <script src="https://unpkg.com/@riotjs/dom-bindings/dist/umd.dom-bindings.js"></script>
-  <script src="https://unpkg.com/riot/riot+compiler.min.js"></script>
+  <script src="https://unpkg.com/riot/riot.min.js"></script>
   <script src="../route.js"></script>
-  <script data-src="./components/app.riot" type="riot"></script>
-  <script data-src="./components/user.riot" type="riot"></script>
 </head>
 <body>
-  <app></app>
-  <script>
-    riot.compile().then(() => {
-      riot.register('route', route.Route)
-      riot.register('router', route.Router)
-      riot.mount('app')
-    })
+  <div id="app"></div>
+  <script type="module">
+    import App from './components/app.js'
+    import User from './components/user.js'
+
+    riot.register('route', route.Route)
+    riot.register('router', route.Router)
+    riot.register('user', User)
+    riot.component(App)(app)
   </script>
 </body>
 </html>

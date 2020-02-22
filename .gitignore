@@ -42,3 +42,4 @@ jspm_packages
 # Generated files
 route.js
 route.esm.js
+demos/components/*.js
