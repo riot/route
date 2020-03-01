@@ -12,20 +12,7 @@ export default {
     commonjs(),
     riot(),
     babel({
-      presets: [
-        [
-          '@babel/env',
-          {
-            useBuiltIns: 'entry',
-            corejs: 3,
-            modules: false,
-            loose: true,
-            targets: {
-              'edge': 15
-            }
-          }
-        ]
-      ]
+      presets: ['@riotjs/babel-preset']
     })
   ]
 }
