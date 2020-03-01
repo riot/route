@@ -32,7 +32,7 @@
         this.stream = route(props.path, props).on.value(this.onRoute)
       },
       onBeforeRoute(path, pathToRegexp) {
-        if (!match(path, this.state.pathToRegexp)) {
+        if (this.state.route && !match(path, this.state.pathToRegexp)) {
           this.callLifecycleProperty('onBeforeUnmount', route)
           this.update({
             route: null

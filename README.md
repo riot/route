@@ -151,6 +151,21 @@ The `<route>` component provides the `route` property to its children (it's simp
 </route>
 ```
 
+Each `<route>` component has its own lifecycle attributes in order to let you know when it gets mounted or unmounted.
+
+```riot
+<app>
+  <router>
+    <route path="/home"
+      on-before-mount={onBeforeHomeMount}
+      on-mounted={onHomeMounted}
+      on-before-unmount={onBeforeHomeUnmount}
+      on-unmounted={onHomeUnmounted}
+    />
+  </router>
+</app>
+```
+
 ### Standalone
 
 This module was not only designed to be used with Riot.js but also as standalone module.
