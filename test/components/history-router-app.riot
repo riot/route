@@ -1,9 +1,12 @@
 <history-router-app>
+  <h1>{state.message}</h1>
   <router base={props.base} onStarted={onStarted}>
     <route path="/">
       <p>Hello</p>
     </route>
-    <route path="/goodbye/:user">
+    <route path="/goodbye/:user" on-mounted={() => this.update({
+      message: 'Title'
+    })}>
       <user name={route.params[0]}/>
     </route>
   </router>
@@ -17,6 +20,9 @@
         Router,
         Route,
         User
+      },
+      state: {
+        message: ''
       },
       onStarted(currentRoute) {
         this.isRouterStarted = true

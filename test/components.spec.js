@@ -23,6 +23,7 @@ describe('components', function() {
     await sleep()
 
     expect(comp.$('user p').innerHTML).to.be.equal('gianluca')
+    expect(comp.$('h1').innerHTML).to.be.equal('Title')
 
     comp.unmount()
   })

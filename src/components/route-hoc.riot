@@ -31,16 +31,22 @@
         router.on.value(this.onBeforeRoute)
         this.stream = route(props.path, props).on.value(this.onRoute)
       },
-
       onBeforeRoute(path, pathToRegexp) {
         if (!match(path, this.state.pathToRegexp)) {
+          this.callLifecycleProperty('onBeforeUnmount', route)
           this.update({
             route: null
           })
+          this.callLifecycleProperty('onUnmounted', route)
         }
       },
       onRoute(route) {
+        this.callLifecycleProperty('onBeforeMount', route)
         this.update({route})
+        this.callLifecycleProperty('onMounted', route)
+      },
+      callLifecycleProperty(method, ...params) {
+        if (this.props[method]) this.props[method](...params)
       },
       onUnmounted() {
         router.off.value(this.onBeforeRoute)
