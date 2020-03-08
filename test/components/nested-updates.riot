@@ -1,0 +1,25 @@
+<nested-updates>
+  <router>
+    <user name={state.name} update-name={updateName}/>
+  </router>
+  <script>
+    import User from './user.riot'
+    import { Router, Route } from '../../src'
+
+    export default {
+      components: {
+        Router,
+        Route,
+        User
+      },
+      state: {
+        name: 'hello'
+      },
+      updateName() {
+        this.update({
+          name: 'goodbye'
+        })
+      }
+    }
+  </script>
+</nested-updates>

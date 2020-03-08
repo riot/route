@@ -1,3 +1,13 @@
 <user>
   <p>{props.name}</p>
+
+  <script>
+    export default {
+      onMounted() {
+        if (this.props.updateName) {
+          this.props.updateName()
+        }
+      }
+    }
+  </script>
 </user>

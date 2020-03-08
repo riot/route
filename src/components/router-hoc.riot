@@ -48,7 +48,9 @@
           this.slot = template(null, [{
             type: bindingTypes.SLOT,
             name: 'default'
-          }]).mount(this.el, {
+          }])
+
+          this.slot.mount(this.el, {
             slots
           }, context)
 

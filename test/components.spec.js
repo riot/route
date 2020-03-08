@@ -1,5 +1,6 @@
 import {base, sleep} from './util'
 import HistoryRouterApp from './components/history-router-app.riot'
+import NestedUpdates from './components/nested-updates.riot'
 import {component} from 'riot'
 import {expect} from 'chai'
 import {router} from '../src'
@@ -24,6 +25,24 @@ describe('components', function() {
 
     expect(comp.$('user p').innerHTML).to.be.equal('gianluca')
     expect(comp.$('h1').innerHTML).to.be.equal('Title')
+
+    comp.unmount()
+  })
+
+  it('The Route Context gets properly updated', async function() {
+    const el = document.createElement('div')
+
+    const comp = component(NestedUpdates)(el, {
+      base
+    })
+
+    await sleep()
+
+    expect(comp.$('p')).to.be.ok
+
+    await sleep()
+
+    expect(comp.$('user p').innerHTML).to.be.equal('goodbye')
 
     comp.unmount()
   })
