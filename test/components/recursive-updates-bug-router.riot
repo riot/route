@@ -1,0 +1,31 @@
+<recursive-updates-bug-router>
+  <router base={props.base}>
+    <route path="/">
+      <recursive-updates-bug148 message={state.message} callbacks={state.callbacks}>
+    </route>
+  </router>
+
+  <script>
+    import { Router, Route } from '../../src'
+    import RecursiveUpdatesBug148 from './recursive-updates-bug148.riot'
+
+    export default {
+      components: {
+        Router,
+        Route,
+        RecursiveUpdatesBug148
+      },
+      state: {
+        callbacks: [],
+        message: '',
+      },
+      onBeforeMount() {
+        this.state.callbacks.push((message) => {
+          this.update({
+            message
+          })
+        })
+      }
+    }
+  </script>
+</recursive-updates-bug-router>

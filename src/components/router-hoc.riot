@@ -10,6 +10,8 @@
     const { template, bindingTypes } = __.DOMBindings
     const BASE_ATTRIBUTE_NAME = 'base'
     const ON_STARTED_ATTRIBUTE_NAME = 'onStarted'
+    const defer = window.requestAnimationFrame || window.setTimeout
+    const cancelDefer = window.cancelAnimationFrame || window.clearTimeout
 
     let wasInitialized = false
 
@@ -36,10 +38,12 @@
           this.setBase(context)
 
           // mount the slots only if the current route was defined
-          if (currentRoute) this.createSlot(context)
-          else router.on.value(onFirstRoute)
-
-          router.push(window.location.href)
+          if (currentRoute) {
+            this.createSlot(context)
+          } else {
+            router.on.value(onFirstRoute)
+            router.push(window.location.href)
+          }
         },
         createSlot(context) {
           if (!slots || !slots.length) return
@@ -60,8 +64,15 @@
         },
         update(context) {
           this.setBase(context)
+
+          // defer the updates to avoid internal recoursive update calls
+          // see https://github.com/riot/route/issues/148
           if (this.slot) {
-            this.slot.update({}, context)
+            cancelDefer(this.deferred)
+
+            this.deferred = defer(() => {
+              this.slot.update({}, context)
+            })
           }
         },
         unmount(...args) {

@@ -1,0 +1,10 @@
+<recursive-updates-bug148>
+  <p>{props.message}</p>
+  <script>
+    export default {
+      onMounted(props) {
+        props.callbacks.forEach(fn => fn('hello'))
+      }
+    }
+  </script>
+</recursive-updates-bug148>
