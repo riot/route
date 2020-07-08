@@ -43,7 +43,7 @@ const isEventForbidden = event => (event.which && event.which !== 1) // not left
 const isForbiddenLink = el => !el || !isLinkNode(el) // not A tag
     || has(el, DOWNLOAD_LINK_ATTRIBUTE) // has download attr
     || !has(el, HREF_LINK_ATTRIBUTE) // has no href attr
-    || isTargetSelfLink(el.target)
+    || isTargetSelfLink(el)
     || isCrossOriginLink(el.href)
 const isHashLink = path => path.split(HASH).length > 1
 const normalizePath = path => path.replace(defaults.base, '')
