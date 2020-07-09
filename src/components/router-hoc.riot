@@ -7,7 +7,7 @@
     import {panic} from '@riotjs/util/misc'
     import initDomListeners from '../dom'
 
-    const { template, bindingTypes } = __.DOMBindings
+
     const BASE_ATTRIBUTE_NAME = 'base'
     const ON_STARTED_ATTRIBUTE_NAME = 'onStarted'
     const defer = window.requestAnimationFrame || window.setTimeout
@@ -15,84 +15,93 @@
 
     let wasInitialized = false
 
-    export default pure(({ slots, attributes, props }) => {
-      if (wasInitialized) panic('Multiple <router> components are not supported')
+    export default (() => {
+      // rely on riot internal only if it's available
+      try {
+        const { template, bindingTypes } = __.DOMBindings
 
-      const getAttribute = name => attributes && attributes.find(a => a.name === name)
+        return pure(({ slots, attributes, props }) => {
+          if (wasInitialized) panic('Multiple <router> components are not supported')
 
-      return {
-        slot: null,
-        el: null,
-        teardown: null,
-        mount(el, context) {
-          const currentRoute = getCurrentRoute()
-          const onFirstRoute = () => {
-            this.createSlot(context)
-            router.off.value(onFirstRoute)
+          const getAttribute = name => attributes && attributes.find(a => a.name === name)
+
+          return {
+            slot: null,
+            el: null,
+            teardown: null,
+            mount(el, context) {
+              const currentRoute = getCurrentRoute()
+              const onFirstRoute = () => {
+                this.createSlot(context)
+                router.off.value(onFirstRoute)
+              }
+              wasInitialized = true
+
+              this.el = el
+              this.teardown = initDomListeners(this.root)
+
+              this.setBase(context)
+
+              // mount the slots only if the current route was defined
+              if (currentRoute) {
+                this.createSlot(context)
+              } else {
+                router.on.value(onFirstRoute)
+                router.push(window.location.href)
+              }
+            },
+            createSlot(context) {
+              if (!slots || !slots.length) return
+              const onStartedAttr = getAttribute(ON_STARTED_ATTRIBUTE_NAME)
+
+              this.slot = template(null, [{
+                type: bindingTypes.SLOT,
+                name: 'default'
+              }])
+
+              this.slot.mount(this.el, {
+                slots
+              }, context)
+
+              if (onStartedAttr) {
+                onStartedAttr.evaluate(context)(getCurrentRoute())
+              }
+            },
+            update(context) {
+              this.setBase(context)
+
+              // defer the updates to avoid internal recoursive update calls
+              // see https://github.com/riot/route/issues/148
+              if (this.slot) {
+                cancelDefer(this.deferred)
+
+                this.deferred = defer(() => {
+                  this.slot.update({}, context)
+                })
+              }
+            },
+            unmount(...args) {
+              this.teardown()
+              wasInitialized = false
+
+              if (this.slot) {
+                this.slot.unmount(...args)
+              }
+            },
+            getBase(context) {
+              const loc = window.location
+              const baseAttr = getAttribute(BASE_ATTRIBUTE_NAME)
+
+              return baseAttr ? baseAttr.evaluate(context) : `${loc.protocol}//${loc.host}`
+            },
+            setBase(context) {
+              setBase(props ? props.base : this.getBase(context))
+            }
           }
-          wasInitialized = true
-
-          this.el = el
-          this.teardown = initDomListeners(this.root)
-
-          this.setBase(context)
-
-          // mount the slots only if the current route was defined
-          if (currentRoute) {
-            this.createSlot(context)
-          } else {
-            router.on.value(onFirstRoute)
-            router.push(window.location.href)
-          }
-        },
-        createSlot(context) {
-          if (!slots || !slots.length) return
-          const onStartedAttr = getAttribute(ON_STARTED_ATTRIBUTE_NAME)
-
-          this.slot = template(null, [{
-            type: bindingTypes.SLOT,
-            name: 'default'
-          }])
-
-          this.slot.mount(this.el, {
-            slots
-          }, context)
-
-          if (onStartedAttr) {
-            onStartedAttr.evaluate(context)(getCurrentRoute())
-          }
-        },
-        update(context) {
-          this.setBase(context)
-
-          // defer the updates to avoid internal recoursive update calls
-          // see https://github.com/riot/route/issues/148
-          if (this.slot) {
-            cancelDefer(this.deferred)
-
-            this.deferred = defer(() => {
-              this.slot.update({}, context)
-            })
-          }
-        },
-        unmount(...args) {
-          this.teardown()
-          wasInitialized = false
-
-          if (this.slot) {
-            this.slot.unmount(...args)
-          }
-        },
-        getBase(context) {
-          const loc = window.location
-          const baseAttr = getAttribute(BASE_ATTRIBUTE_NAME)
-
-          return baseAttr ? baseAttr.evaluate(context) : `${loc.protocol}//${loc.host}`
-        },
-        setBase(context) {
-          setBase(props ? props.base : this.getBase(context))
-        }
+        })
+      } catch(error) {
+        // riot is not available
       }
-    })
+    })()
   </script>
 </router-hoc>
