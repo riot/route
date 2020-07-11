@@ -13,10 +13,10 @@ const RE_ORIGIN = /^.+?\/\/+[^/]+/
 
 const getWindow = () => typeof window === 'undefined' ? null : window
 const getDocument = () => typeof document === 'undefined' ? null : document
-const getHistorty = () => getWindow() && history
+const getHistory = () => getWindow() && history
 const getLocation = () => {
   const win = getWindow()
-  const hist = getHistorty()
+  const hist = getHistory()
 
   return win && (hist.location || win.location)
 }
@@ -25,7 +25,7 @@ const onWindowEvent = () => router.push(normalizePath(String(getLocation().href)
 const onRouterPush = path => {
   const url = path.includes(defaults.base) ? path : defaults.base + path
   const loc = getLocation()
-  const hist = getHistorty()
+  const hist = getHistory()
   const doc = getDocument()
 
   // update the browser history only if it's necessary
