@@ -1,6 +1,6 @@
-import { add, remove } from 'bianco.events'
-import { defaults, router } from 'rawth'
-import { has } from 'bianco.attr'
+import {add, remove} from 'bianco.events'
+import {defaults, router} from 'rawth'
+import {has} from 'bianco.attr'
 
 const WINDOW_EVENTS = 'popstate'
 const CLICK_EVENT = 'click'
@@ -38,13 +38,13 @@ const isLinkNode = node => node.nodeName === LINK_TAG_NAME
 const isCrossOriginLink = path => path.indexOf(getLocation().href.match(RE_ORIGIN)[0]) === -1
 const isTargetSelfLink = el => el.target && el.target !== TARGET_SELF_LINK_ATTRIBUTE
 const isEventForbidden = event => (event.which && event.which !== 1) // not left click
-    || event.metaKey || event.ctrlKey || event.shiftKey // or meta keys
-    || event.defaultPrevented // or default prevented
+  || event.metaKey || event.ctrlKey || event.shiftKey // or meta keys
+  || event.defaultPrevented // or default prevented
 const isForbiddenLink = el => !el || !isLinkNode(el) // not A tag
-    || has(el, DOWNLOAD_LINK_ATTRIBUTE) // has download attr
-    || !has(el, HREF_LINK_ATTRIBUTE) // has no href attr
-    || isTargetSelfLink(el)
-    || isCrossOriginLink(el.href)
+  || has(el, DOWNLOAD_LINK_ATTRIBUTE) // has download attr
+  || !has(el, HREF_LINK_ATTRIBUTE) // has no href attr
+  || isTargetSelfLink(el)
+  || isCrossOriginLink(el.href)
 const isHashLink = path => path.split(HASH).length > 1
 const normalizePath = path => path.replace(defaults.base, '')
 const isInBase = path => !defaults.base || path.includes(defaults.base)

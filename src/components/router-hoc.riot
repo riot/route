@@ -5,10 +5,11 @@
     import getCurrentRoute from '../get-current-route'
     import setBase from '../set-base'
     import {panic} from '@riotjs/util/misc'
+    import {dashToCamelCase} from '@riotjs/util/strings'
     import initDomListeners from '../dom'
 
-
     const BASE_ATTRIBUTE_NAME = 'base'
+    const INITIAL_ROUTE = 'initialRoute'
     const ON_STARTED_ATTRIBUTE_NAME = 'onStarted'
     const defer = window.requestAnimationFrame || window.setTimeout
     const cancelDefer = window.cancelAnimationFrame || window.clearTimeout
@@ -23,7 +24,7 @@
         return pure(({ slots, attributes, props }) => {
           if (wasInitialized) panic('Multiple <router> components are not supported')
 
-          const getAttribute = name => attributes && attributes.find(a => a.name === name)
+          const getAttribute = name => attributes && attributes.find(a => dashToCamelCase(a.name) === name)
 
           return {
             slot: null,
@@ -47,7 +48,7 @@
                 this.createSlot(context)
               } else {
                 router.on.value(onFirstRoute)
-                router.push(window.location.href)
+                router.push(getAttribute(INITIAL_ROUTE) || window.location.href)
               }
             },
             createSlot(context) {
@@ -89,7 +90,7 @@
               }
             },
             getBase(context) {
-              const loc = window.location
+              const loc = window.location || {}
               const baseAttr = getAttribute(BASE_ATTRIBUTE_NAME)
 
               return baseAttr ? baseAttr.evaluate(context) : `${loc.protocol}//${loc.host}`
