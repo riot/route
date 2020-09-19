@@ -19,7 +19,7 @@ const onRouterPush = path => {
   const doc = getDocument()
 
   // update the browser history only if it's necessary
-  if (url !== loc.href) {
+  if (hist && url !== loc.href) {
     hist.pushState(null, doc.title, url)
   }
 }

@@ -1,8 +1,8 @@
 import babel from 'rollup-plugin-babel'
 import commonjs from 'rollup-plugin-commonjs'
+import path from 'path'
 import resolve from 'rollup-plugin-node-resolve'
 import riot from 'rollup-plugin-riot'
-import path from 'path'
 
 const defaultOptions = {
   input: 'src/index.js',

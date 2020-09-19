@@ -11,7 +11,7 @@
       const BASE_ATTRIBUTE_NAME = 'base'
       const INITIAL_ROUTE = 'initialRoute'
       const ON_STARTED_ATTRIBUTE_NAME = 'onStarted'
-      const { template, bindingTypes } = __.DOMBindings
+      const {template, bindingTypes} = __.DOMBindings
       const defer = window.requestAnimationFrame || window.setTimeout
       const cancelDefer = window.cancelAnimationFrame || window.clearTimeout
 
@@ -29,6 +29,7 @@
           teardown: null,
           mount(el, context) {
             const currentRoute = getCurrentRoute()
+            const initialRouteAttr = getAttribute(INITIAL_ROUTE)
             const onFirstRoute = () => {
               this.createSlot(context)
               router.off.value(onFirstRoute)
@@ -45,7 +46,7 @@
               this.createSlot(context)
             } else {
               router.on.value(onFirstRoute)
-              router.push(getAttribute(INITIAL_ROUTE) || window.location.href)
+              router.push(initialRouteAttr ? initialRouteAttr.evaluate(context) : window.location.href)
             }
           },
           createSlot(context) {
