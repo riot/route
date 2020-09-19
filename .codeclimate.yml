@@ -6,3 +6,5 @@ exclude_paths:
   - "route.js"
   - "route.esm.js"
   - "route.standalone.js"
+  - "test/**"
+  - "demos/**"
