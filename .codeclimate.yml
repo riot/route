@@ -1,0 +1,8 @@
+ratings:
+  paths:
+  - "src/**.js"
+
+exclude_paths:
+  - "route.js"
+  - "route.esm.js"
+  - "route.standalone.js"
