@@ -28,8 +28,9 @@ We have 2 editions:
 
 edition | file
 :-- | :--
-**Standalone UMD** | `route.js`
-**Standalone ESM Module** | `route.esm.js`
+** UMD Version ** | `route.js`
+** ESM Module ** | `route.esm.js`
+** Standalone UMD Module ** | `route.standalone.js`
 
 ### Script injection
 
@@ -81,7 +82,7 @@ You can import the `<router>` and `<route>` components in your application and u
       About
     </route>
     <route path="/team/:person">
-      Hello dear { route.params[0] }
+      Hello dear { route.params.person }
     </route>
 
   </router>
@@ -123,7 +124,7 @@ The `<router>` component should wrap your application markup and will detect aut
 You can also specify the base of your application via component attributes:
 
 ```html
-<router base="http://localhost:8000/internal/path">
+<router base="/internal/path">
   <!-- this link is outside the base so it will work as a normal link -->
   <a href="/somewhere">Link<a>
 </router>
@@ -140,7 +141,7 @@ The router component has also an `onStarted` callback that will be called asynch
 The `<route>` component provides the `route` property to its children (it's simply a [URL](https://developer.mozilla.org/en-US/docs/Web/API/URL) object) allowing you to detect the url params and queries.
 
 ```html
-<route path="/:some/:route/:params">
+<route path="/:some/:route/:param">
   {JSON.stringify(route.params)}
 </route>
 
@@ -179,7 +180,7 @@ This module works on node and on any modern browser, it exports the `router` and
 import { route, router, setBase } from '@riotjs/route'
 
 // required to set base first
-setBase(window.location.origin);
+setBase('/');
 
 // create a route stream
 const aboutStream = route('/about')
@@ -216,10 +217,10 @@ import { setBase } from '@riotjs/route'
 const loc = window.location
 
 // in case you want to use the HTML5 history navigation
-setBase(`${loc.protocol}//${loc.host}`)
+setBase(`/`)
 
 // in case you use the hash navigation
-setBase(`${loc.protocol}//${loc.host}#`)
+setBase(`#`)
 ```
 
 Setting the base path of your application route is mandatory and is the first you probably are going to do before creating your route listeners.

@@ -1,0 +1,9 @@
+export const WINDOW_EVENTS = 'popstate'
+export const CLICK_EVENT = 'click'
+export const DOWNLOAD_LINK_ATTRIBUTE = 'download'
+export const HREF_LINK_ATTRIBUTE = 'href'
+export const TARGET_SELF_LINK_ATTRIBUTE = '_self'
+export const LINK_TAG_NAME = 'A'
+export const HASH = '#'
+export const SLASH = '/'
+export const RE_ORIGIN = /^.+?\/\/+[^/]+/

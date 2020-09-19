@@ -1,4 +1,4 @@
-import {base, fireEvent, sleep} from './util'
+import {fireEvent, sleep} from './util'
 import {initDomListeners, route, setBase} from '../src'
 import $ from 'bianco.query'
 import {expect} from 'chai'
@@ -8,7 +8,7 @@ describe('standalone history', function() {
   let teardown // eslint-disable-line
 
   beforeEach(() => {
-    setBase(base)
+    setBase('/')
 
     document.body.innerHTML = `
     <nav>
@@ -46,7 +46,7 @@ describe('standalone history', function() {
   it('html5 history links receive parameters', (done) => {
     const user = route('/user/:username').on.value((url) => {
       user.end()
-      expect(url.params).to.be.deep.equal(['gianluca'])
+      expect(url.params).to.be.deep.equal({username: 'gianluca'})
       done()
     })
 

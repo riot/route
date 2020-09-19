@@ -4,8 +4,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Standalone History Demo</title>
-  <script src="https://unpkg.com/riot/riot+compiler.min.js"></script>
-  <script src="../route.js"></script>
+  <script src="../route.standalone.js"></script>
 </head>
 <body>
   <nav>
@@ -17,11 +16,9 @@
   <div id="root">
   </div>
   <script type="module">
-    const { initDomListeners, setBase } = route
+    const { initDomListeners, setBase, router } = route
 
-    const loc = window.location
-
-    setBase(`${loc.protocol}//${loc.host}`)
+    setBase('/')
 
     const onRoute = (url) => root.innerHTML = `${url} and params=${JSON.stringify(url.params)}`
 

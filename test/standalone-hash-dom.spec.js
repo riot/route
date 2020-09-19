@@ -5,7 +5,7 @@ import {spy} from 'sinon'
 
 describe('standalone hash', function() {
   beforeEach(() => {
-    setBase(`${base}#`)
+    setBase('#')
   })
 
   afterEach(() => {
@@ -27,7 +27,7 @@ describe('standalone hash', function() {
   it('hash links receive parameters', (done) => {
     const user = route('/user/:username').on.value((url) => {
       user.end()
-      expect(url.params).to.be.deep.equal(['gianluca'])
+      expect(url.params).to.be.deep.equal({username: 'gianluca'})
       done()
     })
 

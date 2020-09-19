@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Standalone Hash Demo</title>
-  <script src="../route.js"></script>
+  <script src="../route.standalone.js"></script>
 </head>
 <body>
   <nav>
@@ -16,19 +16,18 @@
   <div id="root">
   </div>
   <script type="module">
-    const { initDomListeners, setBase } = route
+    const { initDomListeners, setBase, router } = route
 
-    const loc = window.location
+    setBase('#')
 
-    setBase(`${loc.protocol}//${loc.host}${loc.pathname}#`)
-
-    const onRoute = (url) => root.innerHTML = `${url} and params=${JSON.stringify()}`
-
+    const onRoute = (url) => root.innerHTML = `${url} and params=${JSON.stringify(url.params)}`
 
     route.route('/hello').on.value(onRoute)
     route.route('/user').on.value(onRoute)
     route.route('/user/:username').on.value(onRoute)
     route.route('/goodbye').on.value(onRoute)
+
+    router.push(window.location.hash.replace('#', ''))
 
     initDomListeners()
   </script>

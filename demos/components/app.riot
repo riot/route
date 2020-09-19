@@ -9,7 +9,7 @@
     <route path="/hello">hello</route>
     <route path="/user">user</route>
     <route path="/user/:username">
-      <user username={route.params[0]}></user>
+      <user username={route.params.username}></user>
     </route>
     <route path="/goodbye">goodbye</route>
   </router>

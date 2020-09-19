@@ -1,25 +1,15 @@
+import {
+  CLICK_EVENT,
+  DOWNLOAD_LINK_ATTRIBUTE, HASH,
+  HREF_LINK_ATTRIBUTE,
+  LINK_TAG_NAME,
+  RE_ORIGIN,
+  TARGET_SELF_LINK_ATTRIBUTE, WINDOW_EVENTS
+} from './constants'
 import {add, remove} from 'bianco.events'
 import {defaults, router} from 'rawth'
+import {getDocument, getHistory, getLocation, getWindow} from './util'
 import {has} from 'bianco.attr'
-
-const WINDOW_EVENTS = 'popstate'
-const CLICK_EVENT = 'click'
-const DOWNLOAD_LINK_ATTRIBUTE = 'download'
-const HREF_LINK_ATTRIBUTE = 'href'
-const TARGET_SELF_LINK_ATTRIBUTE = '_self'
-const LINK_TAG_NAME = 'A'
-const HASH = '#'
-const RE_ORIGIN = /^.+?\/\/+[^/]+/
-
-const getWindow = () => typeof window === 'undefined' ? null : window
-const getDocument = () => typeof document === 'undefined' ? null : document
-const getHistory = () => getWindow() && history
-const getLocation = () => {
-  const win = getWindow()
-  const hist = getHistory()
-
-  return win && (hist.location || win.location)
-}
 
 const onWindowEvent = () => router.push(normalizePath(String(getLocation().href)))
 const onRouterPush = path => {
