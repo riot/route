@@ -722,7 +722,7 @@
       });
     }
 
-    const hasWindow = typeof window !== 'undefined';
+    const isNode = typeof process !== 'undefined';
 
     const isString = str => typeof str === 'string'; // the url parsing function depends on the platform, on node we rely on the 'url' module
 
@@ -734,7 +734,7 @@
         args[_key] = arguments[_key];
       }
 
-      return hasWindow ? new URL(...args) : require('url').parse(...args);
+      return isNode ? require('url').parse(...args) : new URL(...args);
     };
     /**
      * Replace the base path from a path
@@ -970,11 +970,10 @@
 
     const getWindow = () => typeof window === 'undefined' ? null : window;
     const getDocument = () => typeof document === 'undefined' ? null : document;
-    const getHistory = () => getWindow() && history;
+    const getHistory = () => typeof history === 'undefined' ? null : history;
     const getLocation = () => {
       const win = getWindow();
-      const hist = getHistory();
-      return win && (hist.location || win.location);
+      return win ? win.location : {};
     };
 
     /**
@@ -1031,7 +1030,7 @@
       const hist = getHistory();
       const doc = getDocument(); // update the browser history only if it's necessary
 
-      if (url !== loc.href) {
+      if (hist && url !== loc.href) {
         hist.pushState(null, doc.title, url);
       }
     };
