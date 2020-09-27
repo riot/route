@@ -28,8 +28,9 @@
           el: null,
           teardown: null,
           mount(el, context) {
-            const currentRoute = getCurrentRoute()
             const initialRouteAttr = getAttribute(INITIAL_ROUTE)
+            const initialRoute = initialRouteAttr ? initialRouteAttr.evaluate(context) : null
+            const currentRoute =  getCurrentRoute()
             const onFirstRoute = () => {
               this.createSlot(context)
               router.off.value(onFirstRoute)
@@ -42,11 +43,11 @@
             this.setBase(context)
 
             // mount the slots only if the current route was defined
-            if (currentRoute) {
+            if (currentRoute && !initialRoute) {
               this.createSlot(context)
             } else {
               router.on.value(onFirstRoute)
-              router.push(initialRouteAttr ? initialRouteAttr.evaluate(context) : window.location.href)
+              router.push(initialRoute || window.location.href)
             }
           },
           createSlot(context) {
