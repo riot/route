@@ -4,7 +4,7 @@ node_js:
 
 branches:
   only:
-    - master
+    - main
     - dev
 
 before_script:

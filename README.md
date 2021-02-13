@@ -259,8 +259,8 @@ initDomListeners(document.querySelector('.main-navigation'))
 [npm-downloads-image]:http://img.shields.io/npm/dm/@riotjs/route.svg?style=flat-square
 [npm-url]:https://npmjs.org/package/@riotjs/route
 
-[coverage-image]:https://img.shields.io/coveralls/riot/route/master.svg?style=flat-square
-[coverage-url]:https://coveralls.io/github/riot/route/?branch=master
+[coverage-image]:https://img.shields.io/coveralls/riot/route/main.svg?style=flat-square
+[coverage-url]:https://coveralls.io/github/riot/route/?branch=main
 
 [codeclimate-image]:https://api.codeclimate.com/v1/badges/1487b171ba4409b5c302/maintainability
 [codeclimate-url]:https://codeclimate.com/github/riot/route
