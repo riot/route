@@ -214,8 +214,6 @@ This setting can be configured simply via `setBase` method:
 ```js
 import { setBase } from '@riotjs/route'
 
-const loc = window.location
-
 // in case you want to use the HTML5 history navigation
 setBase(`/`)
 
