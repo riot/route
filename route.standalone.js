@@ -355,20 +355,21 @@
 
 
     function regexpToRegexp(path, keys) {
-      if (!keys) return path; // Use a negative lookahead to match only capturing groups.
+      if (!keys) return path;
+      var groupsRegex = /\((?:\?<(.*?)>)?(?!\?)/g;
+      var index = 0;
+      var execResult = groupsRegex.exec(path.source);
 
-      var groups = path.source.match(/\((?!\?)/g);
-
-      if (groups) {
-        for (var i = 0; i < groups.length; i++) {
-          keys.push({
-            name: i,
-            prefix: "",
-            suffix: "",
-            modifier: "",
-            pattern: ""
-          });
-        }
+      while (execResult) {
+        keys.push({
+          // Use parenthesized substring match if available, index otherwise
+          name: execResult[1] || index++,
+          prefix: "",
+          suffix: "",
+          modifier: "",
+          pattern: ""
+        });
+        execResult = groupsRegex.exec(path.source);
       }
 
       return path;
@@ -625,7 +626,7 @@
      */
 
 
-    function panic(message) {
+    function panic$1(message) {
       throw new Error(message);
     }
     /**
@@ -637,11 +638,11 @@
 
 
     erre.install = function (name, fn) {
-      if (!name || typeof name !== 'string') panic('Please provide a name (as string) for your erre plugin');
-      if (!fn || typeof fn !== 'function') panic('Please provide a function for your erre plugin');
+      if (!name || typeof name !== 'string') panic$1('Please provide a name (as string) for your erre plugin');
+      if (!fn || typeof fn !== 'function') panic$1('Please provide a function for your erre plugin');
 
       if (API_METHODS.has(name)) {
-        panic(`The ${name} is already part of the erre API, please provide a different name`);
+        panic$1(`The ${name} is already part of the erre API, please provide a different name`);
       } else {
         erre[name] = fn;
         API_METHODS.add(name);
@@ -669,7 +670,7 @@
             generator = createStream(modifiers),
             stream = Object.create(generator),
             addToCollection = collection => fn => collection.add(fn) && stream,
-            deleteFromCollection = collection => fn => collection.delete(fn) ? stream : panic('Couldn\'t remove handler passed by reference');
+            deleteFromCollection = collection => fn => collection.delete(fn) ? stream : panic$1('Couldn\'t remove handler passed by reference');
 
       return Object.assign(stream, {
         on: Object.freeze({
@@ -774,7 +775,7 @@
      */
 
 
-    const panic$1 = error => {
+    const panic = error => {
       if (defaults.silentErrors) return;
       throw new Error(error);
     }; // make sure that the router will always receive strings params
@@ -782,7 +783,7 @@
 
     const filterStrings = str => isString(str) ? str : erre.cancel(); // create the streaming router
 
-    const router = erre(filterStrings).on.error(panic$1); // cast the values of this stream always to string
+    const router = erre(filterStrings).on.error(panic); // cast the values of this stream always to string
 
     /* @type {object} general configuration object */
 
@@ -861,7 +862,7 @@
      * @returns {Array} a functions array that will be used as stream pipe for erre.js
      */
 
-    const createURLStreamPipe = (pathRegExp, options) => [replaceBase, matchOrSkip(pathRegExp), path => toURL(path, pathRegExp, options)];
+    const createURLStreamPipe = (pathRegExp, options) => [decodeURIComponent, replaceBase, matchOrSkip(pathRegExp), path => toURL(path, pathRegExp, options)];
     /**
      * Create a fork of the main router stream
      * @param   {string} path - route to match
@@ -875,7 +876,7 @@
       const URLStream = erre(...createURLStreamPipe(pathRegExp, Object.assign({}, options, {
         keys
       })));
-      return joinStreams(router, URLStream).on.error(panic$1);
+      return joinStreams(router, URLStream).on.error(panic);
     }
 
     const getCurrentRoute = (currentRoute => {
