@@ -1031,7 +1031,7 @@
       const hist = getHistory();
       const doc = getDocument(); // update the browser history only if it's necessary
 
-      if (hist && url !== decodeURIComponent(loc.href)) {
+      if (hist && url !== decodeURI(loc.href)) {
         hist.pushState(null, doc.title, url);
       }
     };
