@@ -972,9 +972,9 @@
     const getWindow = () => typeof window === 'undefined' ? null : window;
     const getDocument = () => typeof document === 'undefined' ? null : document;
     const getHistory = () => typeof history === 'undefined' ? null : history;
-    const getLocation = () => {
+    const getLocation = fallback => {
       const win = getWindow();
-      return win ? win.location : {};
+      return win ? win.location : fallback;
     };
 
     /**
@@ -1023,15 +1023,15 @@
       return parseNodes(els, name, 'hasAttribute');
     }
 
-    const onWindowEvent = () => router.push(normalizePath(String(getLocation().href)));
+    const onWindowEvent = () => router.push(normalizePath(String(getLocation({}).href)));
 
     const onRouterPush = path => {
       const url = path.includes(defaults.base) ? path : defaults.base + path;
-      const loc = getLocation();
+      const loc = getLocation({});
       const hist = getHistory();
       const doc = getDocument(); // update the browser history only if it's necessary
 
-      if (hist && url !== loc.href) {
+      if (hist && url !== decodeURIComponent(loc.href)) {
         hist.pushState(null, doc.title, url);
       }
     };
@@ -1040,7 +1040,7 @@
 
     const isLinkNode = node => node.nodeName === LINK_TAG_NAME;
 
-    const isCrossOriginLink = path => path.indexOf(getLocation().href.match(RE_ORIGIN)[0]) === -1;
+    const isCrossOriginLink = path => path.indexOf(getLocation({}).href.match(RE_ORIGIN)[0]) === -1;
 
     const isTargetSelfLink = el => el.target && el.target !== TARGET_SELF_LINK_ATTRIBUTE;
 
@@ -1104,8 +1104,7 @@
     const normalizeInitialSlash = str => str[0] === SLASH ? str : `${SLASH}${str}`;
     const removeTrailingSlash = str => str[str.length - 1] === SLASH ? str.substr(0, str.length - 1) : str;
     const normalizeBase = base => {
-      const win = getWindow();
-      const loc = win.location;
+      const loc = getLocation();
       const root = loc ? `${loc.protocol}//${loc.host}` : '';
       const {
         pathname

@@ -1,13 +1,12 @@
 import {HASH, SLASH} from './constants'
 import {defaults} from 'rawth'
-import {getWindow} from './util'
+import {getLocation} from './util'
 
 export const normalizeInitialSlash = str => str[0] === SLASH ? str : `${SLASH}${str}`
 export const removeTrailingSlash = str => str[str.length - 1] === SLASH ? str.substr(0, str.length - 1) : str
 
 export const normalizeBase = base => {
-  const win = getWindow()
-  const loc = win.location
+  const loc = getLocation()
   const root = loc ? `${loc.protocol}//${loc.host}` : ''
   const {pathname} = loc ? loc : {}
 

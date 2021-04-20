@@ -11,21 +11,21 @@ import {defaults, router} from 'rawth'
 import {getDocument, getHistory, getLocation, getWindow} from './util'
 import {has} from 'bianco.attr'
 
-const onWindowEvent = () => router.push(normalizePath(String(getLocation().href)))
+const onWindowEvent = () => router.push(normalizePath(String(getLocation({}).href)))
 const onRouterPush = path => {
   const url = path.includes(defaults.base) ? path : defaults.base + path
-  const loc = getLocation()
+  const loc = getLocation({})
   const hist = getHistory()
   const doc = getDocument()
 
   // update the browser history only if it's necessary
-  if (hist && url !== loc.href) {
+  if (hist && url !== decodeURIComponent(loc.href)) {
     hist.pushState(null, doc.title, url)
   }
 }
 const getLinkElement = node => node && !isLinkNode(node) ? getLinkElement(node.parentNode) : node
 const isLinkNode = node => node.nodeName === LINK_TAG_NAME
-const isCrossOriginLink = path => path.indexOf(getLocation().href.match(RE_ORIGIN)[0]) === -1
+const isCrossOriginLink = path => path.indexOf(getLocation({}).href.match(RE_ORIGIN)[0]) === -1
 const isTargetSelfLink = el => el.target && el.target !== TARGET_SELF_LINK_ATTRIBUTE
 const isEventForbidden = event => (event.which && event.which !== 1) // not left click
   || event.metaKey || event.ctrlKey || event.shiftKey // or meta keys
