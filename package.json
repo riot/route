@@ -38,40 +38,40 @@
   },
   "homepage": "https://github.com/riot/route#readme",
   "devDependencies": {
-    "@babel/core": "^7.13.10",
-    "@babel/preset-env": "^7.13.10",
+    "@babel/core": "^7.14.3",
+    "@babel/preset-env": "^7.14.4",
     "@riotjs/babel-preset": "^1.0.0",
-    "@riotjs/cli": "^5.1.4",
-    "@riotjs/compiler": "^5.3.1",
+    "@riotjs/cli": "^5.2.1",
+    "@riotjs/compiler": "^5.4.2",
     "@riotjs/ssr": "^6.0.0",
     "bianco.query": "^1.0.0",
     "chai": "^4.3.4",
     "coveralls": "^3.1.0",
-    "eslint": "^7.22.0",
+    "eslint": "^7.28.0",
     "eslint-config-riot": "^3.0.0",
     "esm": "^3.2.25",
-    "jsdom": "16.5.1",
+    "jsdom": "16.6.0",
     "jsdom-global": "3.0.2",
-    "mocha": "^8.3.2",
+    "mocha": "^8.4.0",
     "nyc": "^15.1.0",
-    "riot": "^5.3.1",
-    "rollup": "^2.42.1",
+    "riot": "^5.4.3",
+    "rollup": "^2.50.6",
     "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-riot": "^5.0.0",
     "serve": "^11.3.2",
-    "sinon": "^9.2.4",
-    "sinon-chai": "^3.5.0"
+    "sinon": "^11.1.1",
+    "sinon-chai": "^3.7.0"
   },
   "peerDependency": {
-    "riot": "^5.3.1"
+    "riot": "^5.4.3"
   },
   "dependencies": {
-    "@riotjs/util": "^2.0.2",
+    "@riotjs/util": "^2.0.3",
     "bianco.attr": "^1.0.0",
     "bianco.events": "^1.0.0",
     "cumpa": "^1.0.1",
-    "rawth": "^2.1.0"
+    "rawth": "^2.1.1"
   }
 }
