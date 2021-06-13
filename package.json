@@ -38,10 +38,10 @@
   },
   "homepage": "https://github.com/riot/route#readme",
   "devDependencies": {
-    "@babel/core": "^7.14.3",
-    "@babel/preset-env": "^7.14.4",
+    "@babel/core": "^7.14.5",
+    "@babel/preset-env": "^7.14.5",
     "@riotjs/babel-preset": "^1.0.0",
-    "@riotjs/cli": "^5.2.1",
+    "@riotjs/cli": "^5.3.0",
     "@riotjs/compiler": "^5.4.2",
     "@riotjs/ssr": "^6.0.0",
     "bianco.query": "^1.0.0",
@@ -54,24 +54,24 @@
     "jsdom-global": "3.0.2",
     "mocha": "^8.4.0",
     "nyc": "^15.1.0",
-    "riot": "^5.4.3",
-    "rollup": "^2.50.6",
+    "riot": "^5.4.5",
+    "rollup": "^2.51.2",
     "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-riot": "^5.0.0",
-    "serve": "^11.3.2",
+    "serve": "^12.0.0",
     "sinon": "^11.1.1",
     "sinon-chai": "^3.7.0"
   },
   "peerDependency": {
-    "riot": "^5.4.3"
+    "riot": "^5.4.5"
   },
   "dependencies": {
-    "@riotjs/util": "^2.0.3",
+    "@riotjs/util": "^2.0.4",
     "bianco.attr": "^1.0.0",
     "bianco.events": "^1.0.0",
     "cumpa": "^1.0.1",
-    "rawth": "^2.1.1"
+    "rawth": "^2.1.2"
   }
 }
