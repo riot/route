@@ -1,6 +1,6 @@
 # Riot Router
 
-[![Build Status][travis-image]][travis-url] [![Code Quality][codeclimate-image]][codeclimate-url] [![NPM version][npm-version-image]][npm-url] [![NPM downloads][npm-downloads-image]][npm-url] [![MIT License][license-image]][license-url] [![Coverage Status][coverage-image]][coverage-url]
+[![Build Status][ci-image]][ci-url] [![Code Quality][codeclimate-image]][codeclimate-url] [![NPM version][npm-version-image]][npm-url] [![NPM downloads][npm-downloads-image]][npm-url] [![MIT License][license-image]][license-url] [![Coverage Status][coverage-image]][coverage-url]
 
 > Simple isomorphic router
 
@@ -247,8 +247,9 @@ import { initDomListeners } from '@riotjs/route'
 initDomListeners(document.querySelector('.main-navigation'))
 ```
 
-[travis-image]:https://img.shields.io/travis/riot/route.svg?style=flat-square
-[travis-url]:https://travis-ci.org/riot/route
+
+[ci-image]:https://img.shields.io/github/workflow/status/riot/route/test?style=flat-square
+[ci-url]:https://github.com/riot/route/actions
 
 [license-image]:http://img.shields.io/badge/license-MIT-000000.svg?style=flat-square
 [license-url]:LICENSE.txt
