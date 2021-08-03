@@ -1,6 +1,7 @@
 <router-hoc>
     <script>
       import {router} from '../'
+      import {defer, cancelDefer} from '../util'
       import {pure, __} from 'riot'
       import getCurrentRoute from '../get-current-route'
       import setBase from '../set-base'
@@ -12,8 +13,6 @@
       const INITIAL_ROUTE = 'initialRoute'
       const ON_STARTED_ATTRIBUTE_NAME = 'onStarted'
       const {template, bindingTypes} = __.DOMBindings
-      const defer = window.requestAnimationFrame || window.setTimeout
-      const cancelDefer = window.cancelAnimationFrame || window.clearTimeout
 
 
       let wasInitialized = false
@@ -70,7 +69,7 @@
           update(context) {
             this.setBase(context)
 
-            // defer the updates to avoid internal recoursive update calls
+            // defer the updates to avoid internal recursive update calls
             // see https://github.com/riot/route/issues/148
             if (this.slot) {
               cancelDefer(this.deferred)
