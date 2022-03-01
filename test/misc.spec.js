@@ -23,5 +23,6 @@ describe('misc methods', function() {
     expect(normalizeBase('/hello')).to.be.equal(`${base}/hello`)
     expect(normalizeBase('hello')).to.be.equal(`${base}/hello`)
     expect(normalizeBase('http://google.com')).to.be.equal('http://google.com')
+    expect(normalizeBase('/page#anchor')).to.be.equal(`${base}/page#anchor`)
   })
 })

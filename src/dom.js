@@ -1,6 +1,6 @@
 import {
   CLICK_EVENT,
-  DOWNLOAD_LINK_ATTRIBUTE, HASH,
+  DOWNLOAD_LINK_ATTRIBUTE,
   HREF_LINK_ATTRIBUTE,
   LINK_TAG_NAME,
   RE_ORIGIN,
@@ -35,7 +35,6 @@ const isForbiddenLink = el => !el || !isLinkNode(el) // not A tag
   || !has(el, HREF_LINK_ATTRIBUTE) // has no href attr
   || isTargetSelfLink(el)
   || isCrossOriginLink(el.href)
-const isHashLink = path => path.split(HASH).length > 1
 const normalizePath = path => path.replace(defaults.base, '')
 const isInBase = path => !defaults.base || path.includes(defaults.base)
 
@@ -49,7 +48,7 @@ const onClick = event => {
 
   const el = getLinkElement(event.target)
 
-  if (isForbiddenLink(el) || isHashLink(el.href) || !isInBase(el.href)) return
+  if (isForbiddenLink(el) || !isInBase(el.href)) return
 
   const path = normalizePath(el.href)
 
