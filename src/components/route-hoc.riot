@@ -6,6 +6,7 @@
   <script>
     import {route, toRegexp, match, router, createURLStreamPipe} from '../'
     import getCurrentRoute from '../get-current-route'
+    import {getLocation} from '../util'
     import compose from 'cumpa'
 
     const getInitialRouteValue = (pathToRegexp, path, options) => {
@@ -41,8 +42,11 @@
         }
       },
       onRoute(route) {
+        const loc = getLocation()
+
         this.callLifecycleProperty('onBeforeMount', route)
         this.update({route})
+        if (route.hash) loc.hash = route.hash; // make browser scroll to fragment
         this.callLifecycleProperty('onMounted', route)
       },
       callLifecycleProperty(method, ...params) {
