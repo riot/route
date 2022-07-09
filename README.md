@@ -1,6 +1,6 @@
 # Riot Router
 
-[![Route logo](https://raw.githubusercontent.com/riot/branding/master/route/route-horizontal.svg)](https://github.com/riot/route/)
+[![Route logo](https://raw.githubusercontent.com/riot/branding/main/route/route-horizontal.svg)](https://github.com/riot/route/)
 
 [![Build Status][ci-image]][ci-url] [![Code Quality][codeclimate-image]][codeclimate-url] [![NPM version][npm-version-image]][npm-url] [![NPM downloads][npm-downloads-image]][npm-url] [![MIT License][license-image]][license-url] [![Coverage Status][coverage-image]][coverage-url]
 
