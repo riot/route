@@ -28,7 +28,7 @@ It doesn't need Riot.js to work and can be used as standalone module.
 We have 2 editions:
 
 | edition                   | file                      |
-|:--------------------------|:--------------------------|
+| :------------------------ | :------------------------ |
 | **ESM Module**            | `index.js`                |
 | **UMD Version**           | `index.umd.js`            |
 | **Standalone ESM Module** | `index.standalone.js`     |
@@ -165,14 +165,15 @@ This module was not only designed to be used with Riot.js but also as standalone
 Without importing the Riot.js components in your application you can use the core methods exported to build and customize your own router compatible with any kind of frontend setup.
 
 Depending on your project setup you might import it as follows:
-```js
 
+```js
 // in a Riot.js application
 import { route } from '@riotjs/route'
 
 // in a standalone context
 import { route } from '@riotjs/route/standalone'
 ```
+
 #### Fundamentals
 
 This module works on node and on any modern browser, it exports the `router` and `router` property exposed by [rawth](https://github.com/GianlucaGuarini/rawth)
