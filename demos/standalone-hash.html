@@ -1,35 +1,35 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Standalone Hash Demo</title>
-  <script src="../route.standalone.js"></script>
-</head>
-<body>
-  <nav>
-    <a href="#/hello">Hello</a>
-    <a href="#/user">User</a>
-    <a href="#/user/gianluca">Username</a>
-    <a href="#/goodbye">goodbye</a>
-  </nav>
-  <div id="root">
-  </div>
-  <script type="module">
-    const { initDomListeners, setBase, router } = route
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Standalone Hash Demo</title>
+    <script src="../route.standalone.js"></script>
+  </head>
+  <body>
+    <nav>
+      <a href="#/hello">Hello</a>
+      <a href="#/user">User</a>
+      <a href="#/user/gianluca">Username</a>
+      <a href="#/goodbye">goodbye</a>
+    </nav>
+    <div id="root"></div>
+    <script type="module">
+      const { initDomListeners, setBase, router } = route
 
-    setBase('#')
+      setBase('#')
 
-    const onRoute = (url) => root.innerHTML = `${url} and params=${JSON.stringify(url.params)}`
+      const onRoute = (url) =>
+        (root.innerHTML = `${url} and params=${JSON.stringify(url.params)}`)
 
-    route.route('/hello').on.value(onRoute)
-    route.route('/user').on.value(onRoute)
-    route.route('/user/:username').on.value(onRoute)
-    route.route('/goodbye').on.value(onRoute)
+      route.route('/hello').on.value(onRoute)
+      route.route('/user').on.value(onRoute)
+      route.route('/user/:username').on.value(onRoute)
+      route.route('/goodbye').on.value(onRoute)
 
-    router.push(window.location.hash.replace('#', ''))
+      router.push(window.location.hash.replace('#', ''))
 
-    initDomListeners()
-  </script>
-</body>
+      initDomListeners()
+    </script>
+  </body>
 </html>

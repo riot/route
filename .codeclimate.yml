@@ -1,10 +1,10 @@
 ratings:
   paths:
-  - "src/**.js"
+    - 'src/**.js'
 
 exclude_paths:
-  - "route.js"
-  - "route.esm.js"
-  - "route.standalone.js"
-  - "test/**"
-  - "demos/**"
+  - 'route.js'
+  - 'route.esm.js'
+  - 'route.standalone.js'
+  - 'test/**'
+  - 'demos/**'

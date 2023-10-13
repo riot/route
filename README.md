@@ -13,7 +13,6 @@ The Riot.js Router is the minimal router implementation with such technologies:
 - [erre.js streams](https://github.com/GianlucaGuarini/erre) and javascript async generators
 - [rawth.js](https://github.com/GianlucaGuarini/rawth) urls parsing
 
-
 It doesn't need Riot.js to work and can be used as standalone module.
 
 **For Riot.js 3 and the older route version please check the [v3 branch](https://github.com/riot/route/tree/v3)**
@@ -28,11 +27,11 @@ It doesn't need Riot.js to work and can be used as standalone module.
 
 We have 2 editions:
 
-edition | file
-:-- | :--
-**UMD Version** | `index.umd.js`
-**ESM Module** | `index.js`
-**Commonjs Module** | `index.cjs`
+| edition             | file           |
+| :------------------ | :------------- |
+| **UMD Version**     | `index.umd.js` |
+| **ESM Module**      | `index.js`     |
+| **Commonjs Module** | `index.cjs`    |
 
 ### Script injection
 
@@ -40,7 +39,7 @@ edition | file
 <script src="https://unpkg.com/@riotjs/route@x.x.x/route.js"></script>
 ```
 
-*Note*: change the part `x.x.x` to the version numbers what you want to use: ex. `4.5.0` or `4.7.0`.
+_Note_: change the part `x.x.x` to the version numbers what you want to use: ex. `4.5.0` or `4.7.0`.
 
 ### ESM module
 
@@ -68,7 +67,6 @@ You can import the `<router>` and `<route>` components in your application and u
 ```html
 <app>
   <router>
-
     <!-- These links will trigger automatically HTML5 history events -->
     <nav>
       <a href="/home">Home</a>
@@ -77,16 +75,9 @@ You can import the `<router>` and `<route>` components in your application and u
     </nav>
 
     <!-- Your application routes will be rendered here -->
-    <route path="/home">
-      Home page
-    </route>
-    <route path="/about">
-      About
-    </route>
-    <route path="/team/:person">
-      Hello dear { route.params.person }
-    </route>
-
+    <route path="/home"> Home page </route>
+    <route path="/about"> About </route>
+    <route path="/team/:person"> Hello dear { route.params.person } </route>
   </router>
 
   <script>
@@ -135,7 +126,7 @@ You can also specify the base of your application via component attributes:
 The router component has also an `onStarted` callback that will be called asynchronously after the first route event will be called
 
 ```html
-<router onStarted={onRouterStarted}></router>
+<router onStarted="{onRouterStarted}"></router>
 ```
 
 #### Route
@@ -143,9 +134,7 @@ The router component has also an `onStarted` callback that will be called asynch
 The `<route>` component provides the `route` property to its children (it's simply a [URL](https://developer.mozilla.org/en-US/docs/Web/API/URL) object) allowing you to detect the url params and queries.
 
 ```html
-<route path="/:some/:route/:param">
-  {JSON.stringify(route.params)}
-</route>
+<route path="/:some/:route/:param"> {JSON.stringify(route.params)} </route>
 
 <route path="/search(.*)">
   <!-- Assuming the URL is "/search?q=awesome" -->
@@ -182,12 +171,12 @@ This module works on node and on any modern browser, it exports the `router` and
 import { route, router, setBase } from '@riotjs/route'
 
 // required to set base first
-setBase('/');
+setBase('/')
 
 // create a route stream
 const aboutStream = route('/about')
 
-aboutStream.on.value(url => {
+aboutStream.on.value((url) => {
   console.log(url) // URL object
 })
 
@@ -196,7 +185,7 @@ aboutStream.on.value(() => {
 })
 
 // triggered on each route event
-router.on.value(path => {
+router.on.value((path) => {
   // path is always a string in this function
   console.log(path)
 })
@@ -226,12 +215,12 @@ setBase(`#`)
 Setting the base path of your application route is mandatory and is the first you probably are going to do before creating your route listeners.
 
 #### DOM binding
+
 The example above is not really practical in case you are working in a browser environment. In that case you might want to bind your router to the DOM listening all the click events that might trigger a route change event.
 Window history `popstate` events should be also connected to the router.
 With the `initDomListeners` method you can automatically achieve all the features above:
 
 ```js
-
 import { initDomListeners } from '@riotjs/route'
 
 const unsubscribe = initDomListeners()
@@ -249,19 +238,14 @@ import { initDomListeners } from '@riotjs/route'
 initDomListeners(document.querySelector('.main-navigation'))
 ```
 
-
-[ci-image]:https://img.shields.io/github/actions/workflow/status/riot/route/test.yml?style=flat-square
-[ci-url]:https://github.com/riot/route/actions
-
-[license-image]:http://img.shields.io/badge/license-MIT-000000.svg?style=flat-square
-[license-url]:LICENSE.txt
-
-[npm-version-image]:http://img.shields.io/npm/v/@riotjs/route.svg?style=flat-square
-[npm-downloads-image]:http://img.shields.io/npm/dm/@riotjs/route.svg?style=flat-square
-[npm-url]:https://npmjs.org/package/@riotjs/route
-
-[coverage-image]:https://img.shields.io/coveralls/riot/route/main.svg?style=flat-square
-[coverage-url]:https://coveralls.io/github/riot/route/?branch=main
-
-[codeclimate-image]:https://api.codeclimate.com/v1/badges/1487b171ba4409b5c302/maintainability
-[codeclimate-url]:https://codeclimate.com/github/riot/route
+[ci-image]: https://img.shields.io/github/actions/workflow/status/riot/route/test.yml?style=flat-square
+[ci-url]: https://github.com/riot/route/actions
+[license-image]: http://img.shields.io/badge/license-MIT-000000.svg?style=flat-square
+[license-url]: LICENSE.txt
+[npm-version-image]: http://img.shields.io/npm/v/@riotjs/route.svg?style=flat-square
+[npm-downloads-image]: http://img.shields.io/npm/dm/@riotjs/route.svg?style=flat-square
+[npm-url]: https://npmjs.org/package/@riotjs/route
+[coverage-image]: https://img.shields.io/coveralls/riot/route/main.svg?style=flat-square
+[coverage-url]: https://coveralls.io/github/riot/route/?branch=main
+[codeclimate-image]: https://api.codeclimate.com/v1/badges/1487b171ba4409b5c302/maintainability
+[codeclimate-url]: https://codeclimate.com/github/riot/route

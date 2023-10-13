@@ -1,10 +1,10 @@
-import {fireEvent, sleep} from './util'
-import {initDomListeners, route, setBase} from '../src'
+import { fireEvent, sleep } from './util'
+import { initDomListeners, route, setBase } from '../src'
 import $ from 'bianco.query'
-import {expect} from 'chai'
-import {spy} from 'sinon'
+import { expect } from 'chai'
+import { spy } from 'sinon'
 
-describe('standalone history', function() {
+describe('standalone history', function () {
   let teardown // eslint-disable-line
 
   beforeEach(() => {
@@ -27,7 +27,7 @@ describe('standalone history', function() {
     teardown()
   })
 
-  it('html5 history links dispatch events', async function() {
+  it('html5 history links dispatch events', async function () {
     const onRoute = spy()
     const hello = route('/hello').on.value(onRoute)
 
@@ -46,7 +46,7 @@ describe('standalone history', function() {
   it('html5 history links receive parameters', (done) => {
     const user = route('/user/:username').on.value((url) => {
       user.end()
-      expect(url.params).to.be.deep.equal({username: 'gianluca'})
+      expect(url.params).to.be.deep.equal({ username: 'gianluca' })
       done()
     })
 

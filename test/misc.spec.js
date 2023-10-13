@@ -1,14 +1,14 @@
-import {base, sleep} from './util'
-import {getCurrentRoute, router, setBase} from '../src'
-import {expect} from 'chai'
-import {normalizeBase} from '../src/set-base'
+import { base, sleep } from './util'
+import { getCurrentRoute, router, setBase } from '../src'
+import { expect } from 'chai'
+import { normalizeBase } from '../src/set-base'
 
-describe('misc methods', function() {
+describe('misc methods', function () {
   beforeEach(() => {
     setBase(`${base}#`)
   })
 
-  it('getCurrentRoute returns properly the current router value', async function() {
+  it('getCurrentRoute returns properly the current router value', async function () {
     router.push(`${base}#/hello`)
 
     await sleep()
@@ -16,7 +16,7 @@ describe('misc methods', function() {
     expect(getCurrentRoute()).to.be.equal(`${base}#/hello`)
   })
 
-  it('normalizeBase returns the expected paths', async function() {
+  it('normalizeBase returns the expected paths', async function () {
     expect(normalizeBase('#')).to.be.equal(`${base}#`)
     expect(normalizeBase('/')).to.be.equal(`${base}`)
     expect(normalizeBase('')).to.be.equal(`${base}`)

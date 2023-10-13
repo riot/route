@@ -1,9 +1,9 @@
-import {base, sleep} from './util'
-import {route, router, setBase} from '../src'
-import {expect} from 'chai'
-import {spy} from 'sinon'
+import { base, sleep } from './util'
+import { route, router, setBase } from '../src'
+import { expect } from 'chai'
+import { spy } from 'sinon'
 
-describe('standalone hash', function() {
+describe('standalone hash', function () {
   beforeEach(() => {
     setBase('#')
   })
@@ -12,7 +12,7 @@ describe('standalone hash', function() {
     window.history.replaceState(null, '', '/')
   })
 
-  it('hash links dispatch events', async function() {
+  it('hash links dispatch events', async function () {
     const onRoute = spy()
     const hello = route('/hello').on.value(onRoute)
 
@@ -27,7 +27,7 @@ describe('standalone hash', function() {
   it('hash links receive parameters', (done) => {
     const user = route('/user/:username').on.value((url) => {
       user.end()
-      expect(url.params).to.be.deep.equal({username: 'gianluca'})
+      expect(url.params).to.be.deep.equal({ username: 'gianluca' })
       done()
     })
 

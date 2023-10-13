@@ -22,7 +22,7 @@
   },
   "scripts": {
     "prepublishOnly": "npm run build && npm test",
-    "lint": "eslint src test rollup.config.js",
+    "lint": "eslint src test rollup.config.js && prettier -c .",
     "build": "rollup -c && npm run build-demo",
     "build-demo": "riot demos/components -o demos/components",
     "demo": "npm run build && serve",

@@ -1,21 +1,21 @@
-import {base, sleep} from './util'
+import { base, sleep } from './util'
 import HistoryRouterApp from './components/history-router-app.riot'
 import NestedUpdates from './components/nested-updates.riot'
 import RecursiveUpdatesBugRouter from './components/recursive-updates-bug-router.riot'
-import {component} from 'riot'
-import {expect} from 'chai'
-import {router} from '../src'
+import { component } from 'riot'
+import { expect } from 'chai'
+import { router } from '../src'
 
-describe('components', function() {
-  beforeEach(async function() {
+describe('components', function () {
+  beforeEach(async function () {
     router.push('/')
   })
 
-  it('The router contents get properly rendered', async function() {
+  it('The router contents get properly rendered', async function () {
     const el = document.createElement('div')
 
     const comp = component(HistoryRouterApp)(el, {
-      base
+      base,
     })
 
     await sleep()
@@ -34,11 +34,11 @@ describe('components', function() {
     comp.unmount()
   })
 
-  it('The Route Context gets properly updated', async function() {
+  it('The Route Context gets properly updated', async function () {
     const el = document.createElement('div')
 
     const comp = component(NestedUpdates)(el, {
-      base
+      base,
     })
 
     await sleep()
@@ -52,11 +52,11 @@ describe('components', function() {
     comp.unmount()
   })
 
-  it('Recursive onMounted callbacks (bug 148) ', async function() {
+  it('Recursive onMounted callbacks (bug 148) ', async function () {
     const el = document.createElement('div')
 
     const comp = component(RecursiveUpdatesBugRouter)(el, {
-      base
+      base,
     })
 
     await sleep()
