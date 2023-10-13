@@ -40,7 +40,8 @@ jspm_packages
 .DS_Store
 
 # Generated files
-route.js
-route.esm.js
-route.standalone.js
+index.js
+index.umd.js
+index.standalone.js
+index.standalone.umd.js
 demos/components/*.js

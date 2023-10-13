@@ -30,9 +30,9 @@ We have 2 editions:
 
 edition | file
 :-- | :--
-**UMD Version** | `route.js`
-**ESM Module** | `route.esm.js`
-**Standalone UMD Module** | `route.standalone.js`
+**UMD Version** | `index.umd.js`
+**ESM Module** | `index.js`
+**Commonjs Module** | `index.cjs`
 
 ### Script injection
 

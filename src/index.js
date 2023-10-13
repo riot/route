@@ -1,6 +1,5 @@
 import route, {
   createURLStreamPipe,
-  filterStrings,
   match,
   router,
   toPath,
@@ -16,7 +15,6 @@ import setBase from './set-base'
 export {
   route,
   createURLStreamPipe,
-  filterStrings,
   match,
   router,
   toPath,

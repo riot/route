@@ -2,23 +2,40 @@
   "name": "@riotjs/route",
   "version": "8.0.2",
   "description": "Riot.js isomorphic router",
-  "main": "route.js",
-  "jsnext:main": "route.esm.js",
-  "module": "route.esm.js",
+  "type": "module",
+  "main": "index.umd.js",
+  "jsnext:main": "index.js",
+  "module": "index.js",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js",
+      "require": "./index.umd.js",
+      "browser": "./index.umd.js"
+    },
+    "./standalone": {
+      "types": "./index.d.ts",
+      "import": "./index.standalone.js",
+      "require": "./index.standalone.umd.js",
+      "browser": "./index.standalone.umd.js"
+    }
+  },
   "scripts": {
     "prepublishOnly": "npm run build && npm test",
     "lint": "eslint src test rollup.config.js",
     "build": "rollup -c && npm run build-demo",
     "build-demo": "riot demos/components -o demos/components",
     "demo": "npm run build && serve",
-    "cov": "nyc report --reporter=lcov",
-    "cov-html": "nyc report --reporter=html",
-    "test": "npm run lint && nyc mocha -r esm -r test/setup.js test/*.spec.js"
+    "cov": "c8 report --reporter=lcov",
+    "cov-html": "c8 report --reporter=html",
+    "test": "npm run lint && c8 mocha -r esm -r test/setup.js test/*.spec.js"
   },
   "files": [
-    "route.js",
-    "route.esm.js",
-    "route.standalone.js"
+    "index.d.ts",
+    "index.js",
+    "index.umd.js",
+    "index.standalone.js",
+    "index.standalone.umd.js"
   ],
   "repository": {
     "type": "git",
@@ -31,46 +48,45 @@
     "riot-route",
     "route"
   ],
-  "author": "Gianluca Guarini <gianluca.guarini@gmail.com> (http://gianlucaguarini.com)",
+  "author": "Gianluca Guarini <gianluca.guarini@gmail.com> (https://gianlucaguarini.com)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/riot/route/issues"
   },
   "homepage": "https://github.com/riot/route#readme",
   "devDependencies": {
-    "@babel/core": "^7.18.10",
-    "@babel/preset-env": "^7.18.10",
-    "@riotjs/babel-preset": "^1.0.0",
-    "@riotjs/cli": "^6.1.0",
-    "@riotjs/compiler": "^6.3.2",
-    "@riotjs/register": "^6.0.1",
+    "@riotjs/cli": "^9.0.5",
+    "@riotjs/compiler": "^9.0.6",
+    "@riotjs/prettier-config": "^1.1.0",
+    "@riotjs/register": "^9.0.0",
+    "@rollup/plugin-commonjs": "^25.0.5",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-virtual": "^3.0.2",
     "bianco.query": "^1.1.4",
-    "chai": "^4.3.6",
-    "eslint": "^8.22.0",
-    "eslint-config-riot": "^3.0.0",
+    "c8": "^8.0.1",
+    "chai": "^4.3.10",
+    "eslint": "^8.51.0",
+    "eslint-config-riot": "^4.1.1",
     "esm": "^3.2.25",
-    "jsdom": "20.0.0",
+    "jsdom": "22.1.0",
     "jsdom-global": "3.0.2",
-    "mocha": "^8.4.0",
-    "nyc": "^15.1.0",
-    "riot": "^7.0.3",
-    "rollup": "^2.78.0",
-    "rollup-plugin-babel": "^4.4.0",
-    "rollup-plugin-commonjs": "^10.1.0",
-    "rollup-plugin-node-resolve": "^5.2.0",
-    "rollup-plugin-riot": "^6.0.0",
-    "serve": "^14.0.1",
-    "sinon": "^14.0.0",
+    "mocha": "^10.2.0",
+    "prettier": "^3.0.3",
+    "riot": "^9.1.1",
+    "rollup": "^4.0.2",
+    "rollup-plugin-riot": "^9.0.2",
+    "serve": "^14.2.1",
+    "sinon": "^16.1.0",
     "sinon-chai": "^3.7.0"
   },
   "peerDependency": {
     "riot": "^6.0.0 || ^7.0.0"
   },
   "dependencies": {
-    "@riotjs/util": "^2.1.1",
+    "@riotjs/util": "^2.2.3",
     "bianco.attr": "^1.1.1",
     "bianco.events": "^1.1.1",
-    "cumpa": "^1.0.1",
-    "rawth": "^2.1.2"
+    "cumpa": "^2.0.1",
+    "rawth": "^3.0.0"
   }
 }

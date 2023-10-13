@@ -1,8 +1,0 @@
-extends: eslint-config-riot
-
-parserOptions:
-  ecmaVersion: 2018
-  sourceType: 'module'
-
-rules:
-  fp/no-mutating-methods: 0

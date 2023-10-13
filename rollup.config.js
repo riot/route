@@ -1,48 +1,61 @@
-import babel from 'rollup-plugin-babel'
-import commonjs from 'rollup-plugin-commonjs'
-import path from 'path'
-import resolve from 'rollup-plugin-node-resolve'
+import commonjs from '@rollup/plugin-commonjs'
+import resolve from '@rollup/plugin-node-resolve'
 import riot from 'rollup-plugin-riot'
+import { resolve as nodeResolve } from 'node:path'
+import virtual from '@rollup/plugin-virtual'
+
+const standaloneExternal = [
+  nodeResolve('./src/components/route-hoc.riot'),
+  nodeResolve('./src/components/router-hoc.riot'),
+]
 
 const defaultOptions = {
   input: 'src/index.js',
-  plugins: [
-    resolve({
-      jsnext: true
-    }),
-    commonjs(),
-    riot(),
-    babel({
-      presets: ['@riotjs/babel-preset']
-    })
-  ],
-  external: ['riot']
+  plugins: [resolve(), commonjs(), riot()],
+  external: ['riot'],
 }
+
+const standalonePlugins = [
+  virtual(
+    standaloneExternal.reduce(
+      (acc, path) => ({ ...acc, [path]: 'export default {}' }),
+      {},
+    ),
+  ),
+  ...defaultOptions.plugins,
+]
 
 export default [
   {
     ...defaultOptions,
     output: {
       format: 'esm',
-      file: 'route.esm.js'
-    }
-  }, {
+      file: 'index.js',
+    },
+  },
+  {
     ...defaultOptions,
     output: {
       format: 'umd',
       name: 'route',
-      file: 'route.js'
-    }
-  }, {
+      file: 'index.umd.js',
+    },
+  },
+  {
     ...defaultOptions,
-    external: [
-      path.resolve(__dirname, 'src/components/route-hoc.riot'),
-      path.resolve(__dirname, 'src/components/router-hoc.riot')
-    ],
+    plugins: standalonePlugins,
+    output: {
+      format: 'esm',
+      file: 'index.standalone.js',
+    },
+  },
+  {
+    ...defaultOptions,
+    plugins: standalonePlugins,
     output: {
       format: 'umd',
       name: 'route',
-      file: 'route.standalone.js'
-    }
-  }
+      file: 'index.standalone.umd.js',
+    },
+  },
 ]
