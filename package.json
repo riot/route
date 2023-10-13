@@ -28,7 +28,7 @@
     "demo": "npm run build && serve",
     "cov": "c8 report --reporter=lcov",
     "cov-html": "c8 report --reporter=html",
-    "test": "npm run lint && c8 mocha -r esm -r test/setup.js test/*.spec.js"
+    "test": "npm run lint && NODE_OPTIONS=\"--loader @riotjs/register\" c8 mocha -r test/setup.js test/*.spec.js"
   },
   "files": [
     "index.d.ts",
@@ -67,7 +67,6 @@
     "chai": "^4.3.10",
     "eslint": "^8.51.0",
     "eslint-config-riot": "^4.1.1",
-    "esm": "^3.2.25",
     "jsdom": "22.1.0",
     "jsdom-global": "3.0.2",
     "mocha": "^10.2.0",

@@ -1,5 +1,5 @@
-import { base, sleep } from './util'
-import { route, router, setBase } from '../src'
+import { base, sleep } from './util.js'
+import { route, router, setBase } from '../src/index.js'
 import { expect } from 'chai'
 import { spy } from 'sinon'
 

@@ -4,9 +4,9 @@
   </template>
 
   <script>
-    import {route, toRegexp, match, router, createURLStreamPipe} from '../'
-    import getCurrentRoute from '../get-current-route'
-    import {getLocation} from '../util'
+    import {route, toRegexp, match, router, createURLStreamPipe} from '../index.js'
+    import getCurrentRoute from '../get-current-route.js'
+    import {getLocation} from '../util.js'
     import compose from 'cumpa'
 
     const getInitialRouteValue = (pathToRegexp, path, options) => {

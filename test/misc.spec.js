@@ -1,7 +1,7 @@
-import { base, sleep } from './util'
-import { getCurrentRoute, router, setBase } from '../src'
+import { base, sleep } from './util.js'
+import { getCurrentRoute, router, setBase } from '../src/index.js'
 import { expect } from 'chai'
-import { normalizeBase } from '../src/set-base'
+import { normalizeBase } from '../src/set-base.js'
 
 describe('misc methods', function () {
   beforeEach(() => {

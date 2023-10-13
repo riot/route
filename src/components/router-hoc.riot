@@ -1,13 +1,13 @@
 <router-hoc>
     <script>
-      import {router} from '../'
-      import {defer, cancelDefer} from '../util'
+      import {router} from '../index.js'
+      import {defer, cancelDefer} from '../util.js'
       import {pure, __} from 'riot'
-      import getCurrentRoute from '../get-current-route'
-      import setBase from '../set-base'
+      import getCurrentRoute from '../get-current-route.js'
+      import setBase from '../set-base.js'
       import {panic} from '@riotjs/util/misc'
       import {dashToCamelCase} from '@riotjs/util/strings'
-      import initDomListeners from '../dom'
+      import initDomListeners from '../dom.js'
 
       const BASE_ATTRIBUTE_NAME = 'base'
       const INITIAL_ROUTE = 'initialRoute'

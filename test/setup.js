@@ -1,6 +1,5 @@
-import { base } from './util'
+import { base } from './util.js'
 import jsdomGlobal from 'jsdom-global'
-import register from '@riotjs/register'
 import sinonChai from 'sinon-chai'
 import { use } from 'chai'
 
@@ -9,5 +8,3 @@ jsdomGlobal(null, {
 })
 
 use(sinonChai)
-
-register()

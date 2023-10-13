@@ -1,6 +1,6 @@
-import { HASH, SLASH } from './constants'
+import { HASH, SLASH } from './constants.js'
 import { defaults } from 'rawth'
-import { getWindow } from './util'
+import { getWindow } from './util.js'
 
 export const normalizeInitialSlash = (str) =>
   str[0] === SLASH ? str : `${SLASH}${str}`

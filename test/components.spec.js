@@ -1,10 +1,10 @@
-import { base, sleep } from './util'
+import { base, sleep } from './util.js'
 import HistoryRouterApp from './components/history-router-app.riot'
 import NestedUpdates from './components/nested-updates.riot'
 import RecursiveUpdatesBugRouter from './components/recursive-updates-bug-router.riot'
 import { component } from 'riot'
 import { expect } from 'chai'
-import { router } from '../src'
+import { router } from '../src/index.js'
 
 describe('components', function () {
   beforeEach(async function () {

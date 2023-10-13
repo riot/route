@@ -1,5 +1,5 @@
-import { fireEvent, sleep } from './util'
-import { initDomListeners, route, setBase } from '../src'
+import { fireEvent, sleep } from './util.js'
+import { initDomListeners, route, setBase } from '../src/index.js'
 import $ from 'bianco.query'
 import { expect } from 'chai'
 import { spy } from 'sinon'

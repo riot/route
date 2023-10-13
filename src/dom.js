@@ -6,10 +6,10 @@ import {
   RE_ORIGIN,
   TARGET_SELF_LINK_ATTRIBUTE,
   WINDOW_EVENTS,
-} from './constants'
+} from './constants.js'
 import { add, remove } from 'bianco.events'
 import { defaults, router } from 'rawth'
-import { getDocument, getHistory, getLocation, getWindow } from './util'
+import { getDocument, getHistory, getLocation, getWindow } from './util.js'
 import { has } from 'bianco.attr'
 
 const onWindowEvent = () =>
