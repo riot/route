@@ -2,3 +2,4 @@ extends: eslint-config-riot
 
 rules:
   fp/no-mutating-methods: 0
+  fp/no-rest-parameters: 0

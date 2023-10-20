@@ -1,3 +1,5 @@
+import { dashToCamelCase } from '@riotjs/util/strings'
+
 export const getGlobal = () => getWindow() || global
 export const getWindow = () => (typeof window === 'undefined' ? null : window)
 export const getDocument = () =>
@@ -20,3 +22,6 @@ export const cancelDefer = (() => {
 
   return globalScope.cancelAnimationFrame || globalScope.clearTimeout
 })()
+
+export const getAttribute = (attributes, name) =>
+  attributes && attributes.find((a) => dashToCamelCase(a.name) === name)
