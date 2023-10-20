@@ -46,7 +46,8 @@
 
         this.callLifecycleProperty('onBeforeMount', route)
         this.update({route})
-        if (route.hash) loc.hash = route.hash; // make browser scroll to fragment
+        // make browser scroll to fragment
+        if (route.hash && loc.hash !== route.hash) loc.hash = route.hash
         this.callLifecycleProperty('onMounted', route)
       },
       callLifecycleProperty(method, ...params) {

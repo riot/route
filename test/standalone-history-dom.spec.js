@@ -16,6 +16,7 @@ describe('standalone history', function () {
       <a href="/user">User</a>
       <a href="/goodbye">goodbye</a>
       <a href="/user/gianluca">Username</a>
+      <a href="/hello#anchor">Anchor</a>
     </nav>
   `
     teardown = initDomListeners($('nav')[0])
@@ -50,8 +51,25 @@ describe('standalone history', function () {
       done()
     })
 
-    const [a] = $('nav > a:last-of-type')
+    const [a] = $('nav > a:nth-child(4)')
 
     fireEvent(a, 'click')
+  })
+
+  it('hash links are supported', async () => {
+    const onRoute = spy()
+    const hello = route('/hello(/?[?#].*)?').on.value(onRoute)
+
+    const [a] = $('nav > a:nth-child(5)')
+
+    fireEvent(a, 'click')
+
+    await sleep()
+
+    expect(onRoute).to.have.been.called
+    expect(window.location.pathname).to.be.equal('/hello')
+    expect(window.location.hash).to.be.equal('#anchor')
+
+    hello.end()
   })
 })
