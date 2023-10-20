@@ -2,9 +2,10 @@ import { base, sleep } from './util.js'
 import HistoryRouterApp from './components/history-router-app.riot'
 import NestedUpdates from './components/nested-updates.riot'
 import RecursiveUpdatesBugRouter from './components/recursive-updates-bug-router.riot'
+import StaticBasePath from './components/static-base-path.riot'
 import { component } from 'riot'
 import { expect } from 'chai'
-import { router } from '../src/index.js'
+import { router, defaults } from '../src/index.js'
 
 describe('components', function () {
   beforeEach(async function () {
@@ -70,6 +71,15 @@ describe('components', function () {
     await sleep()
 
     expect(comp.$('p').innerHTML).to.be.equal('hello')
+
+    comp.unmount()
+  })
+
+  it('Static base path attributes are supported (bug 172) ', async function () {
+    const el = document.createElement('div')
+    const comp = component(StaticBasePath)(el)
+
+    expect(defaults.base).to.be.equal('https://riot.rocks/app')
 
     comp.unmount()
   })

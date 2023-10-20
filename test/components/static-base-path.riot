@@ -1,0 +1,24 @@
+<static-base-path>
+  <router base="/app">
+    <a href="/home">
+      Home
+    </a>
+    <route path="(.*)">
+        <p>{state.message}</p>
+    </route>
+  </router>
+
+  <script>
+    import { Router, Route } from '../../src/index.js'
+
+    export default {
+      components: {
+        Router,
+        Route,
+      },
+      state: {
+        message: 'hello',
+      }
+    }
+  </script>
+</static-base-path>

@@ -90,7 +90,7 @@
           getBase(context) {
             const baseAttr = getAttribute(BASE_ATTRIBUTE_NAME)
 
-            return baseAttr ? this.el.getAttribute(BASE_ATTRIBUTE_NAME) || baseAttr.evaluate(context) : '/'
+            return baseAttr ? baseAttr.evaluate(context) : this.el.getAttribute(BASE_ATTRIBUTE_NAME) || '/'
           },
           setBase(context) {
             setBase(props ? props.base : this.getBase(context))
