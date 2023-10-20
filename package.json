@@ -59,7 +59,7 @@
     "@riotjs/compiler": "^9.0.6",
     "@riotjs/prettier-config": "^1.1.0",
     "@riotjs/register": "^9.0.0",
-    "@rollup/plugin-commonjs": "^25.0.5",
+    "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-virtual": "^3.0.2",
     "bianco.query": "^1.1.4",
@@ -72,10 +72,10 @@
     "mocha": "^10.2.0",
     "prettier": "^3.0.3",
     "riot": "^9.1.1",
-    "rollup": "^4.0.2",
+    "rollup": "^4.1.4",
     "rollup-plugin-riot": "^9.0.2",
     "serve": "^14.2.1",
-    "sinon": "^16.1.0",
+    "sinon": "^17.0.0",
     "sinon-chai": "^3.7.0"
   },
   "peerDependency": {
