@@ -6,4 +6,5 @@ export const TARGET_SELF_LINK_ATTRIBUTE = '_self'
 export const LINK_TAG_NAME = 'A'
 export const HASH = '#'
 export const SLASH = '/'
+export const PATH_ATTRIBUTE = 'path'
 export const RE_ORIGIN = /^.+?\/\/+[^/]+/

@@ -1,6 +1,7 @@
 import {
   CLICK_EVENT,
   DOWNLOAD_LINK_ATTRIBUTE,
+  HASH,
   HREF_LINK_ATTRIBUTE,
   LINK_TAG_NAME,
   RE_ORIGIN,
@@ -28,6 +29,7 @@ const onRouterPush = (path) => {
 const getLinkElement = (node) =>
   node && !isLinkNode(node) ? getLinkElement(node.parentNode) : node
 const isLinkNode = (node) => node.nodeName === LINK_TAG_NAME
+const isHashLink = (path) => path.includes(HASH)
 const isCrossOriginLink = (path) =>
   path.indexOf(getLocation().href.match(RE_ORIGIN)[0]) === -1
 const isTargetSelfLink = (el) =>
@@ -64,7 +66,9 @@ const onClick = (event) => {
 
   router.push(path)
 
-  event.preventDefault()
+  // prevent default only links that are not hash links
+  // otherwise just let the browser scroll to the linked id
+  if (!isHashLink(el.href)) event.preventDefault()
 }
 
 /**

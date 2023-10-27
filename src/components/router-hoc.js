@@ -1,6 +1,5 @@
 import { router } from '../index.js'
-import { defer, cancelDefer, getAttribute } from '../util.js'
-import { __ } from 'riot'
+import { defer, cancelDefer, getAttribute, createDefaultSlot } from '../util.js'
 import getCurrentRoute from '../get-current-route.js'
 import setBase from '../set-base.js'
 import { panic } from '@riotjs/util/misc'
@@ -9,9 +8,8 @@ import initDomListeners from '../dom.js'
 const BASE_ATTRIBUTE_NAME = 'base'
 const INITIAL_ROUTE = 'initialRoute'
 const ON_STARTED_ATTRIBUTE_NAME = 'onStarted'
-const { template, bindingTypes } = __.DOMBindings
 
-export function routerHoc({ slots, attributes, props }) {
+export const routerHoc = ({ slots, attributes, props }) => {
   if (routerHoc.wasInitialized)
     panic('Multiple <router> components are not supported')
 
@@ -48,12 +46,7 @@ export function routerHoc({ slots, attributes, props }) {
       if (!slots || !slots.length) return
       const onStartedAttr = getAttribute(attributes, ON_STARTED_ATTRIBUTE_NAME)
 
-      this.slot = template(null, [
-        {
-          type: bindingTypes.SLOT,
-          name: 'default',
-        },
-      ])
+      this.slot = createDefaultSlot()
 
       this.slot.mount(
         this.el,
