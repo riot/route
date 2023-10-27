@@ -68,23 +68,28 @@ export const routeHoc = ({ slots, attributes }) => {
         this.afterPlaceholder,
         this.beforePlaceholder.nextSibling,
       )
+
+      if (state.route) this.mountSlot()
     },
     update(context) {
       this.context = context
       if (this.state.route) this.slot.update({}, context)
     },
-    mountSlot(context) {
+    mountSlot() {
+      const { route } = this.state
       this.beforePlaceholder.parentNode.insertBefore(
         this.el,
         this.beforePlaceholder.nextSibling,
       )
+      this.callLifecycleProperty('onBeforeMount', route)
       this.slot.mount(
         this.el,
         {
           slots,
         },
-        context,
+        this.context,
       )
+      this.callLifecycleProperty('onMounted', route)
     },
     clearDOM(includeBoundaries) {
       clearDOMBetweenNodes(
@@ -100,22 +105,23 @@ export const routeHoc = ({ slots, attributes }) => {
       this.stream.end()
     },
     onBeforeRoute(path) {
-      if (this.state.route && !match(path, this.state.pathToRegexp)) {
+      const { route } = this.state
+
+      if (route && !match(path, this.state.pathToRegexp)) {
         this.callLifecycleProperty('onBeforeUnmount', route)
         this.slot.unmount({}, this.context, true)
         this.clearDOM(false)
         this.state.route = null
-        this.callLifecycleProperty('onUnmounted', route)
+        this.callLifecycleProperty('onUnmounted', this.state.route)
       }
     },
     onRoute(route) {
-      this.callLifecycleProperty('onBeforeMount', route)
       this.state.route = route
-      this.mountSlot(this.context)
-      this.callLifecycleProperty('onMounted', route)
+      this.mountSlot()
     },
     callLifecycleProperty(method, ...params) {
       const attr = getAttribute(attributes, method)
+
       if (attr) attr(...params)
     },
   }
