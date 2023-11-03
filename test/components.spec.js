@@ -12,7 +12,7 @@ describe('components', function () {
     router.push('/')
   })
 
-  it.only('The router contents get properly rendered', async function () {
+  it('The router contents get properly rendered', async function () {
     const el = document.createElement('div')
 
     const comp = component(HistoryRouterApp)(el, {

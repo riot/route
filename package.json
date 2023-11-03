@@ -62,20 +62,19 @@
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-virtual": "^3.0.2",
-    "bianco.query": "^1.1.4",
     "c8": "^8.0.1",
     "chai": "^4.3.10",
-    "eslint": "^8.51.0",
+    "eslint": "^8.52.0",
     "eslint-config-riot": "^4.1.1",
     "jsdom": "22.1.0",
     "jsdom-global": "3.0.2",
     "mocha": "^10.2.0",
     "prettier": "^3.0.3",
     "riot": "^9.1.1",
-    "rollup": "^4.1.4",
+    "rollup": "^4.3.0",
     "rollup-plugin-riot": "^9.0.2",
     "serve": "^14.2.1",
-    "sinon": "^17.0.0",
+    "sinon": "^17.0.1",
     "sinon-chai": "^3.7.0"
   },
   "peerDependency": {
@@ -84,6 +83,7 @@
   "dependencies": {
     "@riotjs/util": "^2.2.3",
     "bianco.attr": "^1.1.1",
+    "bianco.query": "^1.1.4",
     "bianco.events": "^1.1.1",
     "cumpa": "^2.0.1",
     "rawth": "^3.0.0"

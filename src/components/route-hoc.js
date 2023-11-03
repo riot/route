@@ -6,6 +6,7 @@ import {
   router,
   createURLStreamPipe,
 } from '../index.js'
+import $ from 'bianco.query'
 import getCurrentRoute from '../get-current-route.js'
 import { get as getAttr } from 'bianco.attr'
 import { createDefaultSlot, getAttribute } from '../util.js'
@@ -31,6 +32,11 @@ const clearDOMBetweenNodes = (first, last, includeBoundaries) => {
 }
 
 export const routeHoc = ({ slots, attributes }) => {
+  const placeholders = {
+    before: document.createTextNode(''),
+    after: document.createTextNode(''),
+  }
+
   return {
     mount(el, context) {
       // create the component state
@@ -61,14 +67,11 @@ export const routeHoc = ({ slots, attributes }) => {
       router.on.value(this.boundOnBeforeRoute)
       this.stream = route(path).on.value(this.boundOnRoute)
       // update the DOM
-      this.beforePlaceholder = document.createTextNode('')
-      this.afterPlaceholder = document.createTextNode('')
-      el.replaceWith(this.beforePlaceholder)
-      this.beforePlaceholder.parentNode.insertBefore(
-        this.afterPlaceholder,
-        this.beforePlaceholder.nextSibling,
+      el.replaceWith(placeholders.before)
+      placeholders.before.parentNode.insertBefore(
+        placeholders.after,
+        placeholders.before.nextSibling,
       )
-
       if (state.route) this.mountSlot()
     },
     update(context) {
@@ -77,9 +80,10 @@ export const routeHoc = ({ slots, attributes }) => {
     },
     mountSlot() {
       const { route } = this.state
-      this.beforePlaceholder.parentNode.insertBefore(
+      // insert the route root element after the before placeholder
+      placeholders.before.parentNode.insertBefore(
         this.el,
-        this.beforePlaceholder.nextSibling,
+        placeholders.before.nextSibling,
       )
       this.callLifecycleProperty('onBeforeMount', route)
       this.slot.mount(
@@ -92,9 +96,10 @@ export const routeHoc = ({ slots, attributes }) => {
       this.callLifecycleProperty('onMounted', route)
     },
     clearDOM(includeBoundaries) {
+      // remove all the DOM nodes between the placeholders
       clearDOMBetweenNodes(
-        this.beforePlaceholder,
-        this.afterPlaceholder,
+        placeholders.before,
+        placeholders.after,
         includeBoundaries,
       )
     },
@@ -106,23 +111,26 @@ export const routeHoc = ({ slots, attributes }) => {
     },
     onBeforeRoute(path) {
       const { route } = this.state
+      // this component was not mounted or the current path matches
+      // we don't need to unmount this component
+      if (!route || match(path, this.state.pathToRegexp)) return
 
-      if (route && !match(path, this.state.pathToRegexp)) {
-        this.callLifecycleProperty('onBeforeUnmount', route)
-        this.slot.unmount({}, this.context, true)
-        this.clearDOM(false)
-        this.state.route = null
-        this.callLifecycleProperty('onUnmounted', this.state.route)
-      }
+      this.callLifecycleProperty('onBeforeUnmount', route)
+      this.slot.unmount({}, this.context, true)
+      this.clearDOM(false)
+      this.state.route = null
+      this.callLifecycleProperty('onUnmounted', this.state.route)
     },
     onRoute(route) {
       this.state.route = route
       this.mountSlot()
+      // emulate the default browser anchor links behaviour
+      if (route.hash) $(route.hash)?.[0].scrollIntoView()
     },
     callLifecycleProperty(method, ...params) {
       const attr = getAttribute(attributes, method)
 
-      if (attr) attr(...params)
+      if (attr) attr.evaluate(this.context)(...params)
     },
   }
 }
