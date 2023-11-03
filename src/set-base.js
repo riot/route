@@ -1,5 +1,5 @@
 import { HASH, SLASH } from './constants.js'
-import { defaults } from 'rawth'
+import { configure } from 'rawth'
 import { getWindow } from './util.js'
 
 export const normalizeInitialSlash = (str) =>
@@ -33,5 +33,5 @@ export const normalizeBase = (base) => {
 }
 
 export default function setBase(base) {
-  defaults.base = normalizeBase(base)
+  configure({ base: normalizeBase(base) })
 }

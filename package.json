@@ -78,13 +78,13 @@
     "sinon-chai": "^3.7.0"
   },
   "peerDependency": {
-    "riot": "^6.0.0 || ^7.0.0"
+    "riot": "^6.0.0 || ^7.0.0 || ^9.0.0"
   },
   "dependencies": {
     "@riotjs/util": "^2.2.3",
     "bianco.attr": "^1.1.1",
-    "bianco.query": "^1.1.4",
     "bianco.events": "^1.1.1",
+    "bianco.query": "^1.1.4",
     "cumpa": "^2.0.1",
     "rawth": "^3.0.0"
   }

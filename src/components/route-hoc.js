@@ -119,7 +119,7 @@ export const routeHoc = ({ slots, attributes }) => {
       this.slot.unmount({}, this.context, true)
       this.clearDOM(false)
       this.state.route = null
-      this.callLifecycleProperty('onUnmounted', this.state.route)
+      this.callLifecycleProperty('onUnmounted', route)
     },
     onRoute(route) {
       this.state.route = route
