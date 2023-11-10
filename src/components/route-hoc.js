@@ -122,8 +122,14 @@ export const routeHoc = ({ slots, attributes }) => {
       this.callLifecycleProperty('onUnmounted', route)
     },
     onRoute(route) {
+      const prevRoute = this.state.route
       this.state.route = route
-      this.mountSlot()
+
+      // if this route component was already mounted we need to update it
+      if (prevRoute) this.slot.update({}, this.context)
+      // this route component was never mounted so we need to create its DOM
+      else this.mountSlot()
+
       // emulate the default browser anchor links behaviour
       if (route.hash) $(route.hash)?.[0].scrollIntoView()
     },

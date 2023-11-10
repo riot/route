@@ -3,6 +3,7 @@ import HistoryRouterApp from './components/history-router-app.riot'
 import NestedUpdates from './components/nested-updates.riot'
 import RecursiveUpdatesBugRouter from './components/recursive-updates-bug-router.riot'
 import StaticBasePath from './components/static-base-path.riot'
+import SameRouteMatches from './components/same-route-matches.riot'
 import { component } from 'riot'
 import { expect } from 'chai'
 import { router, defaults } from '../src/index.js'
@@ -80,6 +81,27 @@ describe('components', function () {
     const comp = component(StaticBasePath)(el)
 
     expect(defaults.base).to.be.equal('https://riot.rocks/app')
+
+    comp.unmount()
+  })
+
+  it('Routes matched multiple times do not render twice (bug 173) ', async function () {
+    const el = document.createElement('div')
+    const comp = component(SameRouteMatches)(el)
+
+    expect(comp.$$('p')).to.have.length(1)
+
+    router.push('/foo')
+
+    await sleep()
+
+    expect(comp.$$('p')).to.have.length(1)
+
+    router.push('/')
+
+    await sleep()
+
+    expect(comp.$$('p')).to.have.length(1)
 
     comp.unmount()
   })

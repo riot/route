@@ -1,12 +1,16 @@
 <app>
   <router>
     <nav>
+
       <a href="/hello">Hello</a>
       <a href="/user">User</a>
       <a href="/user/gianluca">Username</a>
       <a href="/user/gianluca/#anchor">Username with anchor</a>
       <a href="/goodbye">goodbye</a>
     </nav>
+    <route path="(.*)">
+      Every route :)
+    </route>
     <route path="/hello">hello</route>
     <route path="/user">user</route>
     <route path="/user/:username/([?#].*)?">
