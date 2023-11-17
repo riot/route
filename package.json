@@ -1,6 +1,6 @@
 {
   "name": "@riotjs/route",
-  "version": "9.1.1",
+  "version": "9.1.2",
   "description": "Riot.js isomorphic router",
   "type": "module",
   "main": "index.umd.js",
