@@ -41,3 +41,7 @@ export const createDefaultSlot = (attributes = []) => {
     },
   ])
 }
+
+// True if the selector string is valid
+export const isValidQuerySelectorString = (selector) =>
+  /^([a-zA-Z0-9-_*#.:[\]\s>+~()='"]|\\.)+$/.test(selector)

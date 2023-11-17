@@ -1,0 +1,21 @@
+<computed-routes>
+  <router>
+    <route path={state.home}>
+      <p>{state.name}</p>
+    </route>
+  </router>
+  <script>
+    import { Router, Route } from '../../src/index.js'
+
+    export default {
+      components: {
+        Router,
+        Route,
+      },
+      state: {
+        home: '/home',
+        name: 'hello'
+      },
+    }
+  </script>
+</computed-routes>

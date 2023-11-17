@@ -4,6 +4,7 @@ import NestedUpdates from './components/nested-updates.riot'
 import RecursiveUpdatesBugRouter from './components/recursive-updates-bug-router.riot'
 import StaticBasePath from './components/static-base-path.riot'
 import SameRouteMatches from './components/same-route-matches.riot'
+import ComputedRoutes from './components/computed-routes.riot'
 import { component } from 'riot'
 import { expect } from 'chai'
 import { router, defaults } from '../src/index.js'
@@ -102,6 +103,29 @@ describe('components', function () {
     await sleep()
 
     expect(comp.$$('p')).to.have.length(1)
+
+    comp.unmount()
+  })
+
+  it('Computed routes get properly rendered', async function () {
+    const el = document.createElement('div')
+    const comp = component(ComputedRoutes)(el)
+
+    expect(comp.$('p')).to.be.not.ok
+
+    router.push('/home')
+
+    await sleep()
+
+    expect(comp.$('p')).to.be.ok
+
+    await sleep()
+
+    router.push('/')
+
+    await sleep()
+
+    expect(comp.$('p')).to.be.not.ok
 
     comp.unmount()
   })

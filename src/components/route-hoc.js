@@ -9,7 +9,11 @@ import {
 import $ from 'bianco.query'
 import getCurrentRoute from '../get-current-route.js'
 import { get as getAttr } from 'bianco.attr'
-import { createDefaultSlot, getAttribute } from '../util.js'
+import {
+  createDefaultSlot,
+  getAttribute,
+  isValidQuerySelectorString,
+} from '../util.js'
 import compose from 'cumpa'
 
 const getInitialRouteValue = (pathToRegexp, path, options) => {
@@ -42,7 +46,8 @@ export const routeHoc = ({ slots, attributes }) => {
       // create the component state
       const currentRoute = getCurrentRoute()
       const path =
-        getAttribute(attributes, PATH_ATTRIBUTE) || getAttr(el, PATH_ATTRIBUTE)
+        getAttribute(attributes, PATH_ATTRIBUTE)?.evaluate(context) ||
+        getAttr(el, PATH_ATTRIBUTE)
       const pathToRegexp = toRegexp(path, [])
       const state = {
         pathToRegexp,
@@ -127,11 +132,12 @@ export const routeHoc = ({ slots, attributes }) => {
 
       // if this route component was already mounted we need to update it
       if (prevRoute) this.slot.update({}, this.context)
-      // this route component was never mounted so we need to create its DOM
+      // this route component was never mounted, so we need to create its DOM
       else this.mountSlot()
 
       // emulate the default browser anchor links behaviour
-      if (route.hash) $(route.hash)?.[0].scrollIntoView()
+      if (route.hash && isValidQuerySelectorString(route.hash))
+        $(route.hash)?.[0].scrollIntoView()
     },
     callLifecycleProperty(method, ...params) {
       const attr = getAttribute(attributes, method)
