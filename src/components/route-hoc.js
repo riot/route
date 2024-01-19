@@ -131,7 +131,11 @@ export const routeHoc = ({ slots, attributes }) => {
       this.state.route = route
 
       // if this route component was already mounted we need to update it
-      if (prevRoute) this.slot.update({}, this.context)
+      if (prevRoute) {
+        this.callLifecycleProperty('onBeforeUpdate', route)
+        this.slot.update({}, this.context)
+        this.callLifecycleProperty('onUpdated', route)
+      }
       // this route component was never mounted, so we need to create its DOM
       else this.mountSlot()
 

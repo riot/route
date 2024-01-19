@@ -152,6 +152,8 @@ Each `<route>` component has its own lifecycle attributes in order to let you kn
     <route path="/home"
       on-before-mount={onBeforeHomeMount}
       on-mounted={onHomeMounted}
+      on-before-update={onBeforeHomeUpdate}
+      on-updated={onHomeUpdated}
       on-before-unmount={onBeforeHomeUnmount}
       on-unmounted={onHomeUnmounted}
     />

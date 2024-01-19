@@ -28,7 +28,7 @@
     "demo": "npm run build && serve",
     "cov": "c8 report --reporter=lcov",
     "cov-html": "c8 report --reporter=html",
-    "test": "npm run lint && NODE_OPTIONS=\"--loader @riotjs/register\" c8 mocha -r test/setup.js test/*.spec.js"
+    "test": "npm run lint && c8 mocha -r test/setup.js test/*.spec.js"
   },
   "files": [
     "index.d.ts",
@@ -56,22 +56,22 @@
   "homepage": "https://github.com/riot/route#readme",
   "devDependencies": {
     "@riotjs/cli": "^9.0.5",
-    "@riotjs/compiler": "^9.0.6",
+    "@riotjs/compiler": "^9.0.7",
     "@riotjs/prettier-config": "^1.1.0",
     "@riotjs/register": "^9.0.0",
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-virtual": "^3.0.2",
-    "c8": "^8.0.1",
-    "chai": "^4.3.10",
-    "eslint": "^8.54.0",
+    "c8": "^9.1.0",
+    "chai": "^5.0.0",
+    "eslint": "^8.56.0",
     "eslint-config-riot": "^4.1.1",
-    "jsdom": "22.1.0",
+    "jsdom": "23.2.0",
     "jsdom-global": "3.0.2",
     "mocha": "^10.2.0",
-    "prettier": "^3.1.0",
-    "riot": "^9.1.1",
-    "rollup": "^4.4.1",
+    "prettier": "^3.2.4",
+    "riot": "^9.1.2",
+    "rollup": "^4.9.5",
     "rollup-plugin-riot": "^9.0.2",
     "serve": "^14.2.1",
     "sinon": "^17.0.1",
@@ -81,7 +81,7 @@
     "riot": "^6.0.0 || ^7.0.0 || ^9.0.0"
   },
   "dependencies": {
-    "@riotjs/util": "^2.2.3",
+    "@riotjs/util": "^2.2.4",
     "bianco.attr": "^1.1.1",
     "bianco.events": "^1.1.1",
     "bianco.query": "^1.1.4",
