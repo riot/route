@@ -1,4 +1,5 @@
 import { dashToCamelCase } from '@riotjs/util/strings'
+import { isNil } from '@riotjs/util/checks'
 import { __ } from 'riot'
 
 export const getGlobal = () => getWindow() || global
@@ -24,8 +25,22 @@ export const cancelDefer = (() => {
   return globalScope.cancelAnimationFrame || globalScope.clearTimeout
 })()
 
-export const getAttribute = (attributes, name) =>
-  attributes && attributes.find((a) => dashToCamelCase(a.name) === name)
+export const getAttribute = (attributes, name, context) => {
+  if (!attributes) return null
+
+  const normalizedAttributes = attributes.flatMap((attr) =>
+    isNil(attr.name)
+      ? // add support for spread attributes https://github.com/riot/route/issues/178
+        Object.entries(attr.evaluate(context)).map(([key, value]) => ({
+          // evaluate each value of the spread attribute and store it in the array
+          name: key,
+          evaluate: () => value,
+        }))
+      : attr,
+  )
+
+  return normalizedAttributes.find((a) => dashToCamelCase(a.name) === name)
+}
 
 export const createDefaultSlot = (attributes = []) => {
   const { template, bindingTypes, expressionTypes } = __.DOMBindings

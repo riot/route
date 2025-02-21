@@ -46,7 +46,7 @@ export const routeHoc = ({ slots, attributes }) => {
       // create the component state
       const currentRoute = getCurrentRoute()
       const path =
-        getAttribute(attributes, PATH_ATTRIBUTE)?.evaluate(context) ||
+        getAttribute(attributes, PATH_ATTRIBUTE, context)?.evaluate(context) ||
         getAttr(el, PATH_ATTRIBUTE)
       const pathToRegexp = toRegexp(path, [])
       const state = {
@@ -144,7 +144,7 @@ export const routeHoc = ({ slots, attributes }) => {
         $(route.hash)?.[0].scrollIntoView()
     },
     callLifecycleProperty(method, ...params) {
-      const attr = getAttribute(attributes, method)
+      const attr = getAttribute(attributes, method, this.context)
 
       if (attr) attr.evaluate(this.context)(...params)
     },

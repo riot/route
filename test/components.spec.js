@@ -1,5 +1,6 @@
 import { base, sleep } from './util.js'
 import HistoryRouterApp from './components/history-router-app.riot'
+import SpreadPropsRouter from './components/spred-props-router.riot'
 import NestedUpdates from './components/nested-updates.riot'
 import RecursiveUpdatesBugRouter from './components/recursive-updates-bug-router.riot'
 import StaticBasePath from './components/static-base-path.riot'
@@ -18,6 +19,29 @@ describe('components', function () {
     const el = document.createElement('div')
 
     const comp = component(HistoryRouterApp)(el, {
+      base,
+    })
+
+    await sleep()
+
+    expect(comp.$('p')).to.be.ok
+    expect(comp.isRouterStarted).to.be.ok
+    expect(comp.currentRoute).to.be.ok
+
+    router.push('/goodbye/gianluca')
+
+    await sleep()
+
+    expect(comp.$('user p').innerHTML).to.be.equal('gianluca')
+    expect(comp.$('h1').innerHTML).to.be.equal('Title')
+
+    comp.unmount()
+  })
+
+  it('The Router component accepts spread props', async function () {
+    const el = document.createElement('div')
+
+    const comp = component(SpreadPropsRouter)(el, {
       base,
     })
 

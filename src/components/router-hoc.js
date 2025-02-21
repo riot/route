@@ -18,7 +18,7 @@ export const routerHoc = ({ slots, attributes, props }) => {
     el: null,
     teardown: null,
     mount(el, context) {
-      const initialRouteAttr = getAttribute(attributes, INITIAL_ROUTE)
+      const initialRouteAttr = getAttribute(attributes, INITIAL_ROUTE, context)
       const initialRoute = initialRouteAttr
         ? initialRouteAttr.evaluate(context)
         : null
@@ -44,7 +44,11 @@ export const routerHoc = ({ slots, attributes, props }) => {
     },
     createSlot(context) {
       if (!slots || !slots.length) return
-      const onStartedAttr = getAttribute(attributes, ON_STARTED_ATTRIBUTE_NAME)
+      const onStartedAttr = getAttribute(
+        attributes,
+        ON_STARTED_ATTRIBUTE_NAME,
+        context,
+      )
 
       this.slot = createDefaultSlot()
 
@@ -82,7 +86,7 @@ export const routerHoc = ({ slots, attributes, props }) => {
       }
     },
     getBase(context) {
-      const baseAttr = getAttribute(attributes, BASE_ATTRIBUTE_NAME)
+      const baseAttr = getAttribute(attributes, BASE_ATTRIBUTE_NAME, context)
 
       return baseAttr
         ? baseAttr.evaluate(context)

@@ -1,0 +1,33 @@
+<spread-props-router>
+  <h1>{state.message}</h1>
+  <router {...props} on-started={onStarted}>
+    <route path="/">
+      <p>Hello</p>
+    </route>
+    <route path="/goodbye/:user" on-mounted={() => this.update({
+      message: 'Title'
+    })}>
+      <user name={route.params.user}/>
+    </route>
+  </router>
+
+  <script>
+    import { Router, Route } from '../../src/index.js'
+    import User from './user.riot'
+
+    export default {
+      components: {
+        Router,
+        Route,
+        User,
+      },
+      state: {
+        message: ''
+      },
+      onStarted(currentRoute) {
+        this.isRouterStarted = true
+        this.currentRoute = currentRoute
+      }
+    }
+  </script>
+</spread-props-router>
