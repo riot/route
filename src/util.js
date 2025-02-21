@@ -32,8 +32,9 @@ export const getAttribute = (attributes, name, context) => {
     isNil(attr.name)
       ? // add support for spread attributes https://github.com/riot/route/issues/178
         Object.entries(attr.evaluate(context)).map(([key, value]) => ({
-          // evaluate each value of the spread attribute and store it in the array
+          // evaluate each value of the spread attribute and store it into the array
           name: key,
+          // create a nested evaluate function pointing to the original value of the spread object
           evaluate: () => value,
         }))
       : attr,
