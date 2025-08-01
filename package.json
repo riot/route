@@ -79,7 +79,7 @@
     "sinon-chai": "^4.0.0"
   },
   "peerDependency": {
-    "riot": "^10.0.0"
+    "riot": "^6.0.0 || ^7.0.0 || ^9.0.0 || ^10.0.0"
   },
   "dependencies": {
     "@riotjs/util": "^10.0.0",
