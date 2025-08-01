@@ -258,7 +258,7 @@ initDomListeners(document.querySelector('.main-navigation'))
 [npm-version-image]: http://img.shields.io/npm/v/@riotjs/route.svg?style=flat-square
 [npm-downloads-image]: http://img.shields.io/npm/dm/@riotjs/route.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/@riotjs/route
-[coverage-image]: https://qlty.sh/gh/riot/projects/router/coverage.svg
-[coverage-url]: https://qlty.sh/gh/riot/projects/router
-[qlty-image]: https://qlty.sh/gh/riot/projects/router/maintainability.svg
-[qlty-url]: https://qlty.sh/gh/riot/projects/router
+[coverage-image]: https://qlty.sh/gh/riot/projects/route/coverage.svg
+[coverage-url]: https://qlty.sh/gh/riot/projects/route
+[qlty-image]: https://qlty.sh/gh/riot/projects/route/maintainability.svg
+[qlty-url]: https://qlty.sh/gh/riot/projects/route
