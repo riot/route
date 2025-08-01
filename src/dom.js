@@ -50,7 +50,7 @@ const isInBase = (path) => !defaults.base || path.includes(defaults.base)
 
 /**
  * Callback called anytime something will be clicked on the page
- * @param   {HTMLEvent} event - click event
+ * @param   {Event} event - click event
  * @returns {undefined} void method
  */
 const onClick = (event) => {
