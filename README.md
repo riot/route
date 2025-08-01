@@ -2,7 +2,7 @@
 
 [![Route logo](https://raw.githubusercontent.com/riot/branding/main/route/route-horizontal.svg)](https://github.com/riot/route/)
 
-[![Build Status][ci-image]][ci-url] [![Code Quality][codeclimate-image]][codeclimate-url] [![NPM version][npm-version-image]][npm-url] [![NPM downloads][npm-downloads-image]][npm-url] [![MIT License][license-image]][license-url] [![Coverage Status][coverage-image]][coverage-url]
+[![Build Status][ci-image]][ci-url] [![Code Quality][qlty-image]][qlty-url] [![NPM version][npm-version-image]][npm-url] [![NPM downloads][npm-downloads-image]][npm-url] [![MIT License][license-image]][license-url] [![Coverage Status][coverage-image]][coverage-url]
 
 > Simple isomorphic router
 
@@ -51,7 +51,7 @@ import { route } from 'https://unpkg.com/@riotjs/route/index.js'
 ### npm
 
 ```bash
-$ npm i -S @riotjs/route
+npm i -S @riotjs/route
 ```
 
 ### Download by yourself
@@ -258,7 +258,7 @@ initDomListeners(document.querySelector('.main-navigation'))
 [npm-version-image]: http://img.shields.io/npm/v/@riotjs/route.svg?style=flat-square
 [npm-downloads-image]: http://img.shields.io/npm/dm/@riotjs/route.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/@riotjs/route
-[coverage-image]: https://img.shields.io/coveralls/riot/route/main.svg?style=flat-square
-[coverage-url]: https://coveralls.io/github/riot/route/?branch=main
-[codeclimate-image]: https://api.codeclimate.com/v1/badges/1487b171ba4409b5c302/maintainability
-[codeclimate-url]: https://codeclimate.com/github/riot/route
+[coverage-image]: https://qlty.sh/gh/riot/projects/router/coverage.svg
+[coverage-url]: https://qlty.sh/gh/riot/projects/router
+[qlty-image]: https://qlty.sh/gh/riot/projects/router/maintainability.svg
+[qlty-url]: https://qlty.sh/gh/riot/projects/router
