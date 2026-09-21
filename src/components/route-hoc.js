@@ -24,6 +24,14 @@ const getInitialRouteValue = (pathToRegexp, path, options) => {
   return route.params ? route : null
 }
 
+const scrollToHash = (hash) => {
+  const scroll = () => $(hash)?.[0]?.scrollIntoView()
+  scroll()
+  document.fonts?.ready.then(scroll)
+  if (document.readyState !== 'complete')
+    addEventListener('load', scroll, { once: true })
+}
+
 const clearDOMBetweenNodes = (first, last, includeBoundaries) => {
   const clear = (node) => {
     if (!node || (node === last && !includeBoundaries)) return
@@ -141,7 +149,7 @@ export const routeHoc = ({ slots, attributes }) => {
 
       // emulate the default browser anchor links behaviour
       if (route.hash && isValidQuerySelectorString(route.hash))
-        $(route.hash)?.[0].scrollIntoView()
+        scrollToHash(route.hash)
     },
     callLifecycleProperty(method, ...params) {
       const attr = getAttribute(attributes, method, this.context)

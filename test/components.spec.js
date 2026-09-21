@@ -6,8 +6,10 @@ import RecursiveUpdatesBugRouter from './components/recursive-updates-bug-router
 import StaticBasePath from './components/static-base-path.riot'
 import SameRouteMatches from './components/same-route-matches.riot'
 import ComputedRoutes from './components/computed-routes.riot'
+import HashRoute from './components/hash-route.riot'
 import { component } from 'riot'
 import { expect } from 'chai'
+import { spy } from 'sinon'
 import { router, defaults } from '../src/index.js'
 
 describe('components', function () {
@@ -152,5 +154,48 @@ describe('components', function () {
     expect(comp.$('p')).to.be.not.ok
 
     comp.unmount()
+  })
+
+  it('Route fragments scroll to their target element', async function () {
+    const el = document.createElement('div')
+    // the fragment is looked up in the whole document
+    document.body.appendChild(el)
+    const comp = component(HashRoute)(el)
+    // jsdom doesn't implement Element.prototype.scrollIntoView
+    const scrollIntoView = (Element.prototype.scrollIntoView = spy())
+
+    router.push('/hash#anchor')
+
+    await sleep()
+
+    expect(scrollIntoView).to.have.been.called
+    expect(scrollIntoView.firstCall.thisValue).to.be.equal(comp.$('#anchor'))
+
+    comp.unmount()
+    el.remove()
+    window.history.replaceState(null, '', '/')
+  })
+
+  it('Route fragments matching no element are ignored', async function () {
+    const el = document.createElement('div')
+    document.body.appendChild(el)
+    const comp = component(HashRoute)(el)
+    const rejections = []
+    const onRejection = (reason) => rejections.push(reason)
+
+    Element.prototype.scrollIntoView = spy()
+    process.on('unhandledRejection', onRejection)
+
+    router.push('/hash#nothing-matches-this')
+
+    await sleep()
+
+    process.off('unhandledRejection', onRejection)
+
+    expect(rejections).to.have.length(0)
+
+    comp.unmount()
+    el.remove()
+    window.history.replaceState(null, '', '/')
   })
 })
