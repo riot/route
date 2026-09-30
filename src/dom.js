@@ -1,6 +1,7 @@
 import {
   CLICK_EVENT,
   DOWNLOAD_LINK_ATTRIBUTE,
+  HASH,
   HREF_LINK_ATTRIBUTE,
   LINK_TAG_NAME,
   RE_ORIGIN,
@@ -19,10 +20,20 @@ const onRouterPush = (path) => {
   const loc = getLocation()
   const hist = getHistory()
   const doc = getDocument()
+  const win = getWindow()
 
   // update the browser history only if it's necessary
   if (hist && url !== loc.href) {
     hist.pushState(null, doc.title, url)
+
+    // a new navigation starts at the top of the document, unless it points to
+    // a fragment or the application handles the scroll on its own.
+    if (
+      win &&
+      !normalizePath(url).includes(HASH) &&
+      hist.scrollRestoration !== 'manual'
+    )
+      win.scrollTo(0, 0)
   }
 }
 const getLinkElement = (node) =>

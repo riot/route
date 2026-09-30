@@ -11,4 +11,7 @@ jsdomGlobal(null, {
   url: base,
 })
 
+// jsdom doesn't implement window.scrollTo
+window.scrollTo = () => {}
+
 use(sinonChai)

@@ -6,9 +6,14 @@ import { spy } from 'sinon'
 
 describe('standalone history', function () {
   let teardown // eslint-disable-line
+  // jsdom doesn't implement window.scrollTo
+  const scrollTo = spy()
 
   beforeEach(() => {
     setBase('/')
+
+    scrollTo.resetHistory()
+    window.scrollTo = scrollTo
 
     document.body.innerHTML = `
     <nav>
@@ -71,5 +76,42 @@ describe('standalone history', function () {
     expect(window.location.hash).to.be.equal('#anchor')
 
     hello.end()
+  })
+
+  it('links reset the scroll position', async () => {
+    const [a] = $('nav > a:first-of-type')
+
+    fireEvent(a, 'click')
+
+    await sleep()
+
+    expect(scrollTo).to.have.been.calledWith(0, 0)
+  })
+
+  it('links pointing to a fragment do not reset the scroll position', async () => {
+    const [a] = $('nav > a:nth-child(5)')
+
+    fireEvent(a, 'click')
+
+    await sleep()
+
+    expect(scrollTo).to.have.not.been.called
+  })
+
+  it('back and forward navigations do not reset the scroll position', async () => {
+    const [a] = $('nav > a:first-of-type')
+
+    fireEvent(a, 'click')
+
+    await sleep()
+
+    scrollTo.resetHistory()
+
+    // a popstate pushes the location the browser has already restored
+    window.dispatchEvent(new Event('popstate'))
+
+    await sleep()
+
+    expect(scrollTo).to.have.not.been.called
   })
 })

@@ -9,6 +9,8 @@ import {
 import $ from 'bianco.query'
 import getCurrentRoute from '../get-current-route.js'
 import { get as getAttr } from 'bianco.attr'
+import { once, remove } from 'bianco.events'
+import { noop } from '@riotjs/util/functions'
 import {
   createDefaultSlot,
   getAttribute,
@@ -23,6 +25,35 @@ const getInitialRouteValue = (pathToRegexp, path, options) => {
 
   return route.params ? route : null
 }
+
+// at most one fragment scroll is pending: a newer navigation cancels it
+const [scrollToHash, cancelScroll] = ((cancelPending) => [
+  (hash) => {
+    const scroll = () => $(hash)?.[0]?.scrollIntoView()
+    // skip the retry if it was cancelled or replaced in the meantime
+    const retry = () =>
+      Promise.resolve(document.fonts?.ready).then(
+        () => cancelPending === cancel && scroll(),
+      )
+    const cancel = () => {
+      remove(window, 'load', retry)
+      cancelPending = noop
+    }
+    cancelPending()
+    // scrolling forces a layout, which also starts loading the route's fonts
+    scroll()
+    if (
+      document.readyState === 'complete' &&
+      document.fonts?.status !== 'loading'
+    )
+      return
+    cancelPending = cancel
+    // loaded already, so only the route's own fonts are still pending
+    if (document.readyState === 'complete') retry()
+    else once(window, 'load', retry)
+  },
+  () => cancelPending(),
+])(noop)
 
 const clearDOMBetweenNodes = (first, last, includeBoundaries) => {
   const clear = (node) => {
@@ -115,6 +146,8 @@ export const routeHoc = ({ slots, attributes }) => {
       this.stream.end()
     },
     onBeforeRoute(path) {
+      // any navigation supersedes a pending fragment scroll
+      cancelScroll()
       const { route } = this.state
       // this component was not mounted or the current path matches
       // we don't need to unmount this component
@@ -141,7 +174,7 @@ export const routeHoc = ({ slots, attributes }) => {
 
       // emulate the default browser anchor links behaviour
       if (route.hash && isValidQuerySelectorString(route.hash))
-        $(route.hash)?.[0].scrollIntoView()
+        scrollToHash(route.hash)
     },
     callLifecycleProperty(method, ...params) {
       const attr = getAttribute(attributes, method, this.context)
