@@ -9,7 +9,7 @@ import ComputedRoutes from './components/computed-routes.riot'
 import HashRoute from './components/hash-route.riot'
 import { component } from 'riot'
 import { expect } from 'chai'
-import { spy } from 'sinon'
+import { createSandbox, spy } from 'sinon'
 import { router, defaults } from '../src/index.js'
 
 describe('components', function () {
@@ -197,5 +197,86 @@ describe('components', function () {
     comp.unmount()
     el.remove()
     window.history.replaceState(null, '', '/')
+  })
+
+  describe('Route fragments while the document is loading', function () {
+    const el = document.createElement('div')
+    const fireLoad = () => window.dispatchEvent(new Event('load'))
+    const sandbox = createSandbox()
+    const scrollIntoView = spy()
+    let comp // eslint-disable-line
+
+    beforeEach(function () {
+      // jsdom documents are always loaded
+      sandbox.stub(document, 'readyState').get(() => 'loading')
+      document.body.appendChild(el)
+      comp = component(HashRoute)(el)
+      scrollIntoView.resetHistory()
+      Element.prototype.scrollIntoView = scrollIntoView
+    })
+
+    afterEach(function () {
+      sandbox.restore()
+      comp.unmount()
+      el.remove()
+      window.history.replaceState(null, '', '/')
+    })
+
+    it('retry the scroll once the document is loaded', async function () {
+      router.push('/hash#anchor')
+
+      await sleep()
+
+      expect(scrollIntoView).to.have.been.calledOnce
+
+      fireLoad()
+
+      await sleep()
+
+      expect(scrollIntoView).to.have.been.calledTwice
+      expect(scrollIntoView.secondCall.thisValue).to.be.equal(comp.$('#anchor'))
+    })
+
+    it('do not retry the scroll after a navigation', async function () {
+      const removeEventListener = spy(window, 'removeEventListener')
+
+      router.push('/hash#anchor')
+
+      await sleep()
+
+      // same route, so the anchor is still in the DOM
+      router.push('/hash')
+
+      await sleep()
+
+      expect(removeEventListener).to.have.been.calledWith('load')
+      removeEventListener.restore()
+      scrollIntoView.resetHistory()
+
+      fireLoad()
+
+      await sleep()
+
+      expect(scrollIntoView).to.have.not.been.called
+    })
+
+    it('retry only the scroll of the latest navigation', async function () {
+      router.push('/hash#anchor')
+
+      await sleep()
+
+      router.push('/hash#other')
+
+      await sleep()
+
+      scrollIntoView.resetHistory()
+
+      fireLoad()
+
+      await sleep()
+
+      expect(scrollIntoView).to.have.been.calledOnce
+      expect(scrollIntoView.firstCall.thisValue).to.be.equal(comp.$('#other'))
+    })
   })
 })

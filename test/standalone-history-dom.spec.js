@@ -6,13 +6,13 @@ import { spy } from 'sinon'
 
 describe('standalone history', function () {
   let teardown // eslint-disable-line
-  let scrollTo // eslint-disable-line
+  // jsdom doesn't implement window.scrollTo
+  const scrollTo = spy()
 
   beforeEach(() => {
     setBase('/')
 
-    // jsdom doesn't implement window.scrollTo
-    scrollTo = spy()
+    scrollTo.resetHistory()
     window.scrollTo = scrollTo
 
     document.body.innerHTML = `
